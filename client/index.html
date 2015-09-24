@@ -4,24 +4,28 @@
   <meta charset="UTF-8">
   <title>Dive Stop</title>
 
-  <script src="//maps.googleapis.com/maps/api/js?sensor=false"></script>
-
-  <script src="/libs/lodash/lodash.js"></script>
   <script src="/libs/angular/angular.js"></script>
-  <script src="/libs/angular-simple-logger/dist/angular-simple-logger.js"></script>
-  <script src="/libs/angular-google-maps/dist/angular-google-maps.js"></script>
+
+
+  <script src="//maps.google.com/maps/api/js"></script>
+  <script src="/libs/ngmap/build/scripts/ng-map.js"></script>
+  
+ 
+  <script src="app.js"></script>
+
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+
+<body ng-app="divestop">
   <h1>Dive Stop</h1>
   <form>
-    <input type="text">
+    <input type="text" ng-model="text">
     <button>search</button>
   </form>
-  <div class="map" ui-gmap-google-map center={latitude: 33.688895, longitude:130.295930}
-                          zoom=4
-                          dragging="true"
-                          refresh="false"
-                          pan="true"
-                          ></div>
+  <div ng-controller="OurMapController">
+    <map center={{ourmap.center}} zoom="15">
+      <marker position={{ourmap.center}}></marker>
+  </map>
+  </div>
 </body>
 </html>
