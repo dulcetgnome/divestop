@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dive Stop</title>
+
+  <script src="/libs/lodash/lodash.js"></script>
+  <script src="/libs/angular/angular.js"></script>
+  <script src="/libs/angular-simple-logger/dist/angular-simple-logger.js"></script>
+  <script src="/libs/angular-google-maps/dist/angular-google-maps.js"></script>
+</head>
+<body>
+  <h1>Dive Stop</h1>
+  <form>
+    <input type="text">
+    <button>search</button>
+  </form>
+  <div class="map" ui-gmap-google-map center={latitude: 33.688895, longitude:130.295930}
+                          zoom=4
+                          dragging="true"
+                          refresh="false"
+                          pan="true"
+                          ></div>
+</body>
+</html>

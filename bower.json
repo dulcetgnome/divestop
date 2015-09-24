@@ -1,0 +1,23 @@
+{
+  "name": "dulcetgnome",
+  "version": "0.0.0",
+  "homepage": "https://github.com/RFenolio/dulcetgnome",
+  "authors": [
+    "rfenolio <mordoc@gmail.com>"
+  ],
+  "description": "dive site",
+  "main": "client/index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "client/libs/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.6",
+    "angular-google-maps": "~2.2.1"
+  }
+}
