@@ -18,6 +18,7 @@
   ],
   "dependencies": {
     "angular": "~1.4.6",
-    "angular-google-maps": "~2.2.1"
+    "angular-google-maps": "~2.2.1",
+    "ngmap": "~1.13.4"
   }
 }
