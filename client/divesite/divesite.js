@@ -4,10 +4,10 @@ angular.module('divestop.divesite', [])
   .controller('DiveSiteController', function($scope, SharedProperties) {
     $scope.currentSite = SharedProperties.currentSite;
 
+    // This is called by ng-show in the HTML to indicate that a marker for a divesite has actually been selected.
+    // It then gives the information to the view to display the information for that specific dive site.
     $scope.isSiteAvailable = function() {
-      console.log("checking if site is available");
-      console.log("currentSite: ", $scope.currentSite);
-      console.log("Shared current site: ", SharedProperties.currentSite);
-      return !($scope.currentSite.hasOwnProperty('name'));
+      debugger;
+      return $scope.currentSite.site.hasOwnProperty('name');
     };
   });
