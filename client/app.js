@@ -1,8 +1,18 @@
 angular.module('divestop', ['ngMap'])
   .controller("OurMapController", function($scope) {
     $scope.ourmap = {
+      name: "Akase Beach",
       center: site.location,
       zoom: 8
+    };
+
+    $scope.showCustomMarker = function() {
+      debugger;
+      $scope.map.customMarkers.foo.setVisible(true);
+    };
+
+    $scope.closeCustomMarker = function() {
+      $scope.map.customMarkers.foo.setVisible(false);
     };
   });
 

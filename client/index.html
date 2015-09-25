@@ -23,8 +23,8 @@
     <button>search</button>
   </form>
   <div ng-controller="OurMapController">
-    <map center={{ourmap.center}} zoom="15">
-      <marker position={{ourmap.center}}></marker>
+    <map center=zoom="15">
+      <marker position={{ourmap.center}} on-click="showCustomMarker()"></marker>
   </map>
   </div>
 </body>
