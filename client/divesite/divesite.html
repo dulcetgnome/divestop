@@ -1,0 +1,14 @@
+<h2>{{currentSite.site.name}}</h2>
+<p>{{currentSite.site.description}}</p>
+<div class="stats">
+  <div>{{currentSite.site.maxDepth}}</div>
+</div>
+<ul>
+  <li ng-repeat="life in currentSite.site.aquaticLife">{{life}}</li>
+</ul>
+<ul>
+  <li ng-repeat="feature in currentSite.site.features">{{feature}}</li>
+</ul>
+<ul>
+  <li ng-repeat="picture in currentSite.site.pictures"><img ng-src="{{picture}}" alt=""></li>
+</ul>
