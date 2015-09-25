@@ -57,8 +57,8 @@ pg.connect(connectionString, function(err, client, done) {
     'coordinates VARCHAR(150), ' +
     'max_depth INT(3), ' +
     'gradient VARCHAR(10), ' +
-    'description BLOB, ' +
-    'comments BLOB, ' +
+    'description VARCHAR, ' +
+    'comments VARCHAR, ' +
     'PRIMARY KEY (_id), ' +
     ')', function(err, result){
     if (err) {
