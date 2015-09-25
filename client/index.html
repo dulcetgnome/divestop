@@ -6,11 +6,11 @@
 
   <script src="/libs/angular/angular.js"></script>
 
-
   <script src="//maps.google.com/maps/api/js"></script>
   <script src="/libs/ngmap/build/scripts/ng-map.js"></script>
   
  
+  <script src="stub.js"></script>
   <script src="app.js"></script>
 
   <link rel="stylesheet" href="style.css">
@@ -19,12 +19,11 @@
 <body ng-app="divestop">
   <h1>Dive Stop</h1>
   <div ng-controller="OurMapController">
-    <form ng-submit="geocodeAddress()">
+    <form ng-submit='someFunction' > <!-- fill in correct funciton name -->
       <input type="text" ng-model="searchBoxText">
       <button ng-click='geocodeAddress()'>search</button>
     </form>
     <map center='33.688895, 130.295930' zoom="15"></map>
-    <input type="text" ng-model="currentSite.name">
     <div id="siteInformation" ng-show="showSiteInfo">
       <h2>{{currentSite.name}}</h2>
       <p>{{currentSite.description}}</p>
@@ -42,16 +41,5 @@
       </ul>
     </div>
   </div>
-
-<!--       name: "Akase",
-  location: "Shikanoshima, Fukuoka, Japan"
-  coordinates: "33.688895, 130.295930",
-  maxDepth: 12,
-  description: "A lovely cove that is perfect for beginner divers./
-    It starts out shallow with pool like conditions good for training, /
-    and then allows for divers to swim out and enjoy a relaxed dive",
-  aquaticLife: ["fish"],
-  features: ['coral', 'shallow', 'calm'],
-  pictures: ['url1', 'url2'] -->
 </body>
 </html>
