@@ -2,21 +2,31 @@ var express = require('express');
 var app = express();
 var port = process.env.PORT || 3000;
 
+/* Using pg-node https://github.com/brianc/node-postgres/wiki */
 var pg = require('pg');
+
+/* URL for hosted heroku postgresql database */
 var connectionString = 'postgres://wzypzgrifbmmqn:J3vMBj5wK5nb-Z4dFjcfwqSXZL@ec2-54-243-149-147.compute-1.amazonaws.com:5432/d3dvhl55btercp';
 
 
 
 pg.connect(connectionString, function(err, client, done) {
   if (err) {
-    console.log('error fetching client from pool', err);
+    throw err;
   }
 
-  /* Check if table exists, if not create else do nothing */
+  /*----------  Create Tables  ----------*/
+  
+  /* Check if table exists, if not create else do nothing. See postgresql docs for key syntax differences from mysql:
+    -- AUTO_INCREMENT vs. SERIAL
+    -- declaration of FOREIGN and PRIMARY KEYS (single line)
+    -- single quotes only for values within queries
+    -- don't use size when declaring INT column i.e. no INT(3)
+  */
+
   client.query('CREATE TABLE IF NOT EXISTS locations (' +
-    '_id SERIAL, ' +
-    'location VARCHAR(250), ' +
-    'PRIMARY KEY (_id) ' +
+    '_id SERIAL PRIMARY KEY, ' +
+    'location VARCHAR(250) ' +
     ')', function(err, result){
     if (err) {
       throw err;
@@ -26,9 +36,8 @@ pg.connect(connectionString, function(err, client, done) {
   );
 
   client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
-    '_id SERIAL, ' +
-    'type VARCHAR(100), ' +
-    'PRIMARY KEY (_id) ' +
+    '_id SERIAL PRIMARY KEY, ' +
+    'type VARCHAR(100) ' +
     ')', function(err, result){
     if (err) {
       throw err;
@@ -38,9 +47,8 @@ pg.connect(connectionString, function(err, client, done) {
   );
 
   client.query('CREATE TABLE IF NOT EXISTS features (' +
-    '_id SERIAL, ' +
-    'feature VARCHAR(100), ' +
-    'PRIMARY KEY(_id) ' +
+    '_id SERIAL PRIMARY KEY, ' +
+    'feature VARCHAR(100) ' +
     ')', function(err, result){
     if (err) {
       throw err;
@@ -51,15 +59,14 @@ pg.connect(connectionString, function(err, client, done) {
 
 
   client.query('CREATE TABLE IF NOT EXISTS sites (' +
-    '_id SERIAL, ' +
+    '_id SERIAL PRIMARY KEY, ' +
     'site VARCHAR(250), ' +
     'location_id INT REFERENCES locations (_id), ' +
     'coordinates VARCHAR(150), ' +
     'max_depth INT, ' +
     'gradient VARCHAR(10), ' +
     'description VARCHAR, ' +
-    'comments VARCHAR, ' +
-    'PRIMARY KEY (_id) ' +
+    'comments VARCHAR ' +
     ')', function(err, result){
     if (err) {
       throw err;
@@ -67,13 +74,11 @@ pg.connect(connectionString, function(err, client, done) {
     done();
     }
   );
-    // 'FOREIGN KEY (location_id) REFERENCES locations (_id) ' +
 
   client.query('CREATE TABLE IF NOT EXISTS pictures (' +
-    '_id SERIAL, ' +
+    '_id SERIAL PRIMARY KEY, ' +
     'site_id INT NOT NULL REFERENCES sites (_id), ' +
-    'picture VARCHAR(250), ' +
-    'PRIMARY KEY (_id) ' +
+    'picture VARCHAR(250) ' +
     ')', function(err, result){
     if (err) {
       throw err;
@@ -82,6 +87,9 @@ pg.connect(connectionString, function(err, client, done) {
     }
   );
 
+
+  /* Junction Tables */
+  
   client.query('CREATE TABLE IF NOT EXISTS site_features (' +
     'site_id INT NOT NULL REFERENCES sites (_id), ' +
     'feature_id INT NOT NULL REFERENCES features (_id) ' +
@@ -108,7 +116,13 @@ app.get('/', function(req, res) {
 
 app.get('/api/sites', function(req, res) {
  pg.connect(connectionString, function(error, client, done) {
-  client.query('SELECT * FROM sites', function(err, result) {
+  client.query('select s.site, l.location, s.coordinates, s.max_depth, ' + 
+    's.gradient, s.description, s.comments, a.type, f.feature from sites s ' + 
+    'inner join locations l on (s.location_id = l._id) inner join ' + 
+    'site_features sf on (sf.site_id = s._id) inner join features f ' + 
+    'on (sf.feature_id = f._id) inner join site_aquatic_life saq ' + 
+    'on (saq.site_id = s._id) inner join aquatic_life a ' + 
+    'on (a._id = saq.aquatic_life_id);', function(err, result) {
     if (err) {
       throw err;
     }
