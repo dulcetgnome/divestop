@@ -5,7 +5,6 @@ angular.module('divestop.services', [])
     var sharedProperties = {};
 
     sharedProperties.currentSite = {site: {}};
-    sharedProperties.showSiteInfo = false;
 
     return sharedProperties;
   });

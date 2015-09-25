@@ -7,6 +7,7 @@ angular.module('divestop.map', ['ngMap'])
       addMarkers(sites, map);
     })
 
+    // this will add markers to the google map object, and doesn't keep them around in memeory in an easily accessible way.
     var addMarkers = function(sites, map){
       // iterate over all markers, and add a Marker object to the map.
       for (var i = 0; i < sites.length; i++) {
@@ -20,7 +21,6 @@ angular.module('divestop.map', ['ngMap'])
         })
         marker.addListener('click', function(){
           // show the site view, and change views when you click on a different marker.
-          $scope.showSiteInfo = true;
           SharedProperties.currentSite.site = this.diveSite;
 
           $scope.$apply();
