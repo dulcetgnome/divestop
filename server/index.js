@@ -14,7 +14,7 @@ pg.connect(connectionString, function(err, client, done) {
 
   /* Check if table exists, if not create else do nothing */
   client.query('CREATE TABLE locations (' +
-    '_id INT NOT NULL AUTO_INCREMENT, ' +
+    '_id INT NOT NULL SERIAL, ' +
     'location VARCHAR(250), ' +
     'PRIMARY KEY (_id) ' +
     ')', function(err, result){
@@ -26,7 +26,7 @@ pg.connect(connectionString, function(err, client, done) {
   );
 
   client.query('CREATE TABLE aquatic_life (' +
-    '_id INT NOT NULL AUTO_INCREMENT, ' +
+    '_id INT NOT NULL SERIAL, ' +
     'type VARCHAR(100), ' +
     'PRIMARY KEY (_id) ' +
     ')', function(err, result){
@@ -38,7 +38,7 @@ pg.connect(connectionString, function(err, client, done) {
   );
 
   client.query('CREATE TABLE features (' +
-    '_id INT NOT NULL AUTO_INCREMENT, ' +
+    '_id INT NOT NULL SERIAL, ' +
     'feature VARCHAR(100), ' +
     'PRIMARY KEY (_id) ' +
     ')', function(err, result){
@@ -50,7 +50,7 @@ pg.connect(connectionString, function(err, client, done) {
   );
 
   client.query('CREATE TABLE pictures (' +
-    '_id INT NOT NULL AUTO_INCREMENT, ' +
+    '_id INT NOT NULL SERIAL, ' +
     'site_id INT NOT NULL, ' +
     'picture VARCHAR(250), ' +
     'PRIMARY KEY (_id), ' +
@@ -64,7 +64,7 @@ pg.connect(connectionString, function(err, client, done) {
   );
 
   client.query('CREATE TABLE sites (' +
-    '_id INT NOT NULL AUTO_INCREMENT, ' +
+    '_id INT NOT NULL SERIAL, ' +
     'site VARCHAR(250), ' +
     'location_id INT NOT NULL, ' +
     'coordinates VARCHAR(150), ' +
