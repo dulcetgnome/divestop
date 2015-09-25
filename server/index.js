@@ -106,6 +106,17 @@ app.get('/', function(req, res) {
   res.send(200, 'Hello world!');
 });
 
+app.get('/api/sites', function(req, res) {
+ pg.connect(connectionString, function(error, client, done) {
+  client.query('SELECT * FROM sites', function(err, result) {
+    if (err) {
+      throw err;
+    }
+    res.JSON(result);
+  });
+ });
+});
+
 app.listen(port, function() {
   console.log("Listening on port: " + port);
 });
