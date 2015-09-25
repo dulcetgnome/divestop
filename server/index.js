@@ -112,7 +112,7 @@ app.get('/api/sites', function(req, res) {
     if (err) {
       throw err;
     }
-    res.json(result);
+    res.json(result.rows);
     done();
   });
  });
