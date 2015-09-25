@@ -49,19 +49,6 @@ pg.connect(connectionString, function(err, client, done) {
     }
   );
 
-  client.query('CREATE TABLE IF NOT EXISTS pictures (' +
-    '_id SERIAL, ' +
-    'site_id INT NOT NULL, ' +
-    'picture VARCHAR(250), ' +
-    'PRIMARY KEY (_id), ' +
-    'FOREIGN KEY (site_id) REFERENCES sites (_id) ' +
-    ')', function(err, result){
-    if (err) {
-      throw err;
-    }
-    done();
-    }
-  );
 
   client.query('CREATE TABLE IF NOT EXISTS sites (' +
     '_id SERIAL, ' +
@@ -81,12 +68,26 @@ pg.connect(connectionString, function(err, client, done) {
     done();
     }
   );
+  
+  client.query('CREATE TABLE IF NOT EXISTS pictures (' +
+    '_id SERIAL, ' +
+    'site_id INT NOT NULL, ' +
+    'picture VARCHAR(250), ' +
+    'PRIMARY KEY (_id), ' +
+    'FOREIGN KEY (site_id) REFERENCES sites (_id) ' +
+    ')', function(err, result){
+    if (err) {
+      throw err;
+    }
+    done();
+    }
+  );
 
   client.query('CREATE TABLE IF NOT EXISTS site_features (' +
     'site_id INT NOT NULL, ' +
     'feature_id INT NOT NULL, ' +
     'FOREIGN KEY (site_id) REFERENCES sites (_id), ' +
-    'FOREIGN KEY (feature_id) REFERENCES featues (_id) ' +
+    'FOREIGN KEY (feature_id) REFERENCES features (_id) ' +
     ')', function(err, result){
       done();
     }
