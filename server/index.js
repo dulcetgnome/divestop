@@ -17,34 +17,37 @@ pg.connect(connectionString, function(err, client, done) {
     '_id INT NOT NULL AUTO_INCREMENT, ' +
     'location VARCHAR(250), ' +
     'PRIMARY KEY (_id) ' +
-    )', function(err, result){
+    ')', function(err, result){
     if (err) {
       throw err;
     }
     done();
-  });
+    }
+  );
 
   client.query('CREATE TABLE aquatic_life (' +
     '_id INT NOT NULL AUTO_INCREMENT, ' +
     'type VARCHAR(100), ' +
     'PRIMARY KEY (_id) ' +
-    )', function(err, result){
+    ')', function(err, result){
     if (err) {
       throw err;
     }
     done();
-  });
+    }
+  );
 
   client.query('CREATE TABLE features (' +
     '_id INT NOT NULL AUTO_INCREMENT, ' +
     'feature VARCHAR(100), ' +
     'PRIMARY KEY (_id) ' +
-    )', function(err, result){
+    ')', function(err, result){
     if (err) {
       throw err;
     }
     done();
-  });
+    }
+  );
 
   client.query('CREATE TABLE pictures (' +
     '_id INT NOT NULL AUTO_INCREMENT, ' +
@@ -52,12 +55,13 @@ pg.connect(connectionString, function(err, client, done) {
     'picture VARCHAR(250), ' +
     'PRIMARY KEY (_id), ' +
     'FOREIGN KEY (site_id) REFERENCES sites (_id)
-    )', function(err, result){
+    ')', function(err, result){
     if (err) {
       throw err;
     }
     done();
-  });
+    }
+  );
 
   client.query('CREATE TABLE sites (' +
     '_id INT NOT NULL AUTO_INCREMENT, ' +
@@ -70,30 +74,33 @@ pg.connect(connectionString, function(err, client, done) {
     'comments BLOB, ' +
     'PRIMARY KEY (_id), ' +
     'FOREIGN KEY (location_id) REFERENCES locations (_id) ' +
-    )', function(err, result){
+    ')', function(err, result){
     if (err) {
       throw err;
     }
     done();
-  });
+    }
+  );
 
   client.query('CREATE TABLE site_features (' +
     'site_id INT NOT NULL, ' +
     'feature_id INT NOT NULL, ' +
     'FOREIGN KEY (site_id) REFERENCES sites (_id), ' +
     'FOREIGN KEY (feature_id) REFERENCES featues (_id) ' +
-    )', function(err, result){
+    ')', function(err, result){
       done();
-  });
+    }
+  );
 
   client.query('CREATE TABLE site_aquatic_life (' +
     'site_id INT NOT NULL, ' +
     'aquatic_life_id INT NOT NULL, ' +
     'FOREIGN KEY (site_id) REFERENCES sites (_id), ' +
     'FOREIGN KEY (aquatic_life_id) REFERENCES aquatic_life (_id) ' +
-    )', function(err, result){
+    ')', function(err, result){
       done();
-  });
+    }
+  );
 
 
 });
