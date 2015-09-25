@@ -40,7 +40,7 @@ pg.connect(connectionString, function(err, client, done) {
   client.query('CREATE TABLE IF NOT EXISTS features (' +
     '_id SERIAL, ' +
     'feature VARCHAR(100), ' +
-    'PRIMARY KEY (_id) ' +
+    'PRIMARY KEY(_id) ' +
     ')', function(err, result){
     if (err) {
       throw err;
@@ -53,14 +53,13 @@ pg.connect(connectionString, function(err, client, done) {
   client.query('CREATE TABLE IF NOT EXISTS sites (' +
     '_id SERIAL, ' +
     'site VARCHAR(250), ' +
-    'location_id INT NOT NULL, ' +
+    'location_id INT REFERENCES locations (_id), ' +
     'coordinates VARCHAR(150), ' +
     'max_depth INT(3), ' +
     'gradient VARCHAR(10), ' +
     'description BLOB, ' +
     'comments BLOB, ' +
     'PRIMARY KEY (_id), ' +
-    'FOREIGN KEY (location_id) REFERENCES locations (_id) ' +
     ')', function(err, result){
     if (err) {
       throw err;
@@ -68,7 +67,8 @@ pg.connect(connectionString, function(err, client, done) {
     done();
     }
   );
-  
+    // 'FOREIGN KEY (location_id) REFERENCES locations (_id) ' +
+
   client.query('CREATE TABLE IF NOT EXISTS pictures (' +
     '_id SERIAL, ' +
     'site_id INT NOT NULL, ' +
