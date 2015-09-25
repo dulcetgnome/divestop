@@ -6,7 +6,7 @@ var port = process.env.PORT || 3000;
 var pg = require('pg');
 
 /* URL for hosted heroku postgresql database */
-var connectionString = 'postgres://iivpinszspwsel:DD4OlOQTnwsxXv0lBEtE1B2PyR@ec2-54-163-228-188.compute-1.amazonaws.com:5432/d257cvqdn7atru';
+var connectionString = process.env.DATABASE_URL;
 
 
 
