@@ -4,22 +4,42 @@
   <meta charset="UTF-8">
   <title>Dive Stop</title>
 
-  <script src="/libs/lodash/lodash.js"></script>
   <script src="/libs/angular/angular.js"></script>
-  <script src="/libs/angular-simple-logger/dist/angular-simple-logger.js"></script>
-  <script src="/libs/angular-google-maps/dist/angular-google-maps.js"></script>
+
+  <script src="//maps.google.com/maps/api/js"></script>
+  <script src="/libs/ngmap/build/scripts/ng-map.js"></script>
+  
+ 
+  <script src="stub.js"></script>
+  <script src="app.js"></script>
+
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+
+<body ng-app="divestop">
   <h1>Dive Stop</h1>
-  <form>
-    <input type="text">
-    <button>search</button>
-  </form>
-  <div class="map" ui-gmap-google-map center={latitude: 33.688895, longitude:130.295930}
-                          zoom=4
-                          dragging="true"
-                          refresh="false"
-                          pan="true"
-                          ></div>
+  <div ng-controller="OurMapController">
+    <form ng-submit='someFunction' > <!-- fill in correct funciton name -->
+      <input type="text" ng-model="searchBoxText">
+      <button ng-click='geocodeAddress()'>search</button>
+    </form>
+    <map center='33.688895, 130.295930' zoom="15"></map>
+    <div id="siteInformation" ng-show="showSiteInfo">
+      <h2>{{currentSite.name}}</h2>
+      <p>{{currentSite.description}}</p>
+      <div class="stats">
+        <div>{{currentSite.maxDepth}}</div>
+      </div>
+      <ul>
+        <li ng-repeat="life in currentSite.aquaticLife">{{life}}</li>
+      </ul>
+      <ul>
+        <li ng-repeat="feature in currentSite.features">{{feature}}</li>
+      </ul>
+      <ul>
+        <li ng-repeat="picture in currentSite.pictures"><img ng-src="{{picture}}" alt=""></li>
+      </ul>
+    </div>
+  </div>
 </body>
 </html>
