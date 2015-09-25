@@ -1,8 +1,8 @@
+// this controller handles the functionality of working with the map
+
 angular.module('divestop.map', ['ngMap'])
-  .controller("OurMapController", function($scope) {
-    console.log(sites[0]);
-    $scope.showSiteInfo = false;
-    $scope.currentSite = {};
+  .controller("OurMapController", function($scope, SharedProperties) {
+    
     $scope.$on("mapInitialized", function(e, map) {
       addMarkers(sites, map);
     })
@@ -21,7 +21,7 @@ angular.module('divestop.map', ['ngMap'])
         marker.addListener('click', function(){
           // show the site view, and change views when you click on a different marker.
           $scope.showSiteInfo = true;
-          $scope.currentSite = this.diveSite;
+          SharedProperties.currentSite.site = this.diveSite;
 
           $scope.$apply();
         });

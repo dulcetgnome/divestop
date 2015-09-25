@@ -12,6 +12,8 @@
  
   <script src="stub.js"></script>
   <script src="map/map.js"></script>
+  <script src="divesite/divesite.js"></script>
+  <script src="services/services.js"></script>
   <script src="app.js"></script>
 
   <link rel="stylesheet" href="style.css">
@@ -25,22 +27,22 @@
       <button ng-click='geocodeAddress()'>search</button>
     </form>
     <map center='33.688895, 130.295930' zoom="15"></map>
-    <div id="siteInformation" ng-show="showSiteInfo">
-      <h2>{{currentSite.name}}</h2>
-      <p>{{currentSite.description}}</p>
-      <div class="stats">
-        <div>{{currentSite.maxDepth}}</div>
-      </div>
-      <ul>
-        <li ng-repeat="life in currentSite.aquaticLife">{{life}}</li>
-      </ul>
-      <ul>
-        <li ng-repeat="feature in currentSite.features">{{feature}}</li>
-      </ul>
-      <ul>
-        <li ng-repeat="picture in currentSite.pictures"><img ng-src="{{picture}}" alt=""></li>
-      </ul>
+  </div>
+  <div id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable()">
+    <h2>{{currentSite.site.name}}</h2>
+    <p>{{currentSite.site.description}}</p>
+    <div class="stats">
+      <div>{{currentSite.site.maxDepth}}</div>
     </div>
+    <ul>
+      <li ng-repeat="life in currentSite.site.aquaticLife">{{life}}</li>
+    </ul>
+    <ul>
+      <li ng-repeat="feature in currentSite.site.features">{{feature}}</li>
+    </ul>
+    <ul>
+      <li ng-repeat="picture in currentSite.site.pictures"><img ng-src="{{picture}}" alt=""></li>
+    </ul>
   </div>
 </body>
 </html>
