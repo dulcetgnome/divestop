@@ -54,7 +54,7 @@ pg.connect(connectionString, function(err, client, done) {
     'site_id INT NOT NULL, ' +
     'picture VARCHAR(250), ' +
     'PRIMARY KEY (_id), ' +
-    'FOREIGN KEY (site_id) REFERENCES sites (_id)
+    'FOREIGN KEY (site_id) REFERENCES sites (_id) ' +
     ')', function(err, result){
     if (err) {
       throw err;
