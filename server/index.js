@@ -25,7 +25,7 @@ pg.connect(connectionString, function(err, client, done) {
     }
   );
 
-  client.query('CREATE TABLE aquatic_life (' +
+  client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
     '_id SERIAL, ' +
     'type VARCHAR(100), ' +
     'PRIMARY KEY (_id) ' +
@@ -37,7 +37,7 @@ pg.connect(connectionString, function(err, client, done) {
     }
   );
 
-  client.query('CREATE TABLE features (' +
+  client.query('CREATE TABLE IF NOT EXISTS features (' +
     '_id SERIAL, ' +
     'feature VARCHAR(100), ' +
     'PRIMARY KEY (_id) ' +
@@ -49,7 +49,7 @@ pg.connect(connectionString, function(err, client, done) {
     }
   );
 
-  client.query('CREATE TABLE pictures (' +
+  client.query('CREATE TABLE IF NOT EXISTS pictures (' +
     '_id SERIAL, ' +
     'site_id INT NOT NULL, ' +
     'picture VARCHAR(250), ' +
@@ -63,7 +63,7 @@ pg.connect(connectionString, function(err, client, done) {
     }
   );
 
-  client.query('CREATE TABLE sites (' +
+  client.query('CREATE TABLE IF NOT EXISTS sites (' +
     '_id SERIAL, ' +
     'site VARCHAR(250), ' +
     'location_id INT NOT NULL, ' +
@@ -82,7 +82,7 @@ pg.connect(connectionString, function(err, client, done) {
     }
   );
 
-  client.query('CREATE TABLE site_features (' +
+  client.query('CREATE TABLE IF NOT EXISTS site_features (' +
     'site_id INT NOT NULL, ' +
     'feature_id INT NOT NULL, ' +
     'FOREIGN KEY (site_id) REFERENCES sites (_id), ' +
@@ -92,7 +92,7 @@ pg.connect(connectionString, function(err, client, done) {
     }
   );
 
-  client.query('CREATE TABLE site_aquatic_life (' +
+  client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
     'site_id INT NOT NULL, ' +
     'aquatic_life_id INT NOT NULL, ' +
     'FOREIGN KEY (site_id) REFERENCES sites (_id), ' +
