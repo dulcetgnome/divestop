@@ -7,6 +7,7 @@ angular.module('divestop.map', ['ngMap'])
       addMarkers(sites, map);
     })
 
+    $scope.templateUrl = 'map/map.html';
     // this will add markers to the google map object, and doesn't keep them around in memeory in an easily accessible way.
     var addMarkers = function(sites, map){
       // iterate over all markers, and add a Marker object to the map.

@@ -13,6 +13,7 @@
   <script src="stub.js"></script>
   <script src="map/map.js"></script>
   <script src="divesite/divesite.js"></script>
+  <script src="search/search.js"></script>
   <script src="services/services.js"></script>
   <script src="app.js"></script>
 
@@ -21,28 +22,9 @@
 
 <body ng-app="divestop">
   <h1>Dive Stop</h1>
-  <div ng-controller="OurMapController">
-    <form ng-submit='someFunction' > <!-- fill in correct funciton name -->
-      <input type="text" ng-model="searchBoxText">
-      <button ng-click='geocodeAddress()'>search</button>
-    </form>
-    <map center='33.688895, 130.295930' zoom="15"></map>
-  </div>
-  <div id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable()">
-    <h2>{{currentSite.site.name}}</h2>
-    <p>{{currentSite.site.description}}</p>
-    <div class="stats">
-      <div>{{currentSite.site.maxDepth}}</div>
-    </div>
-    <ul>
-      <li ng-repeat="life in currentSite.site.aquaticLife">{{life}}</li>
-    </ul>
-    <ul>
-      <li ng-repeat="feature in currentSite.site.features">{{feature}}</li>
-    </ul>
-    <ul>
-      <li ng-repeat="picture in currentSite.site.pictures"><img ng-src="{{picture}}" alt=""></li>
-    </ul>
-  </div>
+  <!-- these templateUrl files are referenced in each section's controller -->
+  <div ng-controller="SearchController" ng-include src='templateUrl'></div>
+  <div ng-controller="OurMapController" ng-include src='templateUrl'></div>
+  <div id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable()" ng-include src='templateUrl'></div>
 </body>
 </html>
