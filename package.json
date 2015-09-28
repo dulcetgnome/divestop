@@ -11,6 +11,7 @@
     "url": "git+https://github.com/coreysf/dulcetgnome.git"
   },
   "dependencies": {
+    "body-parser": "^1.14.1",
     "express": "^4.13.3",
     "node": "0.0.0",
     "nodemon": "^1.7.0",

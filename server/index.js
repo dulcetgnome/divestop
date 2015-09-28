@@ -1,4 +1,5 @@
 var express = require('../node_modules/express');
+var parser = require('../node_modules/body-parser');
 var app = express();
 var port = process.env.PORT || 3000;
 
@@ -8,7 +9,8 @@ var pg = require('pg');
 /* URL for hosted heroku postgresql database */
 var connectionString = process.env.DATABASE_URL;
 
-
+/* Middleware */
+app.use(parser);
 
 pg.connect(connectionString, function(err, client, done) {
   if (err) {
@@ -106,6 +108,61 @@ pg.connect(connectionString, function(err, client, done) {
   );
 });
 
+/* DB Post Site Query */
+
+function addSite(cb, passedSite) {
+  pg.connect(connectionString, function(err, client, done) {
+
+    /* If no location, add location */
+    client.query('INSERT INTO locations (location) SELECT \'' + passedSite.location + '\' WHERE NOT EXISTS ( ' +
+      'SELECT location FROM locations WHERE location = ' +
+      '\'' + passedSite.location + '\'' +
+      ')', function(err, result){
+      cb();
+      done();
+    });
+
+    /* If no feature, add feature */
+    for (var i = 0; i < passedSite.feature.length; i++) {
+      client.query('INSERT INTO features (feature) SELECT \'' + passedSite.feature[i] + '\' WHERE NOT EXISTS ( ' +
+        'SELECT feature FROM features WHERE feature = ' +
+        '\'' + passedSite.feature[i] + '\'' +
+        ')', function(err, result){
+        cb();
+        done();
+      });
+    };
+
+    /* If no aquatic_life, add aq */
+    for (var i = 0; i < passedSite.type.length; i++) {
+      client.query('INSERT INTO aquatic_life (type) SELECT \'' + passedSite.type[i] + '\' WHERE NOT EXISTS ( ' +
+        'SELECT type FROM aquatic_life WHERE type = ' +
+        '\'' + passedSite.type[i] + '\'' +
+        ')', function(err, result){
+        cb();
+        done();
+      });
+    };
+
+
+
+  });
+
+
+
+  /* If no site, add site */
+
+    /* Add to join table site_feature */
+
+    /* Add to join table site_aquatic_life */
+  
+  
+  
+
+      
+
+};
+
 /* DB Search Query */
 
 function search(cb, passedLocation) {
@@ -181,6 +238,13 @@ app.get('/api/sites', function(req, res) {
   search(function(location) {
     res.json(location);
   });
+});
+
+app.post('/', function(req, res) {
+
+  addSite(function() {
+    res.send(201);
+  }, req.body);
 });
 
 app.listen(port, function() {
