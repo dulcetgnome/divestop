@@ -89,7 +89,7 @@ pg.connect(connectionString, function(err, client, done) {
 
 /* DB Search Query */
 
-var search = function(location) {
+var search = function(cb, location) {
   if (location) {
     locationQuery = ' ON (l.location = ' + location + ')';
   } else {
@@ -108,42 +108,41 @@ var search = function(location) {
 
   pg.connect(connectionString, function(error, client, done) {
     client.query(queryString, function(err, result) {
-   if (err) {
-     throw err;
-   }
+      if (err) {
+        throw err;
+      }
+      var siteObject = {};
+      var resultsArray = [];
+      
+      for (var i = 0; i < result.rows.length; i++) {
+        if (result.rows[i].site === siteObject.site) {
+          if (siteObject.feature.indexOf(result.rows[i].feature) < 0) {
+            console.log('Adding feature', result.rows[i].feature);
+            siteObject.feature.push(result.rows[i].feature);
+          }
+          if (siteObject.type.indexOf(result.rows[i].type) < 0) {
+            console.log('In aq_life statement: ', result.rows[i].type);
+            siteObject.type.push(result.rows[i].type);
+          }
+        } else {
+          if (siteObject.hasOwnProperty('site')) {
+            resultsArray.push(siteObject);
+          }
+          siteObject = result.rows[i];
+          var firstAquaticLife = siteObject.type;
+          siteObject.type = [firstAquaticLife];
+          var firstFeature = siteObject.feature;
+          siteObject.feature = [firstFeature];
+        }
+      }
 
-   var siteObject = {};
-   var resultsArray = [];
-   
-   for (var i = 0; i < result.rows.length; i++) {
-     if (result.rows[i].site === siteObject.site) {
-       if (siteObject.feature.indexOf(result.rows[i].feature) < 0) {
-         console.log('Adding feature', result.rows[i].feature);
-         siteObject.feature.push(result.rows[i].feature);
-       }
-       if (siteObject.type.indexOf(result.rows[i].type) < 0) {
-         console.log('In aq_life statement: ', result.rows[i].type);
-         siteObject.type.push(result.rows[i].type);
-       }
-     } else {
-       if (siteObject.hasOwnProperty('site')) {
+      if (siteObject.hasOwnProperty('site')) {
          resultsArray.push(siteObject);
        }
-       siteObject = result.rows[i];
-       var firstAquaticLife = siteObject.type;
-       siteObject.type = [firstAquaticLife];
 
-       var firstFeature = siteObject.feature;
-       siteObject.feature = [firstFeature];
-     }
-   }
-
-   if (siteObject.hasOwnProperty('site')) {
-     resultsArray.push(siteObject);
-   }
-
-   return resultsArray;
-  };
+      cb(resultsArray);
+  });
+};
 
   /* Junction Tables */
   
@@ -174,11 +173,15 @@ app.get('/', function(req, res) {
 app.get('/api/sites/:location', function(req, res) {
   var location = req.params.location.toLowerCase().replace(/\%/g, ' ');
 
-  res.json(search(location));
+  res.json(search(function(location) {
+    return location;
+  }, location));
 });
 
 app.get('/api/sites', function(req, res) {    
-  res.json(search());
+  res.json(search(function(location) {
+    return location;
+  }));
   done();
 });
 
