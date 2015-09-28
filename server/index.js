@@ -108,10 +108,10 @@ pg.connect(connectionString, function(err, client, done) {
 
 /* DB Search Query */
 
-function search(cb, location) {
+function search(cb, passedLocation) {
   var locationQuery = '';
-  if (location) {
-    locationQuery = ' WHERE (l.location = ' + location + ')';
+  if (passedLocation) {
+    locationQuery = ' WHERE (l.location = ' + passedLocation + ')';
   }
 
   var queryString = 'SELECT s.site, l.location, s.coordinates, s.max_depth, ' + 
