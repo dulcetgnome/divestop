@@ -109,10 +109,9 @@ pg.connect(connectionString, function(err, client, done) {
 /* DB Search Query */
 
 function search(cb, location) {
+  var locationQuery = '';
   if (location) {
     locationQuery = ' WHERE (l.location = ' + location + ')';
-  } else {
-    locationQuery = '';
   }
 
   var queryString = 'SELECT s.site, l.location, s.coordinates, s.max_depth, ' + 
