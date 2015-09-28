@@ -171,7 +171,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/api/sites/:location', function(req, res) {
-  var location = req.params.location.toLowerCase().replace(/\%/g, ' ');
+  var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
 
   search(function(location) {
     res.json(location);
