@@ -159,7 +159,7 @@ function addSite(cb, passedSite) {
         for (var i = 0; i < passedSite.feature.length; i++) {
           client.query('INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
             'WHERE site = \'' + passedSite.site + '\'), ' + 
-            '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[i] + '\')', function(err, result) {
+            '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[i] + '\'))', function(err, result) {
               if (err) { throw err; }
               done();
             });
