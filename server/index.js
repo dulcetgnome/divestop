@@ -132,10 +132,11 @@ app.get('/api/sites', function(req, res) {
     
     for (var i = 0; i < result.rows.length; i++) {
       if (result.rows[i].site === siteObject.site) {
-        if (siteObject.feature.indexOf(result.rows[i].feature) >= 0) {
+        if (siteObject.feature.indexOf(result.rows[i].feature) < 0) {
           siteObject.feature.push(result.rows[i].feature);
         }
-        if (siteObject.aquatic_life.indexOf(result.rows[i].aquatic_life) >= 0) {
+        if (siteObject.aquatic_life.indexOf(result.rows[i].aquatic_life) < 0) {
+          console.log('In aq_life statement: ', result.rows[i].aquatic_life);
           siteObject.aquatic_life.push(result.rows[i].aquatic_life);
         }
       } else {
