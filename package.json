@@ -21,5 +21,10 @@
   "bugs": {
     "url": "https://github.com/coreysf/dulcetgnome/issues"
   },
-  "homepage": "https://github.com/coreysf/dulcetgnome#readme"
+  "homepage": "https://github.com/coreysf/dulcetgnome#readme",
+  "dependencies": {
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3",
+    "sinon": "^1.17.1"
+  }
 }
