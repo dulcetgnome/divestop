@@ -118,7 +118,6 @@ function addSite(cb, passedSite) {
       'SELECT location FROM locations WHERE location = ' +
       '\'' + passedSite.location + '\'' +
       ')', function(err, result){
-        cb();
         done();
     });
 
@@ -128,7 +127,6 @@ function addSite(cb, passedSite) {
         'SELECT feature FROM features WHERE feature = ' +
         '\'' + passedSite.feature[i] + '\'' +
         ')', function(err, result){
-          cb();
           done();
       });
     }
@@ -139,7 +137,6 @@ function addSite(cb, passedSite) {
         'SELECT type FROM aquatic_life WHERE type = ' +
         '\'' + passedSite.type[i] + '\'' +
         ')', function(err, result){
-          cb();
           done();
       });
     }
@@ -164,6 +161,7 @@ function addSite(cb, passedSite) {
             'WHERE site = \'' + passedSite.site + '\'), ' + 
             '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[i] + '\')', function(err, result) {
               if (err) { throw err; }
+              done();
             });
         }
 
@@ -173,16 +171,15 @@ function addSite(cb, passedSite) {
             'WHERE site = \'' + passedSite.site + '\'), ' + 
             '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.type[i] + '\')', function(err, result) {
               if (err) { throw err; }
+              done();
             });
         }
 
-        // cb();
-        // done();
+        done();
     });
 
 
-
-
+    cb();
   });  
 };
 
