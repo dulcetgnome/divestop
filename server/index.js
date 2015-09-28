@@ -13,7 +13,7 @@ var connectionString = process.env.DATABASE_URL;
 app.use(parser.json());
 
 /* Static File Serving */
-app.use(express.static('../client/index.html'));
+app.use('../client', express.static(__dirname + '../client'));
 
 pg.connect(connectionString, function(err, client, done) {
   if (err) {
