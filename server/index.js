@@ -118,8 +118,8 @@ function addSite(cb, passedSite) {
       'SELECT location FROM locations WHERE location = ' +
       '\'' + passedSite.location + '\'' +
       ')', function(err, result){
-      cb();
-      done();
+        cb();
+        done();
     });
 
     /* If no feature, add feature */
@@ -128,10 +128,10 @@ function addSite(cb, passedSite) {
         'SELECT feature FROM features WHERE feature = ' +
         '\'' + passedSite.feature[i] + '\'' +
         ')', function(err, result){
-        cb();
-        done();
+          cb();
+          done();
       });
-    };
+    }
 
     /* If no aquatic_life, add aq */
     for (var i = 0; i < passedSite.type.length; i++) {
@@ -139,13 +139,14 @@ function addSite(cb, passedSite) {
         'SELECT type FROM aquatic_life WHERE type = ' +
         '\'' + passedSite.type[i] + '\'' +
         ')', function(err, result){
-        cb();
-        done();
+          cb();
+          done();
       });
-    };
+    }
 
     /* If no site, add site */
-    client.query('INSERT INTO sites (site, location_id, coordinates, max_depth, gradient, description, comments) SELECT' + 
+    client.query('INSERT INTO sites (site, location_id, coordinates, max_depth, gradient, ' + 
+      'description, comments) SELECT ' + 
       '\'' + passedSite.site + '\', ' +
       '(SELECT _id FROM locations WHERE location = ' + '\'' + passedSite.location + '\'' + '), ' +
       '\'' + passedSite.coordinates + '\', ' +
@@ -156,17 +157,13 @@ function addSite(cb, passedSite) {
       'SELECT site FROM sites WHERE site = ' +
       '\'' + passedSite.site + '\'' +
       ')', function(err, result) {
-        if (err) {
-          throw err;
-        }
+        if (err) { throw err; }
         /* Add all features to join table site_feature */
         for (var i = 0; i < passedSite.feature.length; i++) {
           client.query('INSERT INTO site_feature (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
             'WHERE site = \'' + passedSite.site + '\'), ' + 
             '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[i] + '\')', function(err, result) {
-              if (err) {
-                throw err;
-              }
+              if (err) { throw err; }
             });
         }
 
@@ -175,14 +172,17 @@ function addSite(cb, passedSite) {
           client.query('INSERT INTO site_aquatic_life (site_id, aquatic_life_id) VALUES ((SELECT _id FROM sites ' + 
             'WHERE site = \'' + passedSite.site + '\'), ' + 
             '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.type[i] + '\')', function(err, result) {
-              if (err) {
-                throw err;
-              }
+              if (err) { throw err; }
             });
         }
-        cb();
-        done();
-      });
+
+        // cb();
+        // done();
+    });
+
+
+
+
   });  
 };
 
