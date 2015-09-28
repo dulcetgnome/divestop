@@ -165,15 +165,15 @@ function addSite(cb, passedSite) {
             });
         }
 
-        //  Add all aquatic life to join table site_aquatic_life 
-        // for (var i = 0; i < passedSite.type.length; i++) {
-        //   client.query('INSERT INTO site_aquatic_life (site_id, aquatic_life_id) VALUES ((SELECT _id FROM sites ' + 
-        //     'WHERE site = \'' + passedSite.site + '\'), ' + 
-        //     '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.type[i] + '\')', function(err, result) {
-        //       if (err) { throw err; }
-        //       done();
-        //     });
-        // }
+         // Add all aquatic life to join table site_aquatic_life 
+        for (var i = 0; i < passedSite.type.length; i++) {
+          client.query('INSERT INTO site_aquatic_life (site_id, aquatic_life_id) VALUES ((SELECT _id FROM sites ' + 
+            'WHERE site = \'' + passedSite.site + '\'), ' + 
+            '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.type[i] + '\'))', function(err, result) {
+              if (err) { throw err; }
+              done();
+            });
+        }
 
         done();
     });
