@@ -1,4 +1,4 @@
-var express = require('express');
+var express = require('../node_modules/express');
 var app = express();
 var port = process.env.PORT || 3000;
 
@@ -126,7 +126,38 @@ app.get('/api/sites', function(req, res) {
     if (err) {
       throw err;
     }
-    res.json(result.rows);
+
+    var siteObject = {};
+    var resultsArray = [];
+    
+    for (var i = 0; i < result.rows.length; i++) {
+      if (result.rows[i].site === siteObject.site) {
+        if (siteObject.feature.indexOf(result.rows[i].feature) < 0) {
+          console.log('Adding feature', result.rows[i].feature);
+          siteObject.feature.push(result.rows[i].feature);
+        }
+        if (siteObject.type.indexOf(result.rows[i].type) < 0) {
+          console.log('In aq_life statement: ', result.rows[i].type);
+          siteObject.type.push(result.rows[i].type);
+        }
+      } else {
+        if (siteObject.hasOwnProperty('site')) {
+          resultsArray.push(siteObject);
+        }
+        siteObject = result.rows[i];
+        var firstAquaticLife = siteObject.type;
+        siteObject.type = [firstAquaticLife];
+
+        var firstFeature = siteObject.feature;
+        siteObject.feature = [firstFeature];
+      }
+    }
+
+    if (siteObject.hasOwnProperty('site')) {
+      resultsArray.push(siteObject);
+    }
+    
+    res.json(resultsArray);
     done();
   });
  });
