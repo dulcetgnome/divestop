@@ -2,13 +2,19 @@
   "name": "dulcetgnome",
   "version": "1.0.0",
   "description": "Greenfield Project",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coreysf/dulcetgnome.git"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "node": "0.0.0",
+    "nodemon": "^1.7.0",
+    "pg": "^4.4.2"
   },
   "author": "",
   "license": "ISC",
