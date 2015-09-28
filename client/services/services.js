@@ -15,16 +15,16 @@ angular.module('divestop.services', [])
 
     var diveSites = {};
 
-    var getAllDiveSites = function(callback) {
+    var getAllDiveSites = function() {
       $http.get('/api/sites')
-        .then(function(data) {
-          callback(data);
+        .then(function(resp) {
+          return resp.data
         }, function(err) {
           throw err;
         })
     };
 
-    var postNewSite = function(site, callback) {
+    var postNewSite = function(site) {
       // site is a JSON object with information about the divesite in the following format:
       // {
       //   name: String,
@@ -49,7 +49,8 @@ angular.module('divestop.services', [])
       //   pictures: ['url1', 'url2']
       // }
       $http.post('/api/sites', site)
-        .then(function() {
+        .then(function(resp) {
+          return resp.data;
           // put marker on map? 
         }, function(err) {
           throw err;

@@ -21,6 +21,7 @@ module.exports = function(config) {
       'client/stub.js',
       'client/map/map.js',
       'client/divesite/divesite.js',
+      'client/add/add.js',
       'client/search/search.js',
       'client/services/services.js',
       'client/app.js',
