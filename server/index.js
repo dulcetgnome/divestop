@@ -127,17 +127,16 @@ app.get('/api/sites', function(req, res) {
       throw err;
     }
 
-    /* Declare results array - will be array of site objects */
     var siteObject = {};
     var resultsArray = [];
     
-    for (var i = 0; i < results.rows.length; i++) {
-      if (results.rows[i].site === siteObject.site) {
-        if (!siteObject.feature.indexOf(results.rows[i].feature)) {
-          siteObject.feature.push(results.rows[i].feature);
+    for (var i = 0; i < result.rows.length; i++) {
+      if (result.rows[i].site === siteObject.site) {
+        if (!siteObject.feature.indexOf(result.rows[i].feature)) {
+          siteObject.feature.push(result.rows[i].feature);
         }
-        if (!siteObject.aquatic_life.indexOf(results.rows[i].aquatic_life)) {
-          siteObject.aquatic_life.push(results.rows[i].aquatic_life);
+        if (!siteObject.aquatic_life.indexOf(result.rows[i].aquatic_life)) {
+          siteObject.aquatic_life.push(result.rows[i].aquatic_life);
         }
       } else {
         if (siteObject.hasOwnProperty('site')) {
@@ -155,10 +154,6 @@ app.get('/api/sites', function(req, res) {
     if (siteObject.hasOwnProperty('site')) {
       resultsArray.push(siteObject);
     }
-
-    /* Iterate through rows */
-    /* While same "site" build a new object */
-    /* Build */
     
     res.json(resultsArray);
     done();
