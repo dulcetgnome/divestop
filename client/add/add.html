@@ -1,4 +1,7 @@
 <form class="addSite">
+  Click on the map to choose a location<br />
+  Latitude: {{site.coordinates.lat | number:5}}<br />
+  Longitude: {{site.coordinates.lng | number:5}}<br />
   Site Name: <input type="text" ng-model="site.name" /><br />
   Description: <input type="text" ng-model="site.description" /><br />
   Maximum Depth: <input type="number" ng-model="site.maxDepth"><br />
