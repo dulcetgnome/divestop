@@ -170,12 +170,11 @@ app.get('/', function(req, res) {
 });
 
 app.get('/api/sites/:location', function(req, res) {
-  // var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
+  var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
 
-  res.send(200, 'Hi from param one!');
-  // search(function(location) {
-  //   res.json(location);
-  // }, 'bahamas');
+  search(function(location) {
+    res.json(location);
+  }, 'bahamas');
 });
 
 app.get('/api/sites', function(req, res) {    
