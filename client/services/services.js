@@ -17,7 +17,7 @@ angular.module('divestop.services', [])
     var diveSites = {};
 
     var getAllDiveSites = function(callback) {
-      $http.get('/sites')
+      $http.get('/api/sites')
         .then(function(data) {
           callback(data);
         }, function(err) {
@@ -49,7 +49,7 @@ angular.module('divestop.services', [])
       //   features: ['coral', 'shallow', 'calm'],
       //   pictures: ['url1', 'url2']
       // }
-      $http.post('/sites', site)
+      $http.post('/api/sites', site)
         .then(function() {
           // put marker on map? 
         }, function(err) {
