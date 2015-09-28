@@ -10,7 +10,7 @@ var pg = require('pg');
 var connectionString = process.env.DATABASE_URL;
 
 /* Middleware */
-app.use(parser);
+app.use(parser.json());
 
 pg.connect(connectionString, function(err, client, done) {
   if (err) {
