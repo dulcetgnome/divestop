@@ -1,12 +1,15 @@
 <form class="addSite">
   Click on the map to choose a location<br />
-  Latitude: {{site.coordinates.lat | number:5}}<br />
-  Longitude: {{site.coordinates.lng | number:5}}<br />
-  Site Name: <input type="text" ng-model="site.name" /><br />
-  Description: <input type="text" ng-model="site.description" /><br />
-  Maximum Depth: <input type="number" ng-model="site.maxDepth"><br />
-  Aquatic Life: <input type="text" ng-model="site.aquaticLife"><br />
-  Features: <input type="text" ng-model="site.features"><br />
+  Latitude: {{siteController.site.coordinates.lat | number:5}}<br />
+  Longitude: {{siteController.site.coordinates.lng | number:5}}<br />
+  Site Name: <input type="text" ng-model="siteController.site.name" /><br />
+  Description: <input type="text" ng-model="siteController.site.description" /><br />
+  Maximum Depth: <input type="number" ng-model="siteController.site.maxDepth"><br />
+  Aquatic Life: <input type="text" ng-model="siteController.site.aquaticLife"><br />
+  Features: <input type="text" ng-model="siteController.newFeature"><button ng-click="siteController.addFeature()">+</button><br />
+  <ul>
+    <li ng-repeat="feature in siteController.site.features track by $index" ng-click="siteController.removeFeature($index)">{{feature}}</li>
+  </ul>
   <!-- picture uploader -->
-  <input type="submit" ng-click="addSite()" value="Submit" />
+  <input type="submit" ng-click="siteController.addSite()" value="Submit" />
 </form>

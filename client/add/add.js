@@ -1,13 +1,22 @@
 angular.module('divestop.addsite', [])
-  .controller('AddSiteController', function($scope, SharedProperties, DiveSites) {
-    $scope.site = {};
-    $scope.site.coordinates = SharedProperties.newSite;
-    $scope.showForm = SharedProperties.showForm;
+  .controller('AddSiteController', function(SharedProperties, DiveSites) {
+    this.site = {};
+    this.site.features = [];
+    this.site.coordinates = SharedProperties.newSite;
+    this.showForm = SharedProperties.showForm;
 
-    $scope.templateUrl = 'add/add.html';
+    this.templateUrl = 'add/add.html';
 
-    $scope.addSite = function() {
-      DiveSites.postNewSite($scope.site).then(function(data){
+    this.addFeature = function() {
+      this.site.features.push(this.newFeature);
+      this.newFeature = '';
+    };
+    this.removeFeature = function(index) {
+      this.site.features.splice(index, 1);
+    };
+
+    this.addSite = function() {
+      DiveSites.postNewSite(this.site).then(function(data){
 
       });
     };
