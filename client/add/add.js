@@ -1,6 +1,7 @@
 angular.module('divestop.addsite', [])
   .controller('AddSiteController', function($scope, SharedProperties, DiveSites) {
     $scope.newSite = SharedProperties.newSite; // Object with properties lat, lng
+    $scope.showForm = SharedProperties.showForm;
 
     $scope.templateUrl = 'add/add.html';
 
@@ -9,5 +10,4 @@ angular.module('divestop.addsite', [])
 
       });
     };
-
   });

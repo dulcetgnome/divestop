@@ -5,6 +5,7 @@ angular.module('divestop.services', [])
     var sharedProperties = {};
 
     sharedProperties.newSite = {coordinates: {}};
+    sharedProperties.showForm = {state: false};
     
     sharedProperties.currentSite = {site: {}};
 
@@ -57,7 +58,7 @@ angular.module('divestop.services', [])
         })
     };
     
-    diveSites.getAllDiveSites = getAllDiveSits;
+    diveSites.getAllDiveSites = getAllDiveSites;
     diveSites.postNewSite = postNewSite;
 
     return diveSites;

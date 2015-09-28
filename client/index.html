@@ -24,8 +24,9 @@
 <body ng-app="divestop">
   <h1>Dive Stop</h1>
   <!-- these templateUrl files are referenced in each section's controller -->
-  <div ng-controller="SearchController" ng-include src='templateUrl'></div>
-  <div ng-controller="OurMapController" ng-include src='templateUrl'></div>
-  <div id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable()" ng-include src='templateUrl'></div>
+  <div ng-controller="SearchController" ng-include src="templateUrl"></div>
+  <div ng-controller="OurMapController" ng-include src="templateUrl"></div>
+  <div ng-controller="AddSiteController" ng-include src="templateUrl" ng-show="showForm.state"></div>
+  <div id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable()" ng-include src="templateUrl"></div>
 </body>
 </html>

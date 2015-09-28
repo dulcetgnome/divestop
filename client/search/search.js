@@ -1,6 +1,6 @@
 // controller for the search functionality of the page
 
-angular.module('divesite.search', [])
+angular.module('divestop.search', [])
   .controller('SearchController', function($scope, SharedProperties) {
     $scope.templateUrl = 'search/search.html';
 
