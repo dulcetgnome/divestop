@@ -171,11 +171,11 @@ app.get('/', function(req, res) {
 });
 
 app.get('/api/sites/:location', function(req, res) {
-  var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
+  // var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
 
   search(function(location) {
     res.json(location);
-  }, location);
+  }, 'bahamas');
 });
 
 app.get('/api/sites', function(req, res) {    
