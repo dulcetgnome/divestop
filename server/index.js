@@ -123,9 +123,9 @@ function addSite(cb, passedSite) {
 
     /* If no feature, add feature */
     for (var i = 0; i < passedSite.feature.length; i++) {
-      client.query('INSERT INTO features (feature) SELECT \'' + passedSite.feature.length + '\' WHERE NOT EXISTS ( ' +
+      client.query('INSERT INTO features (feature) SELECT \'' + passedSite.feature[i] + '\' WHERE NOT EXISTS ( ' +
         'SELECT feature FROM features WHERE feature = ' +
-        '\'' + passedSite.feature.length + '\'' +
+        '\'' + passedSite.feature[i] + '\'' +
         ')', function(err, result){
           done();
       });
