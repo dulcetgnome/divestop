@@ -137,10 +137,11 @@ var search = function(cb, location) {
       }
 
       if (siteObject.hasOwnProperty('site')) {
-         resultsArray.push(siteObject);
-       }
+        resultsArray.push(siteObject);
+      }
 
       cb(resultsArray);
+    });
   });
 };
 
