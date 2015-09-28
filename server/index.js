@@ -156,14 +156,14 @@ function addSite(cb, passedSite) {
       ')', function(err, result) {
         if (err) { throw err; }
         /* Add all features to join table site_feature */
-        // for (var i = 0; i < passedSite.feature.length; i++) {
-        //   client.query('INSERT INTO site_feature (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
-        //     'WHERE site = \'' + passedSite.site + '\'), ' + 
-        //     '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[i] + '\')', function(err, result) {
-        //       if (err) { throw err; }
-        //       done();
-        //     });
-        // }
+        for (var i = 0; i < passedSite.feature.length; i++) {
+          client.query('INSERT INTO site_feature (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
+            'WHERE site = \'' + passedSite.site + '\'), ' + 
+            '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[i] + '\')', function(err, result) {
+              if (err) { throw err; }
+              done();
+            });
+        }
 
         //  Add all aquatic life to join table site_aquatic_life 
         // for (var i = 0; i < passedSite.type.length; i++) {
