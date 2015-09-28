@@ -260,7 +260,7 @@ app.get('/api/sites', function(req, res) {
   });
 });
 
-app.post('/', function(req, res) {
+app.post('/api/sites', function(req, res) {
   addSite(function() {
     res.send(201);
   }, req.body);
