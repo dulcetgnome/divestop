@@ -145,9 +145,9 @@ function addSite(cb, passedSite) {
     client.query('INSERT INTO sites (site, location_id, coordinates, max_depth, gradient, ' + 
       'description, comments) SELECT ' + 
       '\'' + passedSite.site + '\', ' +
-      '(SELECT _id FROM locations WHERE location = ' + '\'' + passedSite.location + '\'' + '), ' +
+      '(SELECT _id FROM locations WHERE location = \'' + passedSite.location + '\'), ' +
       '\'' + passedSite.coordinates + '\', ' +
-      passedSite.max_depth + ', ' +
+      '' + passedSite.max_depth + ', ' +
       '\'' + passedSite.gradient + '\', ' +
       '\'' + passedSite.description + '\', ' +
       '\'' + passedSite.comments + '\' WHERE NOT EXISTS (' +
