@@ -111,7 +111,7 @@ pg.connect(connectionString, function(err, client, done) {
 function search(cb, passedLocation) {
   var locationQuery = '';
   if (passedLocation) {
-    locationQuery = ' WHERE (l.location = ' + passedLocation + ')';
+    locationQuery = ' WHERE (l.location = \'' + passedLocation + '\')';
   }
 
   var queryString = 'SELECT s.site, l.location, s.coordinates, s.max_depth, ' + 
@@ -174,7 +174,7 @@ app.get('/api/sites/:location', function(req, res) {
 
   search(function(location) {
     res.json(location);
-  }, 'bahamas');
+  }, location);
 });
 
 app.get('/api/sites', function(req, res) {    
