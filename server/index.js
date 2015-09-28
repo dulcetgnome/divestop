@@ -131,15 +131,15 @@ function addSite(cb, passedSite) {
       });
     }
 
-    // /* If no aquatic_life, add aq */
-    // for (var i = 0; i < passedSite.type.length; i++) {
-    //   client.query('INSERT INTO aquatic_life (type) SELECT \'' + passedSite.type[i] + '\' WHERE NOT EXISTS ( ' +
-    //     'SELECT type FROM aquatic_life WHERE type = ' +
-    //     '\'' + passedSite.type[i] + '\'' +
-    //     ')', function(err, result){
-    //       done();
-    //   });
-    // }
+    /* If no aquatic_life, add aq */
+    for (var i = 0; i < passedSite.type.length; i++) {
+      client.query('INSERT INTO aquatic_life (type) SELECT \'' + passedSite.type[i] + '\' WHERE NOT EXISTS ( ' +
+        'SELECT type FROM aquatic_life WHERE type = ' +
+        '\'' + passedSite.type[i] + '\'' +
+        ')', function(err, result){
+          done();
+      });
+    }
 
     // /* If no site, add site */
     // client.query('INSERT INTO sites (site, location_id, coordinates, max_depth, gradient, ' + 
