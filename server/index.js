@@ -136,17 +136,17 @@ app.get('/api/sites', function(req, res) {
           console.log('Adding feature', result.rows[i].feature);
           siteObject.feature.push(result.rows[i].feature);
         }
-        if (siteObject.aquatic_life.indexOf(result.rows[i].aquatic_life) < 0) {
-          console.log('In aq_life statement: ', result.rows[i].aquatic_life);
-          siteObject.aquatic_life.push(result.rows[i].aquatic_life);
+        if (siteObject.type.indexOf(result.rows[i].type) < 0) {
+          console.log('In aq_life statement: ', result.rows[i].type);
+          siteObject.type.push(result.rows[i].type);
         }
       } else {
         if (siteObject.hasOwnProperty('site')) {
           resultsArray.push(siteObject);
         }
         siteObject = result.rows[i];
-        var firstAquaticLife = siteObject.aquatic_life;
-        siteObject.aquatic_life = [firstAquaticLife];
+        var firstAquaticLife = siteObject.type;
+        siteObject.type = [firstAquaticLife];
 
         var firstFeature = siteObject.feature;
         siteObject.feature = [firstFeature];
