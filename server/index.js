@@ -87,6 +87,63 @@ pg.connect(connectionString, function(err, client, done) {
     }
   );
 
+/* DB Search Query */
+
+var search = function(location) {
+  if (location) {
+    locationQuery = ' ON (l.location = ' + location + ')';
+  } else {
+    locationQuery = '';
+  }
+
+  var queryString = 'SELECT s.site, l.location, s.coordinates, s.max_depth, ' + 
+     's.gradient, s.description, s.comments, a.type, f.feature FROM sites s ' + 
+     'INNER JOIN locations l ON (s.location_id = l._id) INNER JOIN ' + 
+     'site_features sf ON (sf.site_id = s._id) INNER JOIN features f ' + 
+     'ON (sf.feature_id = f._id) INNER JOIN site_aquatic_life saq ' + 
+     'ON (saq.site_id = s._id) INNER JOIN aquatic_life a ' + 
+     'ON (a._id = saq.aquatic_life_id)' + 
+     locationQuery + ';';
+
+
+  pg.connect(connectionString, function(error, client, done) {
+    client.query(queryString, function(err, result) {
+   if (err) {
+     throw err;
+   }
+
+   var siteObject = {};
+   var resultsArray = [];
+   
+   for (var i = 0; i < result.rows.length; i++) {
+     if (result.rows[i].site === siteObject.site) {
+       if (siteObject.feature.indexOf(result.rows[i].feature) < 0) {
+         console.log('Adding feature', result.rows[i].feature);
+         siteObject.feature.push(result.rows[i].feature);
+       }
+       if (siteObject.type.indexOf(result.rows[i].type) < 0) {
+         console.log('In aq_life statement: ', result.rows[i].type);
+         siteObject.type.push(result.rows[i].type);
+       }
+     } else {
+       if (siteObject.hasOwnProperty('site')) {
+         resultsArray.push(siteObject);
+       }
+       siteObject = result.rows[i];
+       var firstAquaticLife = siteObject.type;
+       siteObject.type = [firstAquaticLife];
+
+       var firstFeature = siteObject.feature;
+       siteObject.feature = [firstFeature];
+     }
+   }
+
+   if (siteObject.hasOwnProperty('site')) {
+     resultsArray.push(siteObject);
+   }
+
+   return resultsArray;
+  };
 
   /* Junction Tables */
   
@@ -114,53 +171,15 @@ app.get('/', function(req, res) {
   res.send(200, 'Hello world!');
 });
 
-app.get('/api/sites', function(req, res) {
- pg.connect(connectionString, function(error, client, done) {
-  client.query('select s.site, l.location, s.coordinates, s.max_depth, ' + 
-    's.gradient, s.description, s.comments, a.type, f.feature from sites s ' + 
-    'inner join locations l on (s.location_id = l._id) inner join ' + 
-    'site_features sf on (sf.site_id = s._id) inner join features f ' + 
-    'on (sf.feature_id = f._id) inner join site_aquatic_life saq ' + 
-    'on (saq.site_id = s._id) inner join aquatic_life a ' + 
-    'on (a._id = saq.aquatic_life_id);', function(err, result) {
-    if (err) {
-      throw err;
-    }
+app.get('/api/sites/:location', function(req, res) {
+  var location = req.params.location.toLowerCase().replace(/\%/g, ' ');
 
-    var siteObject = {};
-    var resultsArray = [];
-    
-    for (var i = 0; i < result.rows.length; i++) {
-      if (result.rows[i].site === siteObject.site) {
-        if (siteObject.feature.indexOf(result.rows[i].feature) < 0) {
-          console.log('Adding feature', result.rows[i].feature);
-          siteObject.feature.push(result.rows[i].feature);
-        }
-        if (siteObject.type.indexOf(result.rows[i].type) < 0) {
-          console.log('In aq_life statement: ', result.rows[i].type);
-          siteObject.type.push(result.rows[i].type);
-        }
-      } else {
-        if (siteObject.hasOwnProperty('site')) {
-          resultsArray.push(siteObject);
-        }
-        siteObject = result.rows[i];
-        var firstAquaticLife = siteObject.type;
-        siteObject.type = [firstAquaticLife];
+  res.json(search(location));
+});
 
-        var firstFeature = siteObject.feature;
-        siteObject.feature = [firstFeature];
-      }
-    }
-
-    if (siteObject.hasOwnProperty('site')) {
-      resultsArray.push(siteObject);
-    }
-    
-    res.json(resultsArray);
-    done();
-  });
- });
+app.get('/api/sites', function(req, res) {    
+  res.json(search());
+  done();
 });
 
 app.listen(port, function() {
