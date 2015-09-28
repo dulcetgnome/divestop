@@ -173,16 +173,15 @@ app.get('/', function(req, res) {
 app.get('/api/sites/:location', function(req, res) {
   var location = req.params.location.toLowerCase().replace(/\%/g, ' ');
 
-  res.json(search(function(location) {
-    return location;
-  }, location));
+  search(function(location) {
+    res.json(location);
+  }, location);
 });
 
 app.get('/api/sites', function(req, res) {    
-  res.json(search(function(location) {
-    return location;
-  }));
-  done();
+  search(function(location) {
+    res.json(location);
+  });
 });
 
 app.listen(port, function() {
