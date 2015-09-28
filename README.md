@@ -43,6 +43,23 @@ npm install
 bower install
 ```
 
+###API
+
+> /api/sites - [GET]
+
+  Request to here will return all dive sites in the world as a JSON object with the following properties:
+  -_id
+  -site
+  -location
+  -coordinates
+  -max-depth
+  -gradient
+  -description
+  -aquatic_life (as array)
+  -pictures (as array)
+  -features (as array)
+  -comments
+
 ### Roadmap
 
 View the project roadmap [here](LINK_TO_PROJECT_ISSUES)
