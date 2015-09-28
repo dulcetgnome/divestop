@@ -2,12 +2,34 @@
 
 angular.module('divestop.map', ['ngMap'])
   .controller("OurMapController", function($scope, SharedProperties) {
-    
+    $scope.newSite = SharedProperties.newSite; // Object with properties lat, lng
+    var newSiteMarker = new google.maps.Marker();
+
     $scope.$on("mapInitialized", function(e, map) {
+      $scope.map = map;
       addMarkers(sites, map);
+      showNewMarker();
     })
 
     $scope.templateUrl = 'map/map.html';
+
+    $scope.moveNewMarker = function(event) {
+      var ll = event.latLng;
+      $scope.newSite.lat = ll.lat();
+      $scope.newSite.lng = ll.lng();
+      newSiteMarker.setPosition({
+        lat: ll.lat(),
+        lng: ll.lng()
+      });
+    };
+    var showNewMarker = function() {
+      debugger;
+      newSiteMarker.setMap($scope.map);
+    };
+    var hideNewMarker = function() {
+      newSiteMarker.setMap(null);
+    };
+
     // this will add markers to the google map object, and doesn't keep them around in memeory in an easily accessible way.
     var addMarkers = function(sites, map){
       // iterate over all markers, and add a Marker object to the map.
