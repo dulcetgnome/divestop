@@ -123,14 +123,14 @@ function addSite(cb, passedSite) {
 
     /* If no feature, add feature */
     var testFeature = JSON.stringify(passedSite.feature);
-    // for (var i = 0; i < passedSite.feature.length; i++) {
-      client.query('INSERT INTO features (feature) SELECT \'' + testFeature + '\' WHERE NOT EXISTS ( ' +
+    for (var i = 0; i < testFeature.length; i++) {
+      client.query('INSERT INTO features (feature) SELECT \'' + testFeature[i] + '\' WHERE NOT EXISTS ( ' +
         'SELECT feature FROM features WHERE feature = ' +
-        '\'' + testFeature + '\'' +
+        '\'' + testFeature[i] + '\'' +
         ')', function(err, result){
           done();
       });
-    // }
+    }
 
     /* If no aquatic_life, add aq */
     for (var i = 0; i < passedSite.type.length; i++) {
@@ -262,9 +262,10 @@ app.get('/api/sites', function(req, res) {
 });
 
 app.post('/api/sites', function(req, res) {
-  addSite(function() {
-    res.send(201);
-  }, req.body);
+  res.json(req.body);
+  // addSite(function() {
+  //   res.send(201);
+  // }, req.body);
 });
 
 app.listen(port, function() {
