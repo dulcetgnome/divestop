@@ -110,7 +110,7 @@ pg.connect(connectionString, function(err, client, done) {
 
 function search(cb, location) {
   if (location) {
-    locationQuery = ' ON (l.location = ' + location + ')';
+    locationQuery = ' WHERE (l.location = ' + location + ')';
   } else {
     locationQuery = '';
   }
