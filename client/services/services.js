@@ -4,8 +4,7 @@ angular.module('divestop.services', [])
   .factory('SharedProperties', function() {
     var sharedProperties = {};
 
-    
-
+    sharedProperties.newSite = {coordinates: {}};
     
     sharedProperties.currentSite = {site: {}};
 
