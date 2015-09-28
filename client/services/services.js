@@ -12,7 +12,7 @@ angular.module('divestop.services', [])
     return sharedProperties;
 
   })
-  .factory('DiveSites', function() {
+  .factory('DiveSites', function($http) {
 
     var diveSites = {};
 
