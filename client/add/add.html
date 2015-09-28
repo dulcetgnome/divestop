@@ -5,11 +5,16 @@
   Site Name: <input type="text" ng-model="siteController.site.name" /><br />
   Description: <input type="text" ng-model="siteController.site.description" /><br />
   Maximum Depth: <input type="number" ng-model="siteController.site.maxDepth"><br />
-  Aquatic Life: <input type="text" ng-model="siteController.site.aquaticLife"><br />
-  Features: <input type="text" ng-model="siteController.newFeature"><button ng-click="siteController.addFeature()">+</button><br />
+  
+  Aquatic Life: <input type="text" ng-model="siteController.newAquaticLife"><button type="button" ng-click="siteController.addAquaticLife()">+</button><br />
+  <ul>
+    <li ng-repeat="aquaticLife in siteController.site.aquaticLife track by $index" ng-click="siteController.removeAquaticLife($index)">{{aquaticLife}}</li>
+  </ul>
+
+  Features: <input type="text" ng-model="siteController.newFeature"><button type="button" ng-click="siteController.addFeature()">+</button><br />
   <ul>
     <li ng-repeat="feature in siteController.site.features track by $index" ng-click="siteController.removeFeature($index)">{{feature}}</li>
   </ul>
   <!-- picture uploader -->
-  <input type="submit" ng-click="siteController.addSite()" value="Submit" />
+  <input type="button" ng-click="siteController.addSite()" value="Submit" />
 </form>

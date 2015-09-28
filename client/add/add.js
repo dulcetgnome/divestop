@@ -2,6 +2,7 @@ angular.module('divestop.addsite', [])
   .controller('AddSiteController', function(SharedProperties, DiveSites) {
     this.site = {};
     this.site.features = [];
+    this.site.aquaticLife = [];
     this.site.coordinates = SharedProperties.newSite;
     this.showForm = SharedProperties.showForm;
 
@@ -14,6 +15,13 @@ angular.module('divestop.addsite', [])
     this.removeFeature = function(index) {
       this.site.features.splice(index, 1);
     };
+    this.addAquaticLife = function() {
+      this.site.aquaticLife.push(this.newAquaticLife);
+      this.newAquaticLife = '';
+    };
+    this.removeAquaticLife = function(index) {
+      this.site.aquaticLife.splice(index, 1);
+    };
 
     this.addSite = function() {
       DiveSites.postNewSite(this.site).then(function(data){
@@ -21,3 +29,4 @@ angular.module('divestop.addsite', [])
       });
     };
   });
+  
