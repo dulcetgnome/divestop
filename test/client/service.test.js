@@ -1,6 +1,7 @@
-var expect = require('chai').expect;
 
 describe('Shared Properties', function() {
+
+  beforeEach(module('divestop.services'));
 
   beforeEach(function () {
 
@@ -10,3 +11,16 @@ describe('Shared Properties', function() {
 
   });
 });
+describe('DiveSites HTTP requests', function() {
+
+  beforeEach(module('divestop.services'));
+
+  beforeEach(function () {
+
+  });
+
+  it('', function() {
+
+  });
+});
+
