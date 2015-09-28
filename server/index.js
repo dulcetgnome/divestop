@@ -87,9 +87,28 @@ pg.connect(connectionString, function(err, client, done) {
     }
   );
 
+  /* Junction Tables */
+  
+  client.query('CREATE TABLE IF NOT EXISTS site_features (' +
+    'site_id INT NOT NULL REFERENCES sites (_id), ' +
+    'feature_id INT NOT NULL REFERENCES features (_id) ' +
+    ')', function(err, result){
+      done();
+    }
+  );
+
+  client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
+    'site_id INT NOT NULL REFERENCES sites (_id), ' +
+    'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
+    ')', function(err, result){
+      done();
+    }
+  );
+});
+
 /* DB Search Query */
 
-var search = function(cb, location) {
+function search(cb, location) {
   if (location) {
     locationQuery = ' ON (l.location = ' + location + ')';
   } else {
@@ -141,30 +160,10 @@ var search = function(cb, location) {
       }
 
       cb(resultsArray);
+      done();
     });
   });
 };
-
-  /* Junction Tables */
-  
-  client.query('CREATE TABLE IF NOT EXISTS site_features (' +
-    'site_id INT NOT NULL REFERENCES sites (_id), ' +
-    'feature_id INT NOT NULL REFERENCES features (_id) ' +
-    ')', function(err, result){
-      done();
-    }
-  );
-
-  client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
-    'site_id INT NOT NULL REFERENCES sites (_id), ' +
-    'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
-    ')', function(err, result){
-      done();
-    }
-  );
-
-
-});
 
 
 app.get('/', function(req, res) {
