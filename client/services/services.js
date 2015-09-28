@@ -14,15 +14,13 @@ angular.module('divestop.services', [])
   })
   .factory('DiveSites', function($http) {
 
-    var diveSites = {};
-
     var getAllDiveSites = function() {
-      $http.get('/api/sites')
+      return $http.get('/api/sites')
         .then(function(resp) {
           return resp.data
         }, function(err) {
           throw err;
-        })
+        });
     };
 
     var postNewSite = function(site) {
@@ -49,17 +47,17 @@ angular.module('divestop.services', [])
       //   features: ['coral', 'shallow', 'calm'],
       //   pictures: ['url1', 'url2']
       // }
-      $http.post('/api/sites', site)
+      return $http.post('/api/sites', site)
         .then(function(resp) {
           return resp.data;
           // put marker on map? 
         }, function(err) {
           throw err;
-        })
+        });
     };
-    
-    diveSites.getAllDiveSites = getAllDiveSites;
-    diveSites.postNewSite = postNewSite;
 
-    return diveSites;
+    return {
+      getAllDiveSites: getAllDiveSites,
+      postNewSite: postNewSite
+    };
   });
