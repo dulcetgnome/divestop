@@ -122,14 +122,15 @@ function addSite(cb, passedSite) {
     });
 
     /* If no feature, add feature */
-    for (var i = 0; i < passedSite.feature.length; i++) {
-      client.query('INSERT INTO features (feature) SELECT \'pirate ship\' WHERE NOT EXISTS ( ' +
+    var testFeature = JSON.stringify(passedSite.feature);
+    // for (var i = 0; i < passedSite.feature.length; i++) {
+      client.query('INSERT INTO features (feature) SELECT \'' + testFeature + '\' WHERE NOT EXISTS ( ' +
         'SELECT feature FROM features WHERE feature = ' +
-        '\'pirate ship\'' +
+        '\'' + testFeature + '\'' +
         ')', function(err, result){
           done();
       });
-    }
+    // }
 
     /* If no aquatic_life, add aq */
     for (var i = 0; i < passedSite.type.length; i++) {
