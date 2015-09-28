@@ -24,9 +24,14 @@ angular.module('divestop.addsite', [])
     };
 
     this.addSite = function() {
-      DiveSites.postNewSite(this.site).then(function(data){
+      var newSite = deepCopy(this.site);
+      newSite.coordinates = JSON.stringify(newSite.coordinates);
+      DiveSites.postNewSite(newSite).then(function(data) {
 
       });
     };
+
+    var deepCopy = function(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    };
   });
-  
