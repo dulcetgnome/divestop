@@ -1,20 +1,20 @@
-<form class="addSite">
+<form name="addSite" class="addSite">
   Click on the map to choose a location<br />
-  Latitude: {{siteController.site.coordinates.lat | number:5}}<br />
-  Longitude: {{siteController.site.coordinates.lng | number:5}}<br />
-  Site Name: <input type="text" ng-model="siteController.site.name" /><br />
-  Description: <input type="text" ng-model="siteController.site.description" /><br />
-  Maximum Depth: <input type="number" ng-model="siteController.site.maxDepth"><br />
+  Latitude: {{form.site.coordinates.lat | number:5}}<br />
+  Longitude: {{form.site.coordinates.lng | number:5}}<br />
+  Site Name: <input type="text" required ng-model="form.site.name" /><br />
+  Description: <input type="text" required ng-model="form.site.description" /><br />
+  Maximum Depth: <input type="number" required ng-model="form.site.maxDepth"><br />
   
-  Aquatic Life: <input type="text" ng-model="siteController.newAquaticLife"><button type="button" ng-click="siteController.addAquaticLife()">+</button><br />
+  Aquatic Life: <input type="text" ng-model="form.newAquaticLife"><button type="button" ng-click="form.addAquaticLife()">+</button><br />
   <ul>
-    <li ng-repeat="aquaticLife in siteController.site.aquaticLife track by $index" ng-click="siteController.removeAquaticLife($index)">{{aquaticLife}}</li>
+    <li ng-repeat="aquaticLife in form.site.aquaticLife track by $index" ng-click="form.removeAquaticLife($index)">{{aquaticLife}}</li>
   </ul>
 
-  Features: <input type="text" ng-model="siteController.newFeature"><button type="button" ng-click="siteController.addFeature()">+</button><br />
+  Features: <input type="text" ng-model="form.newFeature"><button type="button" ng-click="form.addFeature()">+</button><br />
   <ul>
-    <li ng-repeat="feature in siteController.site.features track by $index" ng-click="siteController.removeFeature($index)">{{feature}}</li>
+    <li ng-repeat="feature in form.site.features track by $index" ng-click="form.removeFeature($index)">{{feature}}</li>
   </ul>
   <!-- picture uploader -->
-  <input type="button" ng-click="siteController.addSite()" value="Submit" />
+  <input type="button" ng-click="form.addSite()" value="Submit" ng-disabled="addSite.$invalid || form.site.coordinates.lat === undefined" />
 </form>
