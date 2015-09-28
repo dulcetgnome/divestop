@@ -126,7 +126,41 @@ app.get('/api/sites', function(req, res) {
     if (err) {
       throw err;
     }
-    res.json(result.rows);
+
+    /* Declare results array - will be array of site objects */
+    var siteObject = {};
+    var resultsArray = [];
+    
+    for (var i = 0; i < results.rows.length; i++) {
+      if (results.rows[i].site === siteObject.site) {
+        if (!siteObject.feature.indexOf(results.rows[i].feature)) {
+          siteObject.feature.push(results.rows[i].feature);
+        }
+        if (!siteObject.aquatic_life.indexOf(results.rows[i].aquatic_life)) {
+          siteObject.aquatic_life.push(results.rows[i].aquatic_life);
+        }
+      } else {
+        if (siteObject.hasOwnProperty('site')) {
+          resultsArray.push(siteObject);
+        }
+        siteObject = result.rows[i];
+        var firstAquaticLife = siteObject.aquatic_life;
+        siteObject.aquatic_life = [firstAquaticLife];
+
+        var firstFeature = siteObject.feature;
+        siteObject.feature = [firstFeature];
+      }
+    }
+
+    if (siteObject.hasOwnProperty('site')) {
+      resultsArray.push(siteObject);
+    }
+
+    /* Iterate through rows */
+    /* While same "site" build a new object */
+    /* Build */
+    
+    res.json(resultsArray);
     done();
   });
  });
