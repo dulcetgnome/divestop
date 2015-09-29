@@ -5,18 +5,20 @@
   "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "node node_modules/bower/bin/bower install"
+    "postinstall": "node node_modules/bower/bin/bower install && grunt"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coreysf/dulcetgnome.git"
   },
   "dependencies": {
-    "body-parser": "^1.14.1",
-    "bower": "^1.5.3",
-    "express": "^4.13.3",
-    "node": "0.0.0",
-    "pg": "^4.4.2"
+    "chai": "^3.3.0",
+    "grunt": "0.4.5",
+    "grunt-cli": "0.1.13",
+    "karma": "^0.13.10",
+    "karma-mocha": "^0.2.0",
+    "mocha": "^2.3.3",
+    "sinon": "^1.17.1"
   },
   "author": "",
   "license": "ISC",
@@ -24,14 +26,8 @@
     "url": "https://github.com/coreysf/dulcetgnome/issues"
   },
   "homepage": "https://github.com/coreysf/dulcetgnome#readme",
-  "dependencies": {
-    "chai": "^3.3.0",
-    "karma": "^0.13.10",
-    "karma-mocha": "^0.2.0",
-    "mocha": "^2.3.3",
-    "sinon": "^1.17.1"
-  },
   "devDependencies": {
+    "grunt-contrib-uglify": "^0.9.2",
     "karma-chai": "^0.1.0",
     "karma-phantomjs-launcher": "^0.2.1",
     "phantomjs": "^1.9.18"

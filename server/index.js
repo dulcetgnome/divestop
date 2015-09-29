@@ -14,9 +14,6 @@ app.use(parser.json());
 
 /* Static File Serving */
 
-/* this creates /client route that serves client */
-// app.use('/client', express.static('client'));
-
 app.use(express.static('client'));
 
 pg.connect(connectionString, function(err, client, done) {
