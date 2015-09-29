@@ -1,12 +1,37 @@
 var expect = require('chai').expect;
 var Sites = require('../server/index.js');
 
+var express = require('../node_modules/express');
+var parser = require('../node_modules/body-parser');
+var app = express();
+var port = process.env.PORT || 3000;
 
-var dbURI = 'XXX';  // ENTER DB URI!
+/* Using pg-node https://github.com/brianc/node-postgres/wiki */
+/* To install pg, run the following command: npm install pg */
+
+var pg = require('pg');
+
+/* URL for hosted heroku postgresql database */
+var connectionString = process.env.DATABASE_URL;
+
+/* Middleware */
+app.use(parser.json());
+
+pg.connect(connectionString, function(err, client, done) {
+  if (err) {
+    throw err;
+  }
+
+//////////////////////
+
+
+var dbURI = 'postgres:///db/database-name';  // ENTER DB URI!
 
 // The `clearDB` helper function, when invoked, will clear the database
 var clearDB = function (done) {
-  // mongoose.connection.collections['users'].remove(done)   // DETERMINE HOW TO DO THIS
+  Sites.delete(function() {
+    done();
+  });
 }
 
 describe('Postgres Database Structure', function () {
@@ -76,10 +101,11 @@ describe('Postgres Database Structure', function () {
           description: "Exotic species and the chance for riches",
           comments: "I didn't find any gold this trip but I plan to come back!"
         }
-      ]
-
-      // See http://mongoosejs.com/docs/models.html for details on the `create` method
-      // User.create(users, done);          // DETERMINE HOW TO DO THIS IN POSTGRES
+      ];
+      Sites.createTables(done);
+      for (var i = 0; i < sites.length; i++) {
+        Sites.addSite(done, sites[i]);
+      }
     });
   });
 
@@ -100,14 +126,14 @@ describe('Postgres Database Structure', function () {
 
   it('should have a method that, given no location, retrieves all dive sites from the database', function (done) {
     Sites.search(function(allSites) { 
-      expect(allSites.length).to.equal(5);   // CHECK INTO HOW TO CLEAR DB SAFELY TO TEST THIS!
+      expect(allSites.length).to.equal(5);
       done();
     });
   });
 
   it('should have a method that given the name of a location, retrieves site data for that location', function (done) {
     Sites.search(function(sites) { 
-      expect(sites.length).to.equal(2);   // CHECK INTO HOW TO CLEAR DB SAFELY TO TEST THIS!
+      expect(sites.length).to.equal(2);
       expect(sites[0].location).to.equal('San Diego');
       expect(sites[1].location).to.equal('San Diego');
       done();
@@ -115,8 +141,7 @@ describe('Postgres Database Structure', function () {
   });
 
   it('should have a method that given the data for a site, inserts that data into the database', function (done) {
-    Sites.addSite(function(newSite) {
-      // TO DO: GRAB DATA TO TEST!
+    Sites.addSite(function() {
       done();
     }, {
       site: 'Giuseppes Jetty',
@@ -129,5 +154,10 @@ describe('Postgres Database Structure', function () {
       description: "A nice drift dive off the coast of Palermo",
       comments: "Make sure to try the great food in town."
     });
+    Sites.search(function(sites) { 
+      expect(sites[0].location).to.equal('Sicily');
+      done();
+    }, 'Sicily');
+
   });
 });

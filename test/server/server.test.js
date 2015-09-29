@@ -1,6 +1,6 @@
 var expect = require('chai').expect;
-var request = require('supertest');   // LOOK INTO HOW THIS IS USED!
-app = require('../server/index.js');
+var request = require('supertest');
+app = require('../../server/index.js');
 
 describe('RESTful api', function () {
 
@@ -22,6 +22,7 @@ describe('RESTful api', function () {
       // .expect(XXX)                  // DETERMINE WHAT THIS SHOULD EXPECT
       .end(function (err, res) {
         if (err) return done(err);
+        res.should.have.status(200);
         res.should.be.json;
         res.body.should.be.a('array');
         res.body[0].should.have.property('location');
@@ -52,10 +53,11 @@ describe('RESTful api', function () {
       });
 
     request(app)
-      .get('/api/sites/:fiji')
+      .get('/api/sites/fiji')
       // .expect(XXX)                  // DETERMINE WHAT THIS SHOULD EXPECT
       .end(function (err, res) {
         if (err) return done(err);
+        res.should.have.status(200);
         res.should.be.json;
         res.body.should.be.a('array');
         res.body[0].should.have.property('location');
@@ -68,7 +70,7 @@ describe('RESTful api', function () {
   it('responds to GET requests at `/api/sites/:location` by returning site data for specified location', function() {
 
     request(app)
-      .get('/api/sites/:fiji')
+      .get('/api/sites/fiji')   // GET ANOTHER & ADD STATUS CODE TEST
       // .expect(XXX)                  // DETERMINE WHAT THIS SHOULD EXPECT
       .end(function (err, res) {
         if (err) return done(err);

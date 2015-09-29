@@ -4,6 +4,8 @@ var app = express();
 var port = process.env.PORT || 3000;
 
 /* Using pg-node https://github.com/brianc/node-postgres/wiki */
+/* To install pg, run the following command: npm install pg */
+
 var pg = require('pg');
 
 /* URL for hosted heroku postgresql database */
@@ -16,101 +18,104 @@ app.use(parser.json());
 
 app.use(express.static('client'));
 
-pg.connect(connectionString, function(err, client, done) {
-  if (err) {
-    throw err;
-  }
-
-  /*----------  Create Tables  ----------*/
-  
-  /* Check if table exists, if not create else do nothing. See postgresql docs for key syntax differences from mysql:
-    -- AUTO_INCREMENT vs. SERIAL
-    -- declaration of FOREIGN and PRIMARY KEYS (single line)
-    -- single quotes only for values within queries
-    -- don't use size when declaring INT column i.e. no INT(3)
-  */
-
-  client.query('CREATE TABLE IF NOT EXISTS locations (' +
-    '_id SERIAL PRIMARY KEY, ' +
-    'location VARCHAR(250) ' +
-    ')', function(err, result){
+exports.createTables = function(cb) {
+  pg.connect(connectionString, function(err, client, done) {
     if (err) {
       throw err;
     }
-    done();
-    }
-  );
 
-  client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
-    '_id SERIAL PRIMARY KEY, ' +
-    'type VARCHAR(100) ' +
-    ')', function(err, result){
-    if (err) {
-      throw err;
-    }
-    done();
-    }
-  );
+    /*----------  Create Tables  ----------*/
+    
+    /* Check if table exists, if not create else do nothing. See postgresql docs for key syntax differences from mysql:
+      -- AUTO_INCREMENT vs. SERIAL
+      -- declaration of FOREIGN and PRIMARY KEYS (single line)
+      -- single quotes only for values within queries
+      -- don't use size when declaring INT column i.e. no INT(3)
+    */
 
-  client.query('CREATE TABLE IF NOT EXISTS features (' +
-    '_id SERIAL PRIMARY KEY, ' +
-    'feature VARCHAR(100) ' +
-    ')', function(err, result){
-    if (err) {
-      throw err;
-    }
-    done();
-    }
-  );
-
-
-  client.query('CREATE TABLE IF NOT EXISTS sites (' +
-    '_id SERIAL PRIMARY KEY, ' +
-    'site VARCHAR(250), ' +
-    'location_id INT REFERENCES locations (_id), ' +
-    'coordinates VARCHAR(150), ' +
-    'max_depth INT, ' +
-    'gradient VARCHAR(10), ' +
-    'description VARCHAR, ' +
-    'comments VARCHAR ' +
-    ')', function(err, result){
-    if (err) {
-      throw err;
-    }
-    done();
-    }
-  );
-
-  client.query('CREATE TABLE IF NOT EXISTS pictures (' +
-    '_id SERIAL PRIMARY KEY, ' +
-    'site_id INT NOT NULL REFERENCES sites (_id), ' +
-    'picture VARCHAR(250) ' +
-    ')', function(err, result){
-    if (err) {
-      throw err;
-    }
-    done();
-    }
-  );
-
-  /* Junction Tables */
-  
-  client.query('CREATE TABLE IF NOT EXISTS site_features (' +
-    'site_id INT NOT NULL REFERENCES sites (_id), ' +
-    'feature_id INT NOT NULL REFERENCES features (_id) ' +
-    ')', function(err, result){
+    client.query('CREATE TABLE IF NOT EXISTS locations (' +
+      '_id SERIAL PRIMARY KEY, ' +
+      'location VARCHAR(250) ' +
+      ')', function(err, result){
+      if (err) {
+        throw err;
+      }
       done();
-    }
-  );
+      }
+    );
 
-  client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
-    'site_id INT NOT NULL REFERENCES sites (_id), ' +
-    'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
-    ')', function(err, result){
+    client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
+      '_id SERIAL PRIMARY KEY, ' +
+      'type VARCHAR(100) ' +
+      ')', function(err, result){
+      if (err) {
+        throw err;
+      }
       done();
-    }
-  );
-});
+      }
+    );
+
+    client.query('CREATE TABLE IF NOT EXISTS features (' +
+      '_id SERIAL PRIMARY KEY, ' +
+      'feature VARCHAR(100) ' +
+      ')', function(err, result){
+      if (err) {
+        throw err;
+      }
+      done();
+      }
+    );
+
+
+    client.query('CREATE TABLE IF NOT EXISTS sites (' +
+      '_id SERIAL PRIMARY KEY, ' +
+      'site VARCHAR(250), ' +
+      'location_id INT REFERENCES locations (_id), ' +
+      'coordinates VARCHAR(150), ' +
+      'max_depth INT, ' +
+      'gradient VARCHAR(10), ' +
+      'description VARCHAR, ' +
+      'comments VARCHAR ' +
+      ')', function(err, result){
+      if (err) {
+        throw err;
+      }
+      done();
+      }
+    );
+
+    client.query('CREATE TABLE IF NOT EXISTS pictures (' +
+      '_id SERIAL PRIMARY KEY, ' +
+      'site_id INT NOT NULL REFERENCES sites (_id), ' +
+      'picture VARCHAR(250) ' +
+      ')', function(err, result){
+      if (err) {
+        throw err;
+      }
+      done();
+      }
+    );
+
+    /* Junction Tables */
+    
+    client.query('CREATE TABLE IF NOT EXISTS site_features (' +
+      'site_id INT NOT NULL REFERENCES sites (_id), ' +
+      'feature_id INT NOT NULL REFERENCES features (_id) ' +
+      ')', function(err, result){
+        done();
+      }
+    );
+
+    client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
+      'site_id INT NOT NULL REFERENCES sites (_id), ' +
+      'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
+      ')', function(err, result){
+        done();
+      }
+    );
+  });
+  cb();
+};
 
 /* DB Post Site Query */
 
@@ -247,6 +252,24 @@ exports.search = function(cb, passedLocation) {
   });
 }
 
+
+exports.delete = function(cb) {
+  var queryString = 'DELETE FROM site_aquatic_life; DELETE FROM site_features; ' +
+    'DELETE FROM pictures; DELETE FROM sites; DELETE FROM features; ' +
+    'DELETE FROM aquatic_life;' + 'DELETE FROM locations;';
+
+
+  pg.connect(connectionString, function(error, client, done) {
+    client.query(queryString, function(err, result) {
+      if (err) {
+        throw err;
+      }
+
+      cb();
+      done();
+    });
+  });
+};
 
 app.get('/', function(req, res) {
   res.send(200);
