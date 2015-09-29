@@ -99,17 +99,15 @@ angular.module('divestop.services', [])
       resizeImage(file, resizedFileHeight, function(fileBlob) {
         var serverUrl = 'https://api.parse.com/1/files/' + file.name;
 
-        getPhotoAPIKeys()
-          .then(function(keys) {
-            $http.post(serverUrl, fileBlob, {
-              headers: {
-                'X-Parse-Application-Id': keys['X-Parse-Application-Id'],
-                'X-Parse-REST-API-Key': keys['X-Parse-REST-API-Key'],
-                'Content-Type': file.type
-              }
-            }).then(function(resp) {
-              callback(resp.data.url);
-            });
+        getPhotoAPIKeys().then(function(keys) {
+          $http.post(serverUrl, fileBlob, {
+            headers: {
+              'X-Parse-Application-Id': keys['X-Parse-Application-Id'],
+              'X-Parse-REST-API-Key': keys['X-Parse-REST-API-Key'],
+              'Content-Type': file.type
+            }
+          }).then(function(resp) {
+            callback(resp.data.url);
           });
         });
       });
@@ -118,4 +116,5 @@ angular.module('divestop.services', [])
     return {
       uploadPhoto: uploadPhoto
     };
+
   });

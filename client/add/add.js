@@ -1,10 +1,11 @@
 // Controller for the add site form
 
 angular.module('divestop.addsite', [])
-  .controller('AddSiteController', function(SharedProperties, DiveSites) {
+  .controller('AddSiteController', function(SharedProperties, DiveSites, Photos) {
     this.site = {};
     this.site.features = [];
     this.site.aquaticLife = [];
+    this.site.photos = [];
     this.site.coordinates = SharedProperties.newSite;
     this.showForm = SharedProperties.showForm;
 
@@ -46,7 +47,30 @@ angular.module('divestop.addsite', [])
       });
     };
 
+    this.addPhoto = function() {
+      Photos.uploadPhoto(this.newPhoto, function(url){
+        this.photos.push(url);
+      });
+    };
+
     var deepCopy = function(obj) {
       return JSON.parse(JSON.stringify(obj));
     };
-  });
+
+  })
+  .directive("fileread", [function () {
+    return {
+        scope: {
+            fileread: "="
+        },
+        link: function (scope, element, attributes) {
+            element.bind("change", function (changeEvent) {
+                scope.$apply(function () {
+                    scope.fileread = changeEvent.target.files[0];
+                    // or all selected files:
+                    // scope.fileread = changeEvent.target.files;
+                });
+            });
+        }
+    }
+  }]);
