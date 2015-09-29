@@ -29,6 +29,6 @@
   <div ng-controller="SearchController" ng-include src="templateUrl"></div>
   <div ng-controller="OurMapController" ng-include src="templateUrl"></div>
   <div ng-controller="AddSiteController as form" ng-include src="form.templateUrl" ng-show="form.showForm.state"></div>
-  <div id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable()" ng-include src="templateUrl"></div>
+  <div id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable() && !showForm.state" ng-include src="templateUrl"></div>
 </body>
 </html>

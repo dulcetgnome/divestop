@@ -36,6 +36,10 @@ angular.module('divestop.map', ['ngMap'])
       } else {
         hideNewMarker();
       }
+    };
+    $scope.hideForm = function(){
+      $scope.showForm.state = false;
+      hideNewMarker();
     }
 
     // this will add markers to the google map object, and doesn't keep them around in memeory in an easily accessible way.
@@ -53,27 +57,10 @@ angular.module('divestop.map', ['ngMap'])
         marker.addListener('click', function(){
           // show the site view, and change views when you click on a different marker.
           SharedProperties.currentSite.site = this.diveSite;
+          $scope.hideForm();
 
           $scope.$apply();
         });
       }
-
-      // var geocoder = new google.maps.Geocoder();
-
-      // function geocodeAddress() {
-      //   var address = $scope.searchBoxText;
-      //   geocoder.geocode({'address': address}, function(results, status) {
-      //     if (status === google.maps.GeocoderStatus.OK) {
-      //       $scope.map.setCenter(results[0].geometry.location);
-      //       console.log('in geocodeAddress');
-      //     } else {
-      //       alert('Geocode was not successful for the following reason: ' + status);
-      //     }
-      //   });
-      // }
-    };
-
-    $scope.centerMap = function() {
-
     };
   });
