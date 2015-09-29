@@ -9,7 +9,7 @@ angular.module('divestop.map', ['ngMap'])
     $scope.$on("mapInitialized", function(e, map) {
       SharedProperties.map = map;
       addMarkers(sites, map);
-    })
+    });
 
     $scope.templateUrl = 'map/map.html';
 
@@ -37,6 +37,7 @@ angular.module('divestop.map', ['ngMap'])
         hideNewMarker();
       }
     };
+    
     $scope.hideForm = function(){
       $scope.showForm.state = false;
       hideNewMarker();
@@ -53,7 +54,7 @@ angular.module('divestop.map', ['ngMap'])
           title: site.name,
           // store the site object in the marker to make it easier to access when clicking on the marker.
           diveSite: site
-        })
+        });
         marker.addListener('click', function(){
           // show the site view, and change views when you click on a different marker.
           SharedProperties.currentSite.site = this.diveSite;

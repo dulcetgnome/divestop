@@ -16,5 +16,5 @@ angular.module('divestop.search', [])
           console.log('Geocode was not successful for the following reason: ' + status);
         }
       });
-    }
+    };
   });
