@@ -1,9 +1,20 @@
-<form class="addSite">
-  Site Name: <input type="text" ng-model="site.name" /><br />
-  Description: <input type="text" ng-model="site.description" /><br />
-  Maximum Depth: <input type="number" ng-model="site.maxDepth"><br />
-  Aquatic Life: <input type="text" ng-model="site.aquaticLife"><br />
-  Features: <input type="text" ng-model="site.features"><br />
+<form name="addSite" class="addSite">
+  Click on the map to choose a location<br />
+  Latitude: {{form.site.coordinates.lat | number:5}}<br />
+  Longitude: {{form.site.coordinates.lng | number:5}}<br />
+  Site Name: <input type="text" required ng-model="form.site.name" /><br />
+  Description: <input type="text" required ng-model="form.site.description" /><br />
+  Maximum Depth: <input type="number" required ng-model="form.site.maxDepth"><br />
+  
+  Aquatic Life: <input type="text" ng-model="form.newAquaticLife"><button type="button" ng-click="form.addAquaticLife()">+</button><br />
+  <ul>
+    <li ng-repeat="aquaticLife in form.site.aquaticLife track by $index" ng-click="form.removeAquaticLife($index)">{{aquaticLife}}</li>
+  </ul>
+
+  Features: <input type="text" ng-model="form.newFeature"><button type="button" ng-click="form.addFeature()">+</button><br />
+  <ul>
+    <li ng-repeat="feature in form.site.features track by $index" ng-click="form.removeFeature($index)">{{feature}}</li>
+  </ul>
   <!-- picture uploader -->
-  <input type="submit" ng-click="addSite()" value="Submit" />
+  <input type="button" ng-click="form.addSite()" value="Submit" ng-disabled="addSite.$invalid || form.site.coordinates.lat === undefined" />
 </form>
