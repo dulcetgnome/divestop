@@ -19,101 +19,101 @@ app.use(parser.json());
 
 app.use(express.static('client'));
 
-// pg.connect(connectionString, function(err, client, done) {
-//   if (err) {
-//     throw err;
-//   }
+pg.connect(connectionString, function(err, client, done) {
+  if (err) {
+    throw err;
+  }
 
-//   /*----------  Create Tables  ----------*/
+  /*----------  Create Tables  ----------*/
   
-//   /* Check if table exists, if not create else do nothing. See postgresql docs for key syntax differences from mysql:
-//     -- AUTO_INCREMENT vs. SERIAL
-//     -- declaration of FOREIGN and PRIMARY KEYS (single line)
-//     -- single quotes only for values within queries
-//     -- don't use size when declaring INT column i.e. no INT(3)
-//   */
+  /* Check if table exists, if not create else do nothing. See postgresql docs for key syntax differences from mysql:
+    -- AUTO_INCREMENT vs. SERIAL
+    -- declaration of FOREIGN and PRIMARY KEYS (single line)
+    -- single quotes only for values within queries
+    -- don't use size when declaring INT column i.e. no INT(3)
+  */
 
-//   client.query('CREATE TABLE IF NOT EXISTS locations (' +
-//     '_id SERIAL PRIMARY KEY, ' +
-//     'location VARCHAR(250) ' +
-//     ')', function(err, result){
-//     if (err) {
-//       throw err;
-//     }
-//     done();
-//     }
-//   );
+  client.query('CREATE TABLE IF NOT EXISTS locations (' +
+    '_id SERIAL PRIMARY KEY, ' +
+    'location VARCHAR(250) ' +
+    ')', function(err, result){
+    if (err) {
+      throw err;
+    }
+    done();
+    }
+  );
 
-//   client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
-//     '_id SERIAL PRIMARY KEY, ' +
-//     'type VARCHAR(100) ' +
-//     ')', function(err, result){
-//     if (err) {
-//       throw err;
-//     }
-//     done();
-//     }
-//   );
+  client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
+    '_id SERIAL PRIMARY KEY, ' +
+    'type VARCHAR(100) ' +
+    ')', function(err, result){
+    if (err) {
+      throw err;
+    }
+    done();
+    }
+  );
 
-//   client.query('CREATE TABLE IF NOT EXISTS features (' +
-//     '_id SERIAL PRIMARY KEY, ' +
-//     'feature VARCHAR(100) ' +
-//     ')', function(err, result){
-//     if (err) {
-//       throw err;
-//     }
-//     done();
-//     }
-//   );
+  client.query('CREATE TABLE IF NOT EXISTS features (' +
+    '_id SERIAL PRIMARY KEY, ' +
+    'feature VARCHAR(100) ' +
+    ')', function(err, result){
+    if (err) {
+      throw err;
+    }
+    done();
+    }
+  );
 
 
-//   client.query('CREATE TABLE IF NOT EXISTS sites (' +
-//     '_id SERIAL PRIMARY KEY, ' +
-//     'site VARCHAR(250), ' +
-//     'location_id INT REFERENCES locations (_id), ' +
-//     'coordinates VARCHAR(150), ' +
-//     'max_depth INT, ' +
-//     'gradient VARCHAR(10), ' +
-//     'description VARCHAR, ' +
-//     'comments VARCHAR ' +
-//     ')', function(err, result){
-//     if (err) {
-//       throw err;
-//     }
-//     done();
-//     }
-//   );
+  client.query('CREATE TABLE IF NOT EXISTS sites (' +
+    '_id SERIAL PRIMARY KEY, ' +
+    'site VARCHAR(250), ' +
+    'location_id INT REFERENCES locations (_id), ' +
+    'coordinates VARCHAR(150), ' +
+    'max_depth INT, ' +
+    'gradient VARCHAR(10), ' +
+    'description VARCHAR, ' +
+    'comments VARCHAR ' +
+    ')', function(err, result){
+    if (err) {
+      throw err;
+    }
+    done();
+    }
+  );
 
-//   client.query('CREATE TABLE IF NOT EXISTS pictures (' +
-//     '_id SERIAL PRIMARY KEY, ' +
-//     'site_id INT NOT NULL REFERENCES sites (_id), ' +
-//     'picture VARCHAR(250) ' +
-//     ')', function(err, result){
-//     if (err) {
-//       throw err;
-//     }
-//     done();
-//     }
-//   );
+  client.query('CREATE TABLE IF NOT EXISTS pictures (' +
+    '_id SERIAL PRIMARY KEY, ' +
+    'site_id INT NOT NULL REFERENCES sites (_id), ' +
+    'picture VARCHAR(250) ' +
+    ')', function(err, result){
+    if (err) {
+      throw err;
+    }
+    done();
+    }
+  );
 
-//   /* Junction Tables */
+  /* Junction Tables */
   
-//   client.query('CREATE TABLE IF NOT EXISTS site_features (' +
-//     'site_id INT NOT NULL REFERENCES sites (_id), ' +
-//     'feature_id INT NOT NULL REFERENCES features (_id) ' +
-//     ')', function(err, result){
-//       done();
-//     }
-//   );
+  client.query('CREATE TABLE IF NOT EXISTS site_features (' +
+    'site_id INT NOT NULL REFERENCES sites (_id), ' +
+    'feature_id INT NOT NULL REFERENCES features (_id) ' +
+    ')', function(err, result){
+      done();
+    }
+  );
 
-//   client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
-//     'site_id INT NOT NULL REFERENCES sites (_id), ' +
-//     'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
-//     ')', function(err, result){
-//       done();
-//     }
-//   );
-// });
+  client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
+    'site_id INT NOT NULL REFERENCES sites (_id), ' +
+    'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
+    ')', function(err, result){
+      done();
+    }
+  );
+});
 
 /* DB Post Site Query */
 
@@ -253,25 +253,25 @@ app.get('/', function(req, res) {
   res.send(200);
 });
 
-// app.get('/api/sites/:location', function(req, res) {
-//   var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
+app.get('/api/sites/:location', function(req, res) {
+  var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
 
-//   search(function(location) {
-//     res.json(location);
-//   }, location);
-// });
+  search(function(location) {
+    res.json(location);
+  }, location);
+});
 
-// app.get('/api/sites', function(req, res) {    
-//   search(function(location) {
-//     res.json(location);
-//   });
-// });
+app.get('/api/sites', function(req, res) {    
+  search(function(location) {
+    res.json(location);
+  });
+});
 
-// app.post('/api/sites', function(req, res) {
-//   addSite(function() {
-//     res.send(201);
-//   }, req.body);
-// });
+app.post('/api/sites', function(req, res) {
+  addSite(function() {
+    res.send(201);
+  }, req.body);
+});
 
 app.listen(port, function() {
   console.log("Listening on port: " + port);
