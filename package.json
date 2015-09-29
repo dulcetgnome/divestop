@@ -4,16 +4,18 @@
   "description": "Greenfield Project",
   "main": "server/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node node_modules/bower/bin/bower install"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coreysf/dulcetgnome.git"
   },
   "dependencies": {
+    "body-parser": "^1.14.1",
+    "bower": "^1.5.3",
     "express": "^4.13.3",
     "node": "0.0.0",
-    "nodemon": "^1.7.0",
     "pg": "^4.4.2"
   },
   "author": "",
