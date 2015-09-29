@@ -15,6 +15,12 @@
   <ul>
     <li ng-repeat="feature in form.site.features track by $index" ng-click="form.removeFeature($index)">{{feature}}</li>
   </ul>
-  <!-- picture uploader -->
+  
+  Photos: <input type="file" fileread="form.newPhoto" /><button type="button" ng-click="form.addPhoto()">+</button><br />
+  <ul>
+    <li ng-repeat="photo in form.site.photos track by $index">
+      <img ng-src="photo" alt="">
+    </li>
+  </ul>
   <input type="button" ng-click="form.addSite()" value="Submit" ng-disabled="addSite.$invalid || form.site.coordinates.lat === undefined" />
 </form>
