@@ -7,7 +7,7 @@ angular.module('divestop.map', ['ngMap'])
     var newSiteMarker = new google.maps.Marker();
 
     $scope.$on("mapInitialized", function(e, map) {
-      $scope.map = map;
+      SharedProperties.map = map;
       addMarkers(sites, map);
     })
 
@@ -23,7 +23,7 @@ angular.module('divestop.map', ['ngMap'])
       });
     };
     var showNewMarker = function() {
-      newSiteMarker.setMap($scope.map);
+      newSiteMarker.setMap(SharedProperties.map);
     };
     var hideNewMarker = function() {
       newSiteMarker.setMap(null);
