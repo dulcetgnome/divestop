@@ -61,9 +61,9 @@ angular.module('divestop.services', [])
       postNewSite: postNewSite
     };
   })
-  .factory('Photos', function() {
+  .factory('Photos', function($http) {
     var resizeImage = function (file, height, callback) {
-      // Takes a uploaded file, resizes it based on height and calls the callback sending it a Blob
+      // Takes an uploaded file, resizes it based on height and calls the callback sending it a Blob
       var img = new Image();
       var reader = new FileReader();
 
@@ -113,7 +113,9 @@ angular.module('divestop.services', [])
           });
         });
       });
-      
-    }
+    };
 
+    return {
+      uploadPhoto: uploadPhoto
+    };
   });
