@@ -114,7 +114,7 @@ pg.connect(connectionString, function(err, client, done) {
 
 /* DB Post Site Query */
 
-function addSite(cb, passedSite) {
+exports.addSite = function(cb, passedSite) {
   pg.connect(connectionString, function(err, client, done) {
 
     /* If no location, add location */
@@ -189,7 +189,7 @@ function addSite(cb, passedSite) {
 
 /* DB Search Query */
 
-function search(cb, passedLocation) {
+exports.search = function(cb, passedLocation) {
   var locationQuery = '';
   if (passedLocation) {
     locationQuery = ' WHERE (l.location = \'' + passedLocation + '\')';
@@ -228,6 +228,8 @@ function search(cb, passedLocation) {
             resultsArray.push(siteObject);
           }
           siteObject = result.rows[i];
+
+          // The following four lines ensure that the 'type' and 'feature' properties contain arrays.
           var firstAquaticLife = siteObject.type;
           siteObject.type = [firstAquaticLife];
           var firstFeature = siteObject.feature;
