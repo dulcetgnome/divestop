@@ -136,10 +136,10 @@ function addSite(cb, passedSite) {
     }
 
     /* If no aquatic_life, add aq */
-    for (var i = 0; i < passedSite.type.length; i++) {
-      client.query('INSERT INTO aquatic_life (type) SELECT \'' + passedSite.type[i] + '\' WHERE NOT EXISTS ( ' +
+    for (var k = 0; k < passedSite.type.length; k++) {
+      client.query('INSERT INTO aquatic_life (type) SELECT \'' + passedSite.type[k] + '\' WHERE NOT EXISTS ( ' +
         'SELECT type FROM aquatic_life WHERE type = ' +
-        '\'' + passedSite.type[i] + '\'' +
+        '\'' + passedSite.type[k] + '\'' +
         ')', function(err, result){
           done();
       });
@@ -160,20 +160,20 @@ function addSite(cb, passedSite) {
       ')', function(err, result) {
         if (err) { throw err; }
         /* Add all features to join table site_feature */
-        for (var i = 0; i < passedSite.feature.length; i++) {
+        for (var j = 0; j < passedSite.feature.length; j++) {
           client.query('INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
             'WHERE site = \'' + passedSite.site + '\'), ' + 
-            '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[i] + '\'))', function(err, result) {
+            '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[j] + '\'))', function(err, result) {
               if (err) { throw err; }
               done();
             });
         }
 
          // Add all aquatic life to join table site_aquatic_life 
-        for (var i = 0; i < passedSite.type.length; i++) {
+        for (var x = 0; x < passedSite.type.length; x++) {
           client.query('INSERT INTO site_aquatic_life (site_id, aquatic_life_id) VALUES ((SELECT _id FROM sites ' + 
             'WHERE site = \'' + passedSite.site + '\'), ' + 
-            '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.type[i] + '\'))', function(err, result) {
+            '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.type[x] + '\'))', function(err, result) {
               if (err) { throw err; }
               done();
             });
@@ -185,7 +185,7 @@ function addSite(cb, passedSite) {
 
     cb();
   });  
-};
+}
 
 /* DB Search Query */
 
@@ -243,7 +243,7 @@ function search(cb, passedLocation) {
       done();
     });
   });
-};
+}
 
 
 app.get('/', function(req, res) {

@@ -33,7 +33,7 @@ angular.module('divestop.addsite', [])
       this.site.aquaticLife = [];
       this.site.coordinates.lat = undefined;
       this.site.coordinates.lng = undefined;
-    }
+    };
 
     this.addSite = function() {
       // Deep copy the object so we can stringify coordinates before passing to server

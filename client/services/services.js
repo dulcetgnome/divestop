@@ -17,7 +17,7 @@ angular.module('divestop.services', [])
     var getAllDiveSites = function() {
       return $http.get('/api/sites')
         .then(function(resp) {
-          return resp.data
+          return resp.data;
         }, function(err) {
           throw err;
         });
