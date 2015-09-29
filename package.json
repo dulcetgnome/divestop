@@ -29,6 +29,10 @@
     "karma-phantomjs-launcher": "^0.2.1",
     "mocha": "^2.3.3",
     "phantomjs": "^1.9.18",
+    "chai": "^3.3.0",
+    "karma": "^0.13.10",
+    "karma-mocha": "^0.2.0",
+    "mocha": "^2.3.3",
     "sinon": "^1.17.1"
   },
   "author": "",
@@ -36,5 +40,11 @@
   "bugs": {
     "url": "https://github.com/coreysf/dulcetgnome/issues"
   },
-  "homepage": "https://github.com/coreysf/dulcetgnome#readme"
+  "homepage": "https://github.com/coreysf/dulcetgnome#readme",
+  "devDependencies": {
+    "karma-chai": "^0.1.0",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "phantomjs": "^1.9.18",
+    "supertest": "^1.1.0"
+  }
 }

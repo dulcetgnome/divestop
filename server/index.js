@@ -9,7 +9,9 @@ var port = process.env.PORT || 3000;
 var pg = require('pg');
 
 /* URL for hosted heroku postgresql database */
-var connectionString = process.env.DATABASE_URL;
+// var connectionString = process.env.DATABASE_URL;  // FORMAT THAT WORKS!
+// var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';  // TEST!
+var connectionString = 'postgresql://localhost';
 
 /* Middleware */
 app.use(parser.json());
@@ -253,7 +255,7 @@ exports.search = function(cb, passedLocation) {
 }
 
 
-exports.delete = function(cb) {
+exports.wipeDatabase = function(cb) {
   var queryString = 'DELETE FROM site_aquatic_life; DELETE FROM site_features; ' +
     'DELETE FROM pictures; DELETE FROM sites; DELETE FROM features; ' +
     'DELETE FROM aquatic_life;' + 'DELETE FROM locations;';
