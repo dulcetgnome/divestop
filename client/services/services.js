@@ -60,4 +60,60 @@ angular.module('divestop.services', [])
       getAllDiveSites: getAllDiveSites,
       postNewSite: postNewSite
     };
+  })
+  .factory('Photos', function() {
+    var resizeImage = function (file, height, callback) {
+      // Takes a uploaded file, resizes it based on height and calls the callback sending it a Blob
+      var img = new Image();
+      var reader = new FileReader();
+
+      img.onload = function() {
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        
+        canvas.height = height;
+        canvas.width = canvas.height * (img.width / img.height);
+
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        ctx.canvas.toBlob(callback);
+      };
+
+      reader.onload = function (e) {
+        img.src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    };
+
+    var getPhotoAPIKeys = function(){
+      return $http.get('/api/keys')
+        .then(function(resp) {
+          return resp.data
+        });
+    };
+
+    var uploadPhoto = function(file, callback) {
+      // takes a File after upload, resizes it and uploads it to Parse.
+      // Sends Url of upload to callback function
+      var resizedFileHeight = 300;
+      resizeImage(file, resizedFileHeight, function(fileBlob) {
+        var serverUrl = 'https://api.parse.com/1/files/' + file.name;
+
+        getPhotoAPIKeys()
+          .then(function(keys) {
+            $http.post(serverUrl, fileBlob, {
+              headers: {
+                'X-Parse-Application-Id': keys['X-Parse-Application-Id'],
+                'X-Parse-REST-API-Key': keys['X-Parse-REST-API-Key'],
+                'Content-Type': file.type
+              }
+            }).then(function(resp) {
+              callback(resp.data.url);
+            });
+          });
+        });
+      });
+      
+    }
+
   });
