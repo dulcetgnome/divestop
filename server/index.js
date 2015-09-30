@@ -285,11 +285,12 @@ exports.wipeDatabase = function(cb) {
     });
   });
 };
+exports.createTables(function(){
+  console.log('Tables created!');
+});
 
 app.get('/', function(req, res) {
-  exports.createTables(function(){
-    res.send(200);
-  });
+  res.send(200); 
 });
 
 app.get('/api/sites/:location', function(req, res) {
