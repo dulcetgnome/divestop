@@ -167,9 +167,9 @@ exports.addSite = function(cb, passedSite) {
       '$6, ' +
       '$7, ' +
       '$8 WHERE NOT EXISTS (' +
-      'SELECT site FROM sites WHERE site = $1)', [passedSite.name, passedSite.location, 
+      'SELECT site FROM sites WHERE site = $9)', [passedSite.name, passedSite.location, 
       passedSite.lat, passedSite.lng, passedSite.maxDepth, passedSite.gradient, 
-      passedSite.description, passedSite.comments], 
+      passedSite.description, passedSite.comments, passedSite.name], 
       function(err, result) {
         if (err) { throw err; }
         done();
