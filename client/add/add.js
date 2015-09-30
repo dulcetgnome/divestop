@@ -50,7 +50,7 @@ angular.module('divestop.addsite', [])
         this.clearForm();
         // call toggleForm on map controller
         // Rerender map with new marker
-      });
+      }.bind(this));
     };
 
     this.removePhoto = function(index) {
