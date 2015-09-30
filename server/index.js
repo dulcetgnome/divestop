@@ -164,9 +164,9 @@ exports.addSite = function(cb, passedSite) {
       'description, comments) SELECT ' + 
       '\'$1\', ' +
       '(SELECT _id FROM locations WHERE location = \'$2\'), ' +
-      '' + $3 + ', ' +
-      '' + $4 + ', ' +
-      '' + $5 + ', ' +
+      '$3, ' +
+      '$4, ' +
+      '$5, ' +
       '\'$6\', ' +
       '\'$7\', ' +
       '\'$8\' WHERE NOT EXISTS (' +
