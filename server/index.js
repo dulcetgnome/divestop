@@ -306,7 +306,7 @@ app.get('/api/keys', function(req, res) {
 
 app.post('/api/sites', function(req, res) {
   exports.addSite(function() {
-    res.send(201);
+    res.sendStatus(201);
   }, req.body);
 });
 
