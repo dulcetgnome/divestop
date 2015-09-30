@@ -30,7 +30,7 @@
   <div class="col s12 m6">
     <div class="row">
       <div class="input-field col s10">
-        <input id="aquatic-life" type="text" ng-model="form.newAquaticLife">
+        <input id="aquatic-life" type="text" ng-model="form.newAquaticLife" ng-enter="form.addAquaticLife()">
         <label for="aquatic-life">Aquatic Life</label>
       </div>
       <div class="col s2">
@@ -47,7 +47,7 @@
   <div class="col s12 m6">
     <div class="row">
       <div class="input-field col s10">
-        <input id="features"type="text" ng-model="form.newFeature">
+        <input id="features"type="text" ng-model="form.newFeature" ng-enter="form.addFeature()">
         <label for="features">Features</label>
       </div>
       <div class="col s2">
@@ -62,7 +62,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="file-field input-field col s11">
+  <div class="file-field input-field col m11 s10">
     <div class="btn">
       <span>Upload Photo</span>
       <input type="file" fileread="form.newPhoto">
@@ -71,7 +71,7 @@
       <input class="file-path validate" type="text">
     </div>
   </div>
-  <div class="col s1">
+  <div class="col m1 s2">
     <a class="btn-floating" ng-click="form.addPhoto()">
     <i class="material-icons">add</i></a>
   </div>
