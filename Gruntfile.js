@@ -19,7 +19,7 @@ module.exports = function(grunt){
     },
 
     jshint: {
-      all: ['client/**/*.js', 'server/**/*.js', '!client/libs/**/*.js', '!client/stub.js', '!client/build/**/*'],
+      all: ['client/**/*.js', 'server/**/*.js', '!client/libs/**/*.js', '!client/stub.js', '!client/build/**/*', 'test/**/*.js'],
       options: {
         loopfunc: true
       }
