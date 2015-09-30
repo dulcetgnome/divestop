@@ -290,11 +290,11 @@ exports.wipeDatabase = function(cb) {
     });
   });
 };
-exports.createTables(function(){
-  console.log('Tables created!');
-});
 
 app.get('/', function(req, res) {
+  exports.createTables(function(){
+    console.log('Tables created!');
+  });
   res.send(200); 
 });
 
