@@ -39,6 +39,7 @@ angular.module('divestop.addsite', [])
       this.site.description = '';
       this.site.features = [];
       this.site.aquaticLife = [];
+      this.site.photos = [];
       this.site.coordinates.lat = undefined;
       this.site.coordinates.lng = undefined;
     };
