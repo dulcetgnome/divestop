@@ -123,12 +123,14 @@ exports.createTables = function(cb) {
 
 exports.addSite = function(cb, passedSite) {
   pg.connect(connectionString, function(err, client, done) {
+    if (err) {throw err;}
 
     /* If no location, add location */
     client.query('INSERT INTO locations (location) SELECT \'' + passedSite.location + '\' WHERE NOT EXISTS ( ' +
       'SELECT location FROM locations WHERE location = ' +
       '\'' + passedSite.location + '\'' +
       ')', function(err, result){
+        if (err) { throw err; }
         done();
     });
     if (passedSite.feature === undefined) {
@@ -140,6 +142,7 @@ exports.addSite = function(cb, passedSite) {
         'SELECT feature FROM features WHERE feature = ' +
         '\'' + passedSite.feature[i] + '\'' +
         ')', function(err, result){
+          if (err) { throw err; }
           done();
       });
     }
@@ -150,6 +153,7 @@ exports.addSite = function(cb, passedSite) {
         'SELECT type FROM aquatic_life WHERE type = ' +
         '\'' + passedSite.type[k] + '\'' +
         ')', function(err, result){
+          if (err) { throw err; }
           done();
       });
     }
@@ -168,6 +172,7 @@ exports.addSite = function(cb, passedSite) {
       '\'' + passedSite.site + '\'' +
       ')', function(err, result) {
         if (err) { throw err; }
+
         /* Add all features to join table site_feature */
         for (var j = 0; j < passedSite.feature.length; j++) {
           client.query('INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
@@ -187,14 +192,37 @@ exports.addSite = function(cb, passedSite) {
               done();
             });
         }
-
         done();
     });
 
-
+    /* Add all features to join table site_feature */
+    for (var i = 0; i < passedSite.feature.length; i++) {
+      // console.log("passedSite: " + passedSite.site + "feature" + i + ": " + passedSite.feature[i]);
+      client.query('INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
+        'WHERE site = \'' + passedSite.site + '\'), ' + 
+        '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[i] + '\'))', function(err, result) {
+          if (err) { throw err; }
+          done();
+        });
+    }
     cb();
   });  
 }
+     // Add all aquatic life to join table site_aquatic_life 
+    for (var i = 0; i < passedSite.type.length; i++) {
+      client.query('INSERT INTO site_aquatic_life (site_id, aquatic_life_id) VALUES ((SELECT _id FROM sites ' + 
+        'WHERE site = \'' + passedSite.site + '\'), ' + 
+        '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.type[i] + '\'))', function(err, result) {
+          if (err) { throw err; }
+          done();
+        });
+    }
+
+        console.log("Created new site!!");
+        done(); 
+        cb();
+  });
+};
 
 /* DB Search Query */
 
@@ -221,15 +249,15 @@ exports.search = function(cb, passedLocation) {
       }
       var siteObject = {};
       var resultsArray = [];
-      
+      // console.log(queryString);
+      console.log("SELECT result.rows.length: " + result.rows.length);
       for (var i = 0; i < result.rows.length; i++) {
+        console.log("row" + i + ": " + result.rows[i].site);
         if (result.rows[i].site === siteObject.site) {
           if (siteObject.feature.indexOf(result.rows[i].feature) < 0) {
-            console.log('Adding feature', result.rows[i].feature);
             siteObject.feature.push(result.rows[i].feature);
           }
           if (siteObject.type.indexOf(result.rows[i].type) < 0) {
-            console.log('In aq_life statement: ', result.rows[i].type);
             siteObject.type.push(result.rows[i].type);
           }
         } else {
@@ -250,29 +278,113 @@ exports.search = function(cb, passedLocation) {
         resultsArray.push(siteObject);
       }
 
-      cb(resultsArray);
+      console.log("resultsArray.length: " + resultsArray.length);
       done();
+      cb(resultsArray);
     });
   });
 }
 
 
 exports.wipeDatabase = function(cb) {
-  var queryString = 'DELETE FROM site_aquatic_life; DELETE FROM site_features; ' +
-    'DELETE FROM pictures; DELETE FROM sites; DELETE FROM features; ' +
-    'DELETE FROM aquatic_life;' + 'DELETE FROM locations;';
-
+  var queryString = 'TRUNCATE site_aquatic_life, site_features, pictures,' + 
+  ' sites, features, aquatic_life, locations;';
 
   pg.connect(connectionString, function(error, client, done) {
     client.query(queryString, function(err, result) {
       if (err) {
         throw err;
       }
-
-      cb();
       done();
+      cb();
     });
   });
+
+
+  // var queryString = 'DELETE FROM site_aquatic_life;';
+
+  // pg.connect(connectionString, function(error, client, done) {
+  //   client.query(queryString, function(err, result) {
+  //     if (err) {
+  //       throw err;
+  //     }
+
+  //     done();
+  //   });
+  // });
+
+  // var queryString = 'DELETE FROM site_features;';
+
+  // pg.connect(connectionString, function(error, client, done) {
+  //   client.query(queryString, function(err, result) {
+  //     if (err) {
+  //       throw err;
+  //     }
+
+  //     done();
+  //   });
+  // });
+
+  // var queryString = 'DELETE FROM pictures;';
+
+  // pg.connect(connectionString, function(error, client, done) {
+  //   client.query(queryString, function(err, result) {
+  //     if (err) {
+  //       throw err;
+  //     }
+
+  //     done();
+  //   });
+  // });
+
+  // var queryString = 'DELETE FROM sites;';
+
+  // pg.connect(connectionString, function(error, client, done) {
+  //   client.query(queryString, function(err, result) {
+  //     if (err) {
+  //       throw err;
+  //     }
+
+  //     done();
+  //   });
+  // });
+
+  // var queryString = 'DELETE FROM features;';
+
+  // pg.connect(connectionString, function(error, client, done) {
+  //   client.query(queryString, function(err, result) {
+  //     if (err) {
+  //       throw err;
+  //     }
+
+  //     done();
+  //   });
+  // });
+
+  // var queryString = 'DELETE FROM aquatic_life;';
+
+  // pg.connect(connectionString, function(error, client, done) {
+  //   client.query(queryString, function(err, result) {
+  //     if (err) {
+  //       throw err;
+  //     }
+
+  //     done();
+  //   });
+  // });
+
+  // var queryString = 'DELETE FROM locations;';
+
+  // pg.connect(connectionString, function(error, client, done) {
+  //   client.query(queryString, function(err, result) {
+  //     if (err) {
+  //       throw err;
+  //     }
+
+  //     done();
+  //     cb();
+  //   });
+  // });
 };
 
 app.get('/', function(req, res) {
