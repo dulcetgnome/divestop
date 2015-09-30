@@ -287,7 +287,9 @@ exports.wipeDatabase = function(cb) {
 };
 
 app.get('/', function(req, res) {
-  res.send(200);
+  exports.createTables(function(){
+    res.send(200);
+  });
 });
 
 app.get('/api/sites/:location', function(req, res) {
