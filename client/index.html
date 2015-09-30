@@ -24,6 +24,7 @@
   // <script src="services/services.js"></script>
   // <script src="app.js"></script> -->
 
+
   <link rel="stylesheet" href="/build/style.css">
 
   <!--Let browser know website is optimized for mobile-->
@@ -31,10 +32,12 @@
 </head>
 
 <body ng-app="divestop">
-  <nav>
-    <h1>Dive Stop</h1>
-    <!-- these templateUrl files are referenced in each section's controller -->
-    <div ng-controller="SearchController" ng-include src="templateUrl"></div>
+  <nav class="blue-grey lighten-2" role="navigation">
+    <div class="nav-wrapper container">
+        <a href="#" class="brand-logo">Dive Stop</a>
+        <!-- these templateUrl files are referenced in each section's controller -->
+        <span class="right" ng-controller="SearchController" ng-include src="templateUrl"></span>
+    </div>
   </nav>
   <div ng-controller="OurMapController" ng-include src="templateUrl"></div>
   <div class="container">
@@ -44,6 +47,6 @@
 
   <!--Import jQuery before materialize.js-->
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <script type="text/javascript" src="/libs/Materialize/dist/js/materialize.min.js"></script>
 </body>
 </html>
