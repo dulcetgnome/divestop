@@ -266,10 +266,10 @@ app.get('/api/sites', function(req, res) {
 
 app.get('/api/keys', function(req, res) {
   // if (req.hostname === 'dulcetgnome.herokuapp.com') {
-    res.json{
+    res.json({
       'X-Parse-Application-Id': process.env['X-Parse-Application-Id'],
       'X-Parse-REST-API-Key': process.env['X-Parse-REST-API-Key']
-    }
+    });
   // } else {
   //   res.send(401);
   // }

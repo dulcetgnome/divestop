@@ -88,7 +88,7 @@ angular.module('divestop.services', [])
     var getPhotoAPIKeys = function(){
       return $http.get('/api/keys')
         .then(function(resp) {
-          return resp.data
+          return resp.data;
         });
     };
 

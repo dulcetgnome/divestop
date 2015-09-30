@@ -41,7 +41,7 @@ angular.module('divestop.map', ['ngMap'])
     $scope.hideForm = function(){
       $scope.showForm.state = false;
       hideNewMarker();
-    }
+    };
 
     // this will add markers to the google map object, and doesn't keep them around in memeory in an easily accessible way.
     var addMarkers = function(sites, map){
