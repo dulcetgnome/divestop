@@ -128,7 +128,8 @@ exports.addSite = function(cb, passedSite) {
 
     /* If no location, add location */
     client.query('INSERT INTO locations (location) SELECT $1 WHERE NOT EXISTS ( ' +
-      'SELECT location FROM locations WHERE location = $1)', [passedSite.location], 
+      'SELECT location FROM locations WHERE location = $2)', [passedSite.location, 
+      passedSite.location], 
       function(err, result){
         if (err) { throw err; }
         done();
@@ -139,7 +140,8 @@ exports.addSite = function(cb, passedSite) {
     /* If no feature, add feature */
     for (var i = 0; i < passedSite.features.length; i++) {
       client.query('INSERT INTO features (feature) SELECT $1 WHERE NOT EXISTS ( ' +
-        'SELECT feature FROM features WHERE feature = $1)', [passedSite.features[i]], 
+        'SELECT feature FROM features WHERE feature = $2)', [passedSite.features[i], 
+        passedSite.features[i]], 
         function(err, result){
           if (err) { throw err; }
           done();
@@ -149,7 +151,8 @@ exports.addSite = function(cb, passedSite) {
     /* If no aquatic_life, add aq */
     for (var j = 0; j < passedSite.aquaticLife.length; j++) {
       client.query('INSERT INTO aquatic_life (type) SELECT $1 WHERE NOT EXISTS ( ' +
-        'SELECT type FROM aquatic_life WHERE type = $1)', [passedSite.aquaticLife[j]], 
+        'SELECT type FROM aquatic_life WHERE type = $2)', [passedSite.aquaticLife[j], 
+        passedSite.aquaticLife[j]], 
         function(err, result){
           if (err) { throw err; }
           done();
