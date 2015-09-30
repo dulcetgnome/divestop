@@ -68,7 +68,7 @@ angular.module('divestop.services', [])
       var reader = new FileReader();
 
       img.onload = function() {
-        var canvas = document.getElementById("canvas");
+        var canvas = document.createElement("canvas");
         var ctx = canvas.getContext("2d");
         
         canvas.height = height;
