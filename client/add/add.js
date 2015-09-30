@@ -55,7 +55,7 @@ angular.module('divestop.addsite', [])
 
     this.addPhoto = function() {
       Photos.uploadPhoto(this.newPhoto, function(url){
-        this.photos.push(url);
+        this.site.photos.push(url);
       });
     };
 
