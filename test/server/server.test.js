@@ -1,8 +1,8 @@
 var expect = require('chai').expect;
 var request = require('supertest');
-app = require('../../server/index.js');
+var app = require('../../server/index.js').app;
 
-describe('RESTful api', function () {
+xdescribe('RESTful api', function () {
 
   it('responds to GET requests at `/`', function (done) {
 
@@ -46,15 +46,15 @@ describe('RESTful api', function () {
 
     request(app)
       .post('/api/sites')
-      .send(JSON.stringify(data))
+      .send(data)
       .expect(201)
       .end(function (err, res) {
         if (err) return done(err);
+        done();
       });
 
     request(app)
       .get('/api/sites/fiji')
-      // .expect(XXX)                  // DETERMINE WHAT THIS SHOULD EXPECT
       .end(function (err, res) {
         if (err) return done(err);
         res.should.have.status(200);
