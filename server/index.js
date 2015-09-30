@@ -134,26 +134,26 @@ exports.addSite = function(cb, passedSite) {
         if (err) { throw err; }
         done();
     });
-    if (passedSite.feature === undefined) {
+    if (passedSite.features === undefined) {
       console.log("passedSite: " + JSON.stringify(passedSite));
     }
     /* If no feature, add feature */
-    for (var i = 0; i < passedSite.feature.length; i++) {
+    for (var i = 0; i < passedSite.features.length; i++) {
       client.query('INSERT INTO features (feature) SELECT \'$1\' WHERE NOT EXISTS ( ' +
         'SELECT feature FROM features WHERE feature = ' +
         '\'$1\'' +
-        ')', [passedSite.feature[i]], function(err, result){
+        ')', [passedSite.features[i]], function(err, result){
           if (err) { throw err; }
           done();
       });
     }
 
     /* If no aquatic_life, add aq */
-    for (var j = 0; j < passedSite.type.length; j++) {
+    for (var j = 0; j < passedSite.aquaticLife.length; j++) {
       client.query('INSERT INTO aquatic_life (type) SELECT \'$1\' WHERE NOT EXISTS ( ' +
         'SELECT type FROM aquatic_life WHERE type = ' +
         '\'$1\'' +
-        ')', [passedSite.type[j]], function(err, result){
+        ')', [passedSite.aquaticLife[j]], function(err, result){
           if (err) { throw err; }
           done();
       });
