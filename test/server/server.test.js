@@ -19,7 +19,6 @@ xdescribe('RESTful api', function () {
 
     request(app)
       .get('/api/sites')
-      // .expect(XXX)                  // DETERMINE WHAT THIS SHOULD EXPECT
       .end(function (err, res) {
         if (err) return done(err);
         res.should.have.status(200);
@@ -35,7 +34,8 @@ xdescribe('RESTful api', function () {
     var data = {
       site: 'Martins Marina',
       location: 'Fiji',
-      coordinates: '45, 65',
+      lat: 45.345,
+      long: 65.154,
       max_depth: 35,
       gradient: '25d',
       feature: ['coral', 'shipwreck'],
@@ -70,8 +70,7 @@ xdescribe('RESTful api', function () {
   it('responds to GET requests at `/api/sites/:location` by returning site data for specified location', function() {
 
     request(app)
-      .get('/api/sites/fiji')   // GET ANOTHER & ADD STATUS CODE TEST
-      // .expect(XXX)                  // DETERMINE WHAT THIS SHOULD EXPECT
+      .get('/api/sites/fiji')
       .end(function (err, res) {
         if (err) return done(err);
         res.should.be.json;

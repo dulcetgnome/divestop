@@ -6,7 +6,7 @@ var clearDB = function (done) {
   Sites.wipeDatabase(done);
 }
 
-xdescribe('Postgres Database Structure', function () {
+describe('Postgres Database Structure', function () {
   before(function (done) {
     Sites.createTables(done);
   });
@@ -18,7 +18,8 @@ xdescribe('Postgres Database Structure', function () {
         {
           site: 'Oscars Oasis',
           location: 'Cuba',
-          coordinates: '54, 56',
+          lat: 54.343,
+          long: 56.454,
           max_depth: 25,
           gradient: '25d',
           feature: ['cave', 'shipwreck'],
@@ -29,7 +30,8 @@ xdescribe('Postgres Database Structure', function () {
         {
           site: 'Irenas Island',
           location: 'San Diego',
-          coordinates: '29, 16',
+          lat: 29.45,
+          long: 56.232,
           max_depth: 20,
           gradient: '5d',
           feature: ['shipwreck'],
@@ -40,7 +42,8 @@ xdescribe('Postgres Database Structure', function () {
         {
           site: 'Pauls Pier',
           location: 'Ft. Lauderdale',
-          coordinates: '2, 110',
+          lat: 2.34,
+          long: 54.98,
           max_depth: 30,
           gradient: '35d',
           feature: ['coral'],
@@ -51,7 +54,8 @@ xdescribe('Postgres Database Structure', function () {
         {
           site: 'Angies Abyss',
           location: 'San Diego',
-          coordinates: '134, 67',
+          lat: 134.09,
+          long: 54.35,
           max_depth: 100,
           gradient: '45d',
           feature: ['deep abyss'],
@@ -62,7 +66,8 @@ xdescribe('Postgres Database Structure', function () {
         {
           site: 'Rogers Reef',
           location: 'Rio de Janeiro',
-          coordinates: '94, 5',
+          lat: 94.5,
+          long: 34.12,
           max_depth: 50,
           gradient: '15d',
           feature: ['coral', 'buried treasure'],
@@ -120,7 +125,8 @@ xdescribe('Postgres Database Structure', function () {
     }, {
       site: 'Giuseppes Jetty',
       location: 'Sicily',
-      coordinates: '114, 27',
+      lat: 114.27,
+      long: 54.89,
       max_depth: 55,
       gradient: '10d',
       feature: ['coral'],
