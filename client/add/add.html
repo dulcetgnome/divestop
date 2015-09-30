@@ -79,7 +79,7 @@
 
 <div class="row">
   <div ng-repeat="photo in form.site.photos track by $index" class="col s6 m2">
-    <img class="responsive-img" ng-src="{{photo}}" alt="">
+    <img class="responsive-img" ng-src="{{photo}}" alt="" ng-click="form.removePhoto($index)">
   </div>
 </div>
 <button class="btn waves-effect waves-light" type="submit" ng-click="form.addSite()" ng-disabled="addSite.$invalid" >Add Site</button>

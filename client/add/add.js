@@ -53,6 +53,10 @@ angular.module('divestop.addsite', [])
       });
     };
 
+    this.removePhoto = function(index) {
+      this.site.photos.splice(index, 1);
+    };
+
     this.addPhoto = function() {
       Photos.uploadPhoto(this.newPhoto, function(url){
         this.site.photos.push(url);
