@@ -4,7 +4,7 @@ var Sites = require('../../server/index.js');
 // The `clearDB` helper function, when invoked, will clear the database
 var clearDB = function (done) {
   Sites.wipeDatabase(done);
-}
+};
 
 describe('Postgres Database Structure', function () {
   before(function (done) {
@@ -80,31 +80,22 @@ describe('Postgres Database Structure', function () {
       for (var i = 0; i < sites.length; i++) {
         promises.push(new Promise(function(resolve, reject) {
           Sites.addSite(function() {
-            console.log("Got into promise!");
+            // console.log("Got into promise!");
             resolve();}, sites[i]);
         }));
       }
 
-      Promise.all(promises).then(function() {done()});
-
-      // for (var i = 0; i < sites.length; i++) {
-      //   var p = new Promise(function(resolve, reject) {
-      //       Sites.addSite(function() {
-      //         console.log("Got into promise!");
-      //         resolve();}, sites[i]);
-      //     });
-      //   p.then(function() {done()});
-      // }
+      Promise.all(promises).then(function() {done();});
     });
   });
 
   it('should have a method that, given no location, retrieves all dive sites from the database', function (done) {
     Sites.search(function(allSites) {
-      console.log("allSites[0].site (Oscars Oasis): " + allSites[0].site);
-      console.log("allSites[1].site (Irenas Island): " + allSites[1].site);
-      console.log("allSites[2].site (Pauls Pier): " + allSites[2].site);
-      console.log("allSites[3].site (Angies Abyss): " + allSites[3].site);
-      console.log("allSites[4].site (Rogers Reef): " + allSites[4].site);
+      // console.log("allSites[0].site (Oscars Oasis): " + allSites[0].site);
+      // console.log("allSites[1].site (Irenas Island): " + allSites[1].site);
+      // console.log("allSites[2].site (Pauls Pier): " + allSites[2].site);
+      // console.log("allSites[3].site (Angies Abyss): " + allSites[3].site);
+      // console.log("allSites[4].site (Rogers Reef): " + allSites[4].site);
       expect(allSites.length).to.equal(5);
       done();
     });

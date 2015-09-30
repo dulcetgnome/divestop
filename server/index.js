@@ -149,10 +149,10 @@ exports.addSite = function(cb, passedSite) {
     }
 
     /* If no aquatic_life, add aq */
-    for (var k = 0; k < passedSite.type.length; k++) {
-      client.query('INSERT INTO aquatic_life (type) SELECT \'' + passedSite.type[k] + '\' WHERE NOT EXISTS ( ' +
+    for (var j = 0; j < passedSite.type.length; j++) {
+      client.query('INSERT INTO aquatic_life (type) SELECT \'' + passedSite.type[j] + '\' WHERE NOT EXISTS ( ' +
         'SELECT type FROM aquatic_life WHERE type = ' +
-        '\'' + passedSite.type[k] + '\'' +
+        '\'' + passedSite.type[j] + '\'' +
         ')', function(err, result){
           if (err) { throw err; }
           done();
@@ -174,53 +174,31 @@ exports.addSite = function(cb, passedSite) {
       '\'' + passedSite.site + '\'' +
       ')', function(err, result) {
         if (err) { throw err; }
-
-        /* Add all features to join table site_feature */
-        for (var j = 0; j < passedSite.feature.length; j++) {
-          client.query('INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
-            'WHERE site = \'' + passedSite.site + '\'), ' + 
-            '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[j] + '\'))', function(err, result) {
-              if (err) { throw err; }
-              done();
-            });
-        }
-
-         // Add all aquatic life to join table site_aquatic_life 
-        for (var x = 0; x < passedSite.type.length; x++) {
-          client.query('INSERT INTO site_aquatic_life (site_id, aquatic_life_id) VALUES ((SELECT _id FROM sites ' + 
-            'WHERE site = \'' + passedSite.site + '\'), ' + 
-            '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.type[x] + '\'))', function(err, result) {
-              if (err) { throw err; }
-              done();
-            });
-        }
         done();
     });
 
     /* Add all features to join table site_feature */
-    for (var i = 0; i < passedSite.feature.length; i++) {
+    for (var k = 0; k < passedSite.feature.length; k++) {
       // console.log("passedSite: " + passedSite.site + "feature" + i + ": " + passedSite.feature[i]);
       client.query('INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
         'WHERE site = \'' + passedSite.site + '\'), ' + 
-        '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[i] + '\'))', function(err, result) {
-          if (err) { throw err; }
-          done();
-        });
-    }
-    cb();
-  });  
-}
-     // Add all aquatic life to join table site_aquatic_life 
-    for (var i = 0; i < passedSite.type.length; i++) {
-      client.query('INSERT INTO site_aquatic_life (site_id, aquatic_life_id) VALUES ((SELECT _id FROM sites ' + 
-        'WHERE site = \'' + passedSite.site + '\'), ' + 
-        '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.type[i] + '\'))', function(err, result) {
+        '(SELECT _id FROM features WHERE feature = \'' + passedSite.feature[k] + '\'))', function(err, result) {
           if (err) { throw err; }
           done();
         });
     }
 
-        console.log("Created new site!!");
+     // Add all aquatic life to join table site_aquatic_life 
+    for (var l = 0; l < passedSite.type.length; l++) {
+      client.query('INSERT INTO site_aquatic_life (site_id, aquatic_life_id) VALUES ((SELECT _id FROM sites ' + 
+        'WHERE site = \'' + passedSite.site + '\'), ' + 
+        '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.type[l] + '\'))', function(err, result) {
+          if (err) { throw err; }
+          done();
+        });
+    }
+
+        // console.log("Created new site!!");
         done(); 
         cb();
   });
@@ -252,15 +230,15 @@ exports.search = function(cb, passedLocation) {
       var siteObject = {};
       var resultsArray = [];
       // console.log(queryString);
-      console.log("SELECT result.rows.length: " + result.rows.length);
-      for (var i = 0; i < result.rows.length; i++) {
-        console.log("row" + i + ": " + result.rows[i].site);
-        if (result.rows[i].site === siteObject.site) {
-          if (siteObject.feature.indexOf(result.rows[i].feature) < 0) {
-            siteObject.feature.push(result.rows[i].feature);
+      // console.log("SELECT result.rows.length: " + result.rows.length);
+      for (var m = 0; m < result.rows.length; m++) {
+        // console.log("row" + i + ": " + result.rows[i].site);
+        if (result.rows[m].site === siteObject.site) {
+          if (siteObject.feature.indexOf(result.rows[m].feature) < 0) {
+            siteObject.feature.push(result.rows[m].feature);
           }
-          if (siteObject.type.indexOf(result.rows[i].type) < 0) {
-            siteObject.type.push(result.rows[i].type);
+          if (siteObject.type.indexOf(result.rows[m].type) < 0) {
+            siteObject.type.push(result.rows[m].type);
           }
         } else {
           if (siteObject.hasOwnProperty('site')) {
@@ -280,12 +258,12 @@ exports.search = function(cb, passedLocation) {
         resultsArray.push(siteObject);
       }
 
-      console.log("resultsArray.length: " + resultsArray.length);
+      // console.log("resultsArray.length: " + resultsArray.length);
       done();
       cb(resultsArray);
     });
   });
-}
+};
 
 
 exports.wipeDatabase = function(cb) {

@@ -15,14 +15,14 @@ xdescribe('RESTful api', function () {
       });
   });
 
-  it('responds to GET requests at `/api/sites` by returning data for all sites', function() {
+  it('responds to GET requests at `/api/sites` by returning data for all sites', function (done) {
 
     request(app)
       .get('/api/sites')
       .end(function (err, res) {
         if (err) return done(err);
         res.should.have.status(200);
-        res.should.be.json;
+        // res.should.be.json;
         res.body.should.be.a('array');
         res.body[0].should.have.property('location');
         done();
@@ -58,7 +58,7 @@ xdescribe('RESTful api', function () {
       .end(function (err, res) {
         if (err) return done(err);
         res.should.have.status(200);
-        res.should.be.json;
+        // res.should.be.json;
         res.body.should.be.a('array');
         res.body[0].should.have.property('location');
         res.body[0].location.should.equal('fiji');  // Make sure "Fiji" gets converted to lower case!
@@ -67,13 +67,13 @@ xdescribe('RESTful api', function () {
 
   });
 
-  it('responds to GET requests at `/api/sites/:location` by returning site data for specified location', function() {
+  it('responds to GET requests at `/api/sites/:location` by returning site data for specified location', function (done) {
 
     request(app)
       .get('/api/sites/fiji')
       .end(function (err, res) {
         if (err) return done(err);
-        res.should.be.json;
+        // res.should.be.json;
         res.body.should.be.a('array');
         res.body[0].should.have.property('location');
         res.body[0].location.should.equal('fiji');  // Make sure "Fiji" gets converted to lower case!
