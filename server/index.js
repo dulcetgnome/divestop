@@ -182,7 +182,7 @@ exports.addSite = function(cb, passedSite) {
     for (var k = 0; k < passedSite.features.length; k++) {
       // console.log("passedSite: " + passedSite.name + "feature" + i + ": " + passedSite.feature[i]);
       client.query('INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
-        'WHERE site = $1), ' + '(SELECT _id FROM features WHERE feature = $2)', 
+        'WHERE site = $1), ' + '(SELECT _id FROM features WHERE feature = $2))', 
         [passedSite.name, passedSite.features[k]], function(err, result) {
           if (err) { throw err; }
           done();
@@ -192,7 +192,7 @@ exports.addSite = function(cb, passedSite) {
      /* Add all pictures to join picture table */
     for (var m = 0; m < passedSite.photos.length; m++) {
       client.query('INSERT INTO pictures (site_id, picture) VALUES ((SELECT _id FROM sites ' + 
-        'WHERE site = $1), $2)',
+        'WHERE site = $1), $2))',
         [passedSite.name, passedSite.photos[m]], function(err, result) {
           if (err) { throw err; }
           done();
