@@ -244,7 +244,7 @@ exports.search = function(cb, passedLocation) {
           if (siteObject.hasOwnProperty('site')) {
             resultsArray.push(siteObject);
           }
-          siteObject = result.rows[i];
+          siteObject = result.rows[m];
 
           // The following four lines ensure that the 'type' and 'feature' properties contain arrays.
           var firstAquaticLife = siteObject.type;
