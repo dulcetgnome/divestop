@@ -56,7 +56,7 @@ angular.module('divestop.addsite', [])
     this.addPhoto = function() {
       Photos.uploadPhoto(this.newPhoto, function(url){
         this.site.photos.push(url);
-      });
+      }.bind(this));
     };
 
     var deepCopy = function(obj) {
