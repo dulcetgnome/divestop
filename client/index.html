@@ -31,12 +31,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 
+<!-- these templateUrl files are referenced in each section's controller -->
 <body ng-app="divestop">
   <nav class="blue-grey lighten-2" role="navigation">
     <div class="nav-wrapper container">
-        <a href="#" class="brand-logo">Dive Stop</a>
-        <!-- these templateUrl files are referenced in each section's controller -->
-        <span class="right" ng-controller="SearchController" ng-include src="templateUrl"></span>
+      <div class="row"> 
+        <div class="col s12 m8">
+          <a href="#" class="brand-logo">Dive Stop</a>
+        </div>
+        <div class="hide-on-med-and-up"><br \></div>
+        <div class="right col s12 m4">
+          <span ng-controller="SearchController" ng-include src="templateUrl"></span>
+        </div>
+      </div>
     </div>
   </nav>
   <div ng-controller="OurMapController" ng-include src="templateUrl"></div>
