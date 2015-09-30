@@ -51,7 +51,7 @@ module.exports = function(grunt){
     /* For executing command line scripts */
     exec: {
       test: {
-        command: 'mocha test'
+        command: 'mocha test test/**/*.js'
       },
       test_server: {
         command: 'mocha test test/server/**/*.js'

@@ -6,7 +6,7 @@ var clearDB = function (done) {
   Sites.wipeDatabase(done);
 };
 
-describe('Postgres Database Structure', function () {
+xdescribe('Postgres Database Structure', function () {
   before(function (done) {
     Sites.createTables(done);
   });
