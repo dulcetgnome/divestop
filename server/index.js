@@ -172,42 +172,42 @@ exports.addSite = function(cb, passedSite) {
       '\'$8\' WHERE NOT EXISTS (' +
       'SELECT site FROM sites WHERE site = ' +
       '\'$1\'' +
-      ')', [passedSite.site, passedSite.location, passedSite.lat, passedSite.long, 
-      passedSite.max_depth, passedSite.gradient, passedSite.description, passedSite.comments], 
+      ')', [passedSite.name, passedSite.location, passedSite.lat, passedSite.lng, 
+      passedSite.maxDepth, passedSite.gradient, passedSite.description, passedSite.comments], 
       function(err, result) {
         if (err) { throw err; }
         done();
     });
 
     /* Add all features to join table site_feature */
-    for (var k = 0; k < passedSite.feature.length; k++) {
-      // console.log("passedSite: " + passedSite.site + "feature" + i + ": " + passedSite.feature[i]);
+    for (var k = 0; k < passedSite.features.length; k++) {
+      // console.log("passedSite: " + passedSite.name + "feature" + i + ": " + passedSite.feature[i]);
       client.query('INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
         'WHERE site = \'$1\'), ' + 
         '(SELECT _id FROM features WHERE feature = \'$2\'))', 
-        [passedSite.site, passedSite.feature[k]], function(err, result) {
+        [passedSite.name, passedSite.features[k]], function(err, result) {
           if (err) { throw err; }
           done();
         });
     }
 
      /* Add all pictures to join picture table */
-    for (var m = 0; m < passedSite.feature.length; m++) {
+    for (var m = 0; m < passedSite.photos.length; m++) {
       client.query('INSERT INTO pictures (site_id, picture) VALUES ((SELECT _id FROM sites ' + 
         'WHERE site = \'$1\'), ' + 
         '\'$2\')',
-        [passedSite.site, passedSite.pictures[m]], function(err, result) {
+        [passedSite.name, passedSite.photos[m]], function(err, result) {
           if (err) { throw err; }
           done();
         });
     }
 
      // Add all aquatic life to join table site_aquatic_life 
-    for (var l = 0; l < passedSite.type.length; l++) {
+    for (var l = 0; l < passedSite.aquaticLife.length; l++) {
       client.query('INSERT INTO site_aquatic_life (site_id, aquatic_life_id) VALUES ((SELECT _id FROM sites ' + 
         'WHERE site = \'$1\'), ' + 
         '(SELECT _id FROM aquatic_life WHERE type = \'$2\'))', 
-        [passedSite.site, passedSite.type[l]], function(err, result) {
+        [passedSite.name, passedSite.aquaticLife[l]], function(err, result) {
           if (err) { throw err; }
           done();
         });
