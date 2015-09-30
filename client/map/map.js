@@ -1,14 +1,17 @@
 // this controller handles the functionality of working with the map
 
 angular.module('divestop.map', ['ngMap'])
-  .controller("OurMapController", function($scope, SharedProperties) {
+  .controller("OurMapController", function($scope, SharedProperties, DiveSites) {
     $scope.newSite = SharedProperties.newSite; // Object with properties lat, lng
     $scope.showForm = SharedProperties.showForm;
     var newSiteMarker = new google.maps.Marker();
 
     $scope.$on("mapInitialized", function(e, map) {
       SharedProperties.map = map;
-      addMarkers(sites, map);
+      DiveSites.getAllDiveSites()
+        .then(function(sites) {
+          addMarkers(sites, map);
+        });
     });
 
     $scope.templateUrl = 'map/map.html';
