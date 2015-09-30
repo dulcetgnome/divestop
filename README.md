@@ -1,4 +1,4 @@
-# dulcetgnome
+# dulcetgnome [![Build Status](https://travis-ci.org/dulcetgnome/dulcetgnome.svg?branch=master)](https://travis-ci.org/dulcetgnome/dulcetgnome)
 Greenfield Project
 
 > Pithy project description
