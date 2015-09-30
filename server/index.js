@@ -214,7 +214,7 @@ exports.search = function(cb, passedLocation) {
   var locationQuery = '';
   if (passedLocation) {
     var params = [passedLocation];
-    locationQuery = ' WHERE (l.location = \'' + $1 + '\')';
+    locationQuery = ' WHERE (l.location = \'$1\')';
   }
 
   var queryString = 'SELECT s.site, l.location, s.lat, s.long, s.max_depth, ' + 
