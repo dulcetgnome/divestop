@@ -1,0 +1,10 @@
+language: node_js
+node_js:
+  - "0.10"
+before_install: 
+  - "sudo apt-get install ruby-compass"
+  - "npm install -g grunt grunt-cli bower"
+script: 
+  - "bower install"
+  - "npm test"
+  - "grunt build"
