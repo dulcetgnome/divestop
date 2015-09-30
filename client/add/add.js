@@ -11,15 +11,21 @@ angular.module('divestop.addsite', [])
 
     this.templateUrl = 'add/add.html';
 
+    var addToArray = function(item, array) {
+      if(array.indexOf(item) === -1 && !isBlank(item)){
+        array.push(item);
+      }
+    };
+
     this.addFeature = function() {
-      this.site.features.push(this.newFeature);
+      addToArray(this.newFeature, this.site.features);
       this.newFeature = '';
     };
     this.removeFeature = function(index) {
       this.site.features.splice(index, 1);
     };
     this.addAquaticLife = function() {
-      this.site.aquaticLife.push(this.newAquaticLife);
+      addToArray(this.newAquaticLife, this.site.aquaticLife);
       this.newAquaticLife = '';
     };
     this.removeAquaticLife = function(index) {
@@ -55,6 +61,10 @@ angular.module('divestop.addsite', [])
 
     var deepCopy = function(obj) {
       return JSON.parse(JSON.stringify(obj));
+    };
+
+    var isBlank = function(string) {
+      return string.trim() === '';
     };
 
   })
