@@ -72,5 +72,5 @@ angular.module('divestop.addsite', [])
                 });
             });
         }
-    }
+    };
   }]);

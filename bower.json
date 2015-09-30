@@ -20,6 +20,7 @@
     "angular": "~1.4.6",
     "angular-google-maps": "~2.2.1",
     "angular-mocks": "~1.4.6",
+    "Materialize": "materialize#~0.97.1",
     "ngmap": "~1.13.4"
   }
 }

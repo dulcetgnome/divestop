@@ -1,26 +1,86 @@
 <form name="addSite" class="addSite">
-  Click on the map to choose a location<br />
-  Latitude: {{form.site.coordinates.lat | number:5}}<br />
-  Longitude: {{form.site.coordinates.lng | number:5}}<br />
-  Site Name: <input type="text" required ng-model="form.site.name" /><br />
-  Description: <input type="text" required ng-model="form.site.description" /><br />
-  Maximum Depth: <input type="number" required ng-model="form.site.maxDepth"><br />
-  
-  Aquatic Life: <input type="text" ng-model="form.newAquaticLife"><button type="button" ng-click="form.addAquaticLife()">+</button><br />
-  <ul>
-    <li ng-repeat="aquaticLife in form.site.aquaticLife track by $index" ng-click="form.removeAquaticLife($index)">{{aquaticLife}}</li>
-  </ul>
 
-  Features: <input type="text" ng-model="form.newFeature"><button type="button" ng-click="form.addFeature()">+</button><br />
-  <ul>
-    <li ng-repeat="feature in form.site.features track by $index" ng-click="form.removeFeature($index)">{{feature}}</li>
-  </ul>
-  
-  Photos: <input type="file" fileread="form.newPhoto" /><button type="button" ng-click="form.addPhoto()">+</button><br />
-  <ul>
-    <li ng-repeat="photo in form.site.photos track by $index">
-      <img ng-src="photo" alt="">
-    </li>
-  </ul>
-  <input type="button" ng-click="form.addSite()" value="Submit" ng-disabled="addSite.$invalid || form.site.coordinates.lat === undefined" />
+<div class="input-field">
+  <input id="site-name" type="text" required ng-model="form.site.name" />
+  <label for="site-name">Site Name</label>
+</div>
+
+<div class="input-field">
+  <input id="description" type="text" required ng-model="form.site.description" />
+  <label for="description">Description</label>
+</div>
+
+<div class="row">
+  <div class="input-field col s12 m4">
+    <input id="depth" type="number" required ng-model="form.site.maxDepth">
+    <label for="depth">Maximum Depth (meters)</label>
+  </div>
+  <div class="input-field col s12 m4">
+    <input type="text" disabled required ng-model="form.site.coordinates.lat" placeholder="click map!">
+    <label class="active">Latitude</label>
+  </div>
+  <div class="input-field col s12 m4">
+    <input type="text" disabled required ng-model="form.site.coordinates.lng" placeholder="click map!">
+    <label class="active">Longitude</label>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="col s12 m6">
+    <div class="row">
+      <div class="input-field col s10">
+        <input id="aquatic-life" type="text" ng-model="form.newAquaticLife">
+        <label for="aquatic-life">Aquatic Life</label>
+      </div>
+      <div class="col s2">
+        <a class="btn-floating" type="button" ng-click="form.addAquaticLife()">
+        <i class="material-icons">add</i></a>
+      </div>
+    </div>
+    <div class="chip" ng-repeat="aquaticLife in form.site.aquaticLife track by $index">
+      {{aquaticLife}}
+      <i class="material-icons" ng-click="form.removeAquaticLife($index)">close</i>
+    </div>
+  </div>
+
+  <div class="col s12 m6">
+    <div class="row">
+      <div class="input-field col s10">
+        <input id="features"type="text" ng-model="form.newFeature">
+        <label for="features">Features</label>
+      </div>
+      <div class="col s2">
+        <a class="btn-floating" type="button" ng-click="form.addFeature()">
+        <i class="material-icons">add</i></a>
+      </div>
+    </div>
+    <div class="chip" ng-repeat="feature in form.site.features track by $index">
+      {{feature}}
+      <i class="material-icons" ng-click="form.removeFeature($index)">close</i>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="file-field input-field col s11">
+    <div class="btn">
+      <span>Upload Photo</span>
+      <input type="file" fileread="form.newPhoto">
+    </div>
+    <div class="file-path-wrapper">
+      <input class="file-path validate" type="text">
+    </div>
+  </div>
+  <div class="col s1">
+    <a class="btn-floating" ng-click="form.addPhoto()">
+    <i class="material-icons">add</i></a>
+  </div>
+</div>
+
+<div class="row">
+  <div ng-repeat="photo in form.site.photos track by $index" class="col s6 m2">
+    <img class="responsive-img" ng-src="{{photo}}" alt="">
+  </div>
+</div>
+<button class="btn waves-effect waves-light" type="submit" ng-click="form.addSite()" ng-disabled="addSite.$invalid" >Add Site</button>
 </form>
