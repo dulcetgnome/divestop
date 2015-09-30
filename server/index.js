@@ -131,7 +131,9 @@ exports.addSite = function(cb, passedSite) {
       ')', function(err, result){
         done();
     });
-
+    if (passedSite.feature === undefined) {
+      console.log("passedSite: " + JSON.stringify(passedSite));
+    }
     /* If no feature, add feature */
     for (var i = 0; i < passedSite.feature.length; i++) {
       client.query('INSERT INTO features (feature) SELECT \'' + passedSite.feature[i] + '\' WHERE NOT EXISTS ( ' +
@@ -280,13 +282,13 @@ app.get('/', function(req, res) {
 app.get('/api/sites/:location', function(req, res) {
   var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
 
-  search(function(location) {
+  exports.search(function(location) {
     res.json(location);
   }, location);
 });
 
 app.get('/api/sites', function(req, res) {    
-  search(function(location) {
+  exports.search(function(location) {
     res.json(location);
   });
 });
@@ -303,7 +305,7 @@ app.get('/api/keys', function(req, res) {
 });
 
 app.post('/api/sites', function(req, res) {
-  addSite(function() {
+  exports.addSite(function() {
     res.send(201);
   }, req.body);
 });
@@ -311,3 +313,5 @@ app.post('/api/sites', function(req, res) {
 app.listen(port, function() {
   console.log("Listening on port: " + port);
 });
+
+exports.app = app;
