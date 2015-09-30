@@ -5,7 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "test": "grunt test",
-    "postinstall": "node node_modules/bower/bin/bower install && grunt"
+    "postinstall": "bower cache clean && bower install && grunt"
   },
   "repository": {
     "type": "git",
