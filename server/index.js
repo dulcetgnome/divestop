@@ -39,85 +39,77 @@ exports.createTables = function(cb) {
       '_id SERIAL PRIMARY KEY, ' +
       'location VARCHAR(250) ' +
       ')', function(err, result){
-      if (err) {
-        throw err;
-      }
-      done();
-      }
-    );
-
-    client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
-      '_id SERIAL PRIMARY KEY, ' +
-      'type VARCHAR(100) ' +
-      ')', function(err, result){
-      if (err) {
-        throw err;
-      }
-      done();
-      }
-    );
-
-    client.query('CREATE TABLE IF NOT EXISTS features (' +
-      '_id SERIAL PRIMARY KEY, ' +
-      'feature VARCHAR(100) ' +
-      ')', function(err, result){
-      if (err) {
-        throw err;
-      }
-      done();
-      }
-    );
-
-
-    client.query('CREATE TABLE IF NOT EXISTS sites (' +
-      '_id SERIAL PRIMARY KEY, ' +
-      'site VARCHAR(250), ' +
-      'location_id INT REFERENCES locations (_id), ' +
-      'lat NUMERIC, ' +
-      'long NUMERIC, ' +
-      'max_depth INT, ' +
-      'gradient VARCHAR(10), ' +
-      'description VARCHAR, ' +
-      'comments VARCHAR ' +
-      ')', function(err, result){
-      if (err) {
-        throw err;
-      }
-      done();
-      }
-    );
-
-    client.query('CREATE TABLE IF NOT EXISTS pictures (' +
-      '_id SERIAL PRIMARY KEY, ' +
-      'site_id INT NOT NULL REFERENCES sites (_id), ' +
-      'picture VARCHAR(250) ' +
-      ')', function(err, result){
-      if (err) {
-        throw err;
-      }
-      done();
-      }
-    );
-
-    /* Junction Tables */
-    
-    client.query('CREATE TABLE IF NOT EXISTS site_features (' +
-      'site_id INT NOT NULL REFERENCES sites (_id), ' +
-      'feature_id INT NOT NULL REFERENCES features (_id) ' +
-      ')', function(err, result){
-        done();
-      }
-    );
-
-    client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
-      'site_id INT NOT NULL REFERENCES sites (_id), ' +
-      'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
-      ')', function(err, result){
-        done();
+        if (err) {
+          throw err;
+        }
+        client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
+          '_id SERIAL PRIMARY KEY, ' +
+          'type VARCHAR(100) ' +
+          ')', function(err, result){
+            if (err) {
+              throw err;
+            }
+            client.query('CREATE TABLE IF NOT EXISTS features (' +
+              '_id SERIAL PRIMARY KEY, ' +
+              'feature VARCHAR(100) ' +
+              ')', function(err, result){
+                if (err) {
+                  throw err;
+                }
+                client.query('CREATE TABLE IF NOT EXISTS sites (' +
+                  '_id SERIAL PRIMARY KEY, ' +
+                  'site VARCHAR(250), ' +
+                  'location_id INT REFERENCES locations (_id), ' +
+                  'lat NUMERIC, ' +
+                  'long NUMERIC, ' +
+                  'max_depth INT, ' +
+                  'gradient VARCHAR(10), ' +
+                  'description VARCHAR, ' +
+                  'comments VARCHAR ' +
+                  ')', function(err, result){
+                    if (err) {
+                      throw err;
+                    }
+                    client.query('CREATE TABLE IF NOT EXISTS pictures (' +
+                      '_id SERIAL PRIMARY KEY, ' +
+                      'site_id INT NOT NULL REFERENCES sites (_id), ' +
+                      'picture VARCHAR(250) ' +
+                      ')', function(err, result){
+                        if (err) {
+                          throw err;
+                        }
+                        client.query('CREATE TABLE IF NOT EXISTS site_features (' +
+                          'site_id INT NOT NULL REFERENCES sites (_id), ' +
+                          'feature_id INT NOT NULL REFERENCES features (_id) ' +
+                          ')', function(err, result){
+                            if (err) {
+                              throw err;
+                            }
+                            client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
+                              'site_id INT NOT NULL REFERENCES sites (_id), ' +
+                              'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
+                              ')', function(err, result){
+                                if (err) {
+                                  throw err;
+                                }
+                                done();
+                              }
+                            );
+                          }
+                        );
+                      }
+                    );
+                  }
+                );
+              }
+            );
+          }
+        );
       }
     );
   });
   cb();
+  pg.end();
 };
 
 /* DB Post Site Query */
