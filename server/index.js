@@ -140,87 +140,60 @@ exports.addSite = function(cb, passedSite) {
       passedSite.location], 
       function(err, result){
         if (err) { throw err; }
-        done();
-      });
-    if (passedSite.features === undefined) {
-      console.log("passedSite: " + JSON.stringify(passedSite));
-    }
-    /* If no feature, add feature */
-    for (var i = 0; i < passedSite.features.length; i++) {
-      client.query('INSERT INTO features (feature) SELECT $1 WHERE NOT EXISTS ( ' +
-        'SELECT feature FROM features WHERE feature = $2)', [passedSite.features[i], 
-        passedSite.features[i]], 
-        function(err, result){
+        /* If no feature, add feature */
+        var featureString = '';
+        for (var n = 0; n < passedSite.features.length; n++) {
+          featureString += 'INSERT INTO features (feature) SELECT \'' + passedSite.features[n] + '' +
+          '\' WHERE NOT EXISTS (SELECT feature FROM features WHERE feature = \'' + passedSite.features[n] + '\'); '
+        }
+        client.query(featureString, function(err, result){
           if (err) { throw err; }
-          done();
-      });
-    }
-
-    /* If no aquatic_life, add aq */
-    for (var j = 0; j < passedSite.aquaticLife.length; j++) {
-      client.query('INSERT INTO aquatic_life (type) SELECT $1 WHERE NOT EXISTS ( ' +
-        'SELECT type FROM aquatic_life WHERE type = $2)', [passedSite.aquaticLife[j], 
-        passedSite.aquaticLife[j]], 
-        function(err, result){
-          if (err) { throw err; }
-          done();
-      });
-    }
-
-    /* If no site, add site */
-    client.query('INSERT INTO sites (site, location_id, lat, long, max_depth, gradient, ' + 
-      'description, comments) SELECT ' + 
-      '$1, ' +
-      '(SELECT _id FROM locations WHERE location = $2), ' +
-      '$3, ' +
-      '$4, ' +
-      '$5, ' +
-      '$6, ' +
-      '$7, ' +
-      '$8 WHERE NOT EXISTS (' +
-      'SELECT site FROM sites WHERE site = $9)', [passedSite.name, passedSite.location, 
-      passedSite.coordinates.lat, passedSite.coordinates.lng, passedSite.maxDepth, passedSite.gradient, 
-      passedSite.description, passedSite.comments, passedSite.name], 
-      function(err, result) {
-        if (err) { throw err; }
-        done();
+          var aquaticLifeString = '';
+          for (var p = 0; p < passedSite.aquaticLife.length; p++) {
+            aquaticLifeString += 'INSERT INTO aquatic_life (type) SELECT \'' + passedSite.aquaticLife[p] + '' +
+            '\' WHERE NOT EXISTS (SELECT type FROM aquatic_life WHERE type = \'' + passedSite.aquaticLife[p] + '\'); '
+          }
+          client.query(aquaticLifeString, function(err, result){
+            if (err) { throw err; }
+            /* If no site, add site */
+            client.query('INSERT INTO sites (site, location_id, lat, long, max_depth, gradient, ' + 
+              'description, comments) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
+              'location = \'' + passedSite.location + '\'), ' + passedSite.lat + ', ' + passedSite.lng + ', ' + 
+              passedSite.maxDepth + ', \'' + passedSite.gradient + '\', \'' + passedSite.description + '\', ' + 
+              '\'' + passedSite.comments + '\' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\')', 
+              function(err, result) {
+                if (err) { throw err; }
+                var siteFeaturesString = '';
+                for (var q = 0; q < passedSite.features.length; q++) {
+                  siteFeaturesString += 'INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
+                  'WHERE site = \'' + passedSite.name + '\'), (SELECT _id FROM features WHERE feature = \'' + passedSite.features[q] + '\')); '
+                }
+                client.query(siteFeaturesString, function(err, result){
+                  if (err) { throw err; }
+                  var photosString = '';
+                  for (var q = 0; q < passedSite.photos.length; q++) {
+                    photosString += 'INSERT INTO pictures (site_id, picture) VALUES ((SELECT _id FROM sites ' + 
+                    'WHERE site = \'' + passedSite.name + '\'), \'' + passedSite.photos[q] + '\')); '
+                  }
+                  client.query(photosString, function(err, result){
+                    if (err) { throw err; }
+                    var siteAquaticLifeString = '';
+                    for (var q = 0; q < passedSite.aquaticLife.length; q++) {
+                      siteAquaticLifeString += 'INSERT INTO site_aquatic_life (site_id, aquatic_life_id) ' + 
+                      'VALUES ((SELECT _id FROM sites WHERE site = \'' + passedSite.name + '\'), ' + 
+                      '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.aquaticLife[q] + '\')); '
+                    }
+                    client.query(siteAquaticLifeString, function(err, result){
+                      if (err) { throw err; }
+                      done();
+                      cb();
+                    });
+                  });
+                });
+            });
+          });
+        });
     });
-
-    /* Add all features to join table site_feature */
-    for (var k = 0; k < passedSite.features.length; k++) {
-      // console.log("passedSite: " + passedSite.name + "feature" + i + ": " + passedSite.feature[i]);
-      client.query('INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
-        'WHERE site = $1), ' + '(SELECT _id FROM features WHERE feature = $2))', 
-        [passedSite.name, passedSite.features[k]], function(err, result) {
-          if (err) { throw err; }
-          done();
-        });
-    }
-
-     /* Add all pictures to join picture table */
-    for (var m = 0; m < passedSite.photos.length; m++) {
-      client.query('INSERT INTO pictures (site_id, picture) VALUES ((SELECT _id FROM sites ' + 
-        'WHERE site = $1), $2))',
-        [passedSite.name, passedSite.photos[m]], function(err, result) {
-          if (err) { throw err; }
-          done();
-        });
-    }
-
-     // Add all aquatic life to join table site_aquatic_life 
-    for (var l = 0; l < passedSite.aquaticLife.length; l++) {
-      client.query('INSERT INTO site_aquatic_life (site_id, aquatic_life_id) VALUES ((SELECT _id FROM sites ' + 
-        'WHERE site = $1), ' + 
-        '(SELECT _id FROM aquatic_life WHERE type = $2))', 
-        [passedSite.name, passedSite.aquaticLife[l]], function(err, result) {
-          if (err) { throw err; }
-          done();
-        });
-    }
-
-        // console.log("Created new site!!");
-        done(); 
-        cb();
   });
 };
 
@@ -303,10 +276,7 @@ exports.wipeDatabase = function(cb) {
 };
 
 app.get('/', function(req, res) {
-  console.log('Tables created!');
-  exports.createTables(function(){
-    res.sendStatus(200);
-  });
+  res.sendStatus(200);
 });
 
 app.get('/api/sites/:location', function(req, res) {
@@ -319,10 +289,12 @@ app.get('/api/sites/:location', function(req, res) {
 
 app.get('/api/sites', function(req, res) { 
   console.log('In sites get!');
-  res.sendStatus(200);  
-  // exports.search(function(location) {
-  //   res.json(location);
-  // });
+  exports.createTables(function(){
+    console.log('Creating tables!');
+    exports.search(function(location) {
+      res.json(location);
+    });
+  })
 });
 
 app.get('/api/keys', function(req, res) {
