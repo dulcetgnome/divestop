@@ -126,7 +126,7 @@ exports.addSite = function(cb, passedSite) {
       function(err, result){
         if (err) { throw err; }
         done();
-    });
+      });
     if (passedSite.features === undefined) {
       console.log("passedSite: " + JSON.stringify(passedSite));
     }
@@ -290,8 +290,8 @@ exports.wipeDatabase = function(cb) {
 app.get('/', function(req, res) {
   exports.createTables(function(){
     console.log('Tables created!');
+    res.send(200);
   });
-  res.send(200); 
 });
 
 app.get('/api/sites/:location', function(req, res) {
