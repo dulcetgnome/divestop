@@ -156,8 +156,8 @@ exports.addSite = function(cb, passedSite) {
           client.query(aquaticLifeString, function(err, result){
             if (err) { throw err; }
             /* If no site, add site */
-            client.query('INSERT INTO sites (site, location_id, lat, long) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
-              'location = \'' + passedSite.location + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
+            client.query('INSERT INTO sites (site, location_id, lat, long, max_depth, gradient, description, comments) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
+              'location = \'' + passedSite.location + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ', ' + passedSite.maxDepth + ', \'' + passedSite.gradient + '\', \'' + passedSite.description + '\', \'' + passedSite.comments + '\' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
               function(err, result) {
                 if (err) { 
                   console.error(err);
@@ -173,7 +173,7 @@ exports.addSite = function(cb, passedSite) {
                   var photosString = '';
                   for (var q = 0; q < passedSite.photos.length; q++) {
                     photosString += 'INSERT INTO pictures (site_id, picture) VALUES ((SELECT _id FROM sites ' + 
-                    'WHERE site = \'' + passedSite.name + '\'), \'' + passedSite.photos[q] + '\')); '
+                    'WHERE site = \'' + passedSite.name + '\'), \'' + passedSite.photos[q] + '\'); '
                   }
                   client.query(photosString, function(err, result){
                     if (err) { throw err; }
