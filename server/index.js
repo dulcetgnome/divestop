@@ -43,7 +43,7 @@ exports.createTables = function(cb) {
         if (err) {
           throw err;
         }
-        console.log('Locations built with:' result);
+        console.log('Locations built with:', result);
 
         client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
           '_id SERIAL PRIMARY KEY, ' +
@@ -52,7 +52,7 @@ exports.createTables = function(cb) {
             if (err) {
               throw err;
             }
-            console.log('aquatic_life built with:' result);
+            console.log('aquatic_life built with:', result);
 
             client.query('CREATE TABLE IF NOT EXISTS features (' +
               '_id SERIAL PRIMARY KEY, ' +
