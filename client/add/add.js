@@ -49,7 +49,7 @@ angular.module('divestop.addsite', [])
     this.addSite = function() {
       // Deep copy the object so we can stringify coordinates before passing to server
       var newSite = deepCopy(this.site);
-      newSite.coordinates = JSON.stringify(newSite.coordinates);
+      //newSite.coordinates = JSON.stringify(newSite.coordinates);
       DiveSites.postNewSite(newSite).then(function(data) {
         this.clearForm();
         // call toggleForm on map controller
