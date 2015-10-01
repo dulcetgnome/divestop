@@ -157,7 +157,7 @@ exports.addSite = function(cb, passedSite) {
             if (err) { throw err; }
             /* If no site, add site */
             client.query('INSERT INTO sites (site, location_id) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
-              'location = \'' + passedSite.location + '\'), WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
+              'location = \'' + passedSite.location + '\') WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
               function(err, result) {
                 if (err) { 
                   console.error(err);
