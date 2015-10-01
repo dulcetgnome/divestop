@@ -8,7 +8,7 @@ angular.module('divestop.addsite', [])
     this.site.photos = [];
     this.site.coordinates = SharedProperties.newSite;
     this.showForm = SharedProperties.showForm;
-    this.site.location = "testLocation";
+    this.site.location = "key largo";
     this.site.comments = "testComment";
     this.site.gradient = "tG";
 
