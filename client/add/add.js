@@ -10,7 +10,7 @@ angular.module('divestop.addsite', [])
     this.showForm = SharedProperties.showForm;
     this.site.location = "testLocation";
     this.site.comments = "testComment";
-    this.site.gradient = "testGradient";
+    this.site.gradient = "tG";
 
     this.templateUrl = 'add/add.html';
 
