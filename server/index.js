@@ -25,6 +25,7 @@ exports.createTables = function(cb) {
     if (err) {
       throw err;
     }
+    console.log('About to being waterfall!');
 
     /*----------  Create Tables  ----------*/
     
@@ -42,6 +43,8 @@ exports.createTables = function(cb) {
         if (err) {
           throw err;
         }
+        console.log('Locations built with:' result);
+
         client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
           '_id SERIAL PRIMARY KEY, ' +
           'type VARCHAR(100) ' +
@@ -49,6 +52,8 @@ exports.createTables = function(cb) {
             if (err) {
               throw err;
             }
+            console.log('aquatic_life built with:' result);
+
             client.query('CREATE TABLE IF NOT EXISTS features (' +
               '_id SERIAL PRIMARY KEY, ' +
               'feature VARCHAR(100) ' +
@@ -56,6 +61,8 @@ exports.createTables = function(cb) {
                 if (err) {
                   throw err;
                 }
+                console.log('features built with:' result);
+
                 client.query('CREATE TABLE IF NOT EXISTS sites (' +
                   '_id SERIAL PRIMARY KEY, ' +
                   'site VARCHAR(250), ' +
@@ -70,6 +77,8 @@ exports.createTables = function(cb) {
                     if (err) {
                       throw err;
                     }
+                    console.log('sites built with:' result);
+
                     client.query('CREATE TABLE IF NOT EXISTS pictures (' +
                       '_id SERIAL PRIMARY KEY, ' +
                       'site_id INT NOT NULL REFERENCES sites (_id), ' +
@@ -78,6 +87,8 @@ exports.createTables = function(cb) {
                         if (err) {
                           throw err;
                         }
+                        console.log('pictures built with:' result);
+
                         client.query('CREATE TABLE IF NOT EXISTS site_features (' +
                           'site_id INT NOT NULL REFERENCES sites (_id), ' +
                           'feature_id INT NOT NULL REFERENCES features (_id) ' +
@@ -85,6 +96,8 @@ exports.createTables = function(cb) {
                             if (err) {
                               throw err;
                             }
+
+                            console.log('site_features built with:' result);
                             client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
                               'site_id INT NOT NULL REFERENCES sites (_id), ' +
                               'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
@@ -92,9 +105,10 @@ exports.createTables = function(cb) {
                                 if (err) {
                                   throw err;
                                 }
-                                done();
-                                client.end();
+                                console.log('site_features and done!' result);
                                 cb();
+                                done();
+                                // client.end();
                               }
                             );
                           }
