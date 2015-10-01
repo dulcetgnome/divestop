@@ -158,9 +158,7 @@ exports.addSite = function(cb, passedSite) {
             /* If no site, add site */
             client.query('INSERT INTO sites (site, location_id, lat, long, max_depth, gradient, ' + 
               'description, comments) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
-              'location = \'' + passedSite.location + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ', ' + 
-              '' + passedSite.maxDepth + ', \'' + passedSite.gradient + '\', \'' + passedSite.description + '\', ' + 
-              '\'' + passedSite.comments + '\' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
+              'location = \'' + passedSite.location + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
               function(err, result) {
                 if (err) { 
                   console.error(err);
