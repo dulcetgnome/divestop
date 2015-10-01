@@ -61,7 +61,7 @@ exports.createTables = function(cb) {
                 if (err) {
                   throw err;
                 }
-                console.log('features built with:' result);
+                console.log('features built with:', result);
 
                 client.query('CREATE TABLE IF NOT EXISTS sites (' +
                   '_id SERIAL PRIMARY KEY, ' +
@@ -77,7 +77,7 @@ exports.createTables = function(cb) {
                     if (err) {
                       throw err;
                     }
-                    console.log('sites built with:' result);
+                    console.log('sites built with:', result);
 
                     client.query('CREATE TABLE IF NOT EXISTS pictures (' +
                       '_id SERIAL PRIMARY KEY, ' +
@@ -87,7 +87,7 @@ exports.createTables = function(cb) {
                         if (err) {
                           throw err;
                         }
-                        console.log('pictures built with:' result);
+                        console.log('pictures built with:', result);
 
                         client.query('CREATE TABLE IF NOT EXISTS site_features (' +
                           'site_id INT NOT NULL REFERENCES sites (_id), ' +
@@ -97,7 +97,7 @@ exports.createTables = function(cb) {
                               throw err;
                             }
 
-                            console.log('site_features built with:' result);
+                            console.log('site_features built with:', result);
                             client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
                               'site_id INT NOT NULL REFERENCES sites (_id), ' +
                               'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
@@ -105,7 +105,7 @@ exports.createTables = function(cb) {
                                 if (err) {
                                   throw err;
                                 }
-                                console.log('site_features and done!' result);
+                                console.log('site_features and done!', result);
                                 cb();
                                 done();
                                 // client.end();
