@@ -45,7 +45,7 @@ exports.createTables = function(cb) {
           throw err;
         }
         console.log('Locations built with:', result);
-
+        done();
         client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
           '_id SERIAL PRIMARY KEY, ' +
           'type VARCHAR(100) ' +
@@ -54,7 +54,7 @@ exports.createTables = function(cb) {
               throw err;
             }
             console.log('aquatic_life built with:', result);
-
+            done();
             client.query('CREATE TABLE IF NOT EXISTS features (' +
               '_id SERIAL PRIMARY KEY, ' +
               'feature VARCHAR(100) ' +
@@ -63,7 +63,7 @@ exports.createTables = function(cb) {
                   throw err;
                 }
                 console.log('features built with:', result);
-
+                done();
                 client.query('CREATE TABLE IF NOT EXISTS sites (' +
                   '_id SERIAL PRIMARY KEY, ' +
                   'site VARCHAR(250), ' +
@@ -79,7 +79,7 @@ exports.createTables = function(cb) {
                       throw err;
                     }
                     console.log('sites built with:', result);
-
+                    done();
                     client.query('CREATE TABLE IF NOT EXISTS pictures (' +
                       '_id SERIAL PRIMARY KEY, ' +
                       'site_id INT NOT NULL REFERENCES sites (_id), ' +
@@ -89,7 +89,7 @@ exports.createTables = function(cb) {
                           throw err;
                         }
                         console.log('pictures built with:', result);
-
+                        done();
                         client.query('CREATE TABLE IF NOT EXISTS site_features (' +
                           'site_id INT NOT NULL REFERENCES sites (_id), ' +
                           'feature_id INT NOT NULL REFERENCES features (_id) ' +
@@ -97,7 +97,7 @@ exports.createTables = function(cb) {
                             if (err) {
                               throw err;
                             }
-
+                            done();
                             console.log('site_features built with:', result);
                             client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
                               'site_id INT NOT NULL REFERENCES sites (_id), ' +
@@ -108,7 +108,7 @@ exports.createTables = function(cb) {
                                 }
                                 console.log('site_features and done!', result);
                                 cb();
-                                // done();
+                                done();
                                 // client.end();
                               }
                             );
@@ -317,7 +317,8 @@ app.get('/api/sites/:location', function(req, res) {
   }, location);
 });
 
-app.get('/api/sites', function(req, res) {  
+app.get('/api/sites', function(req, res) { 
+  console.log('In sites get!');
   res.sendStatus(200);  
   // exports.search(function(location) {
   //   res.json(location);
