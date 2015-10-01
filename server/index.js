@@ -125,6 +125,7 @@ exports.createTables = function(cb) {
 exports.addSite = function(cb, passedSite) {
   pg.connect(connectionString, function(err, client, done) {
     if (err) {throw err;}
+    console.log("Passed site", passedSite);
 
     /* If no location, add location */
     client.query('INSERT INTO locations (location) SELECT $1 WHERE NOT EXISTS ( ' +
@@ -171,7 +172,7 @@ exports.addSite = function(cb, passedSite) {
       '$7, ' +
       '$8 WHERE NOT EXISTS (' +
       'SELECT site FROM sites WHERE site = $9)', [passedSite.name, passedSite.location, 
-      passedSite.lat, passedSite.lng, passedSite.maxDepth, passedSite.gradient, 
+      passedSite.coordinates.lat, passedSite.coordinates.lng, passedSite.maxDepth, passedSite.gradient, 
       passedSite.description, passedSite.comments, passedSite.name], 
       function(err, result) {
         if (err) { throw err; }
