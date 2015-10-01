@@ -21,6 +21,7 @@ app.use(parser.json());
 app.use(express.static('client'));
 
 exports.createTables = function(cb) {
+  console.log('In create tables!');
   pg.connect(connectionString, function(err, client, done) {
     if (err) {
       throw err;
@@ -107,7 +108,7 @@ exports.createTables = function(cb) {
                                 }
                                 console.log('site_features and done!', result);
                                 cb();
-                                done();
+                                // done();
                                 // client.end();
                               }
                             );
@@ -304,7 +305,7 @@ exports.wipeDatabase = function(cb) {
 app.get('/', function(req, res) {
   exports.createTables(function(){
     console.log('Tables created!');
-    res.send(200);
+    res.sendStatus(200);
   });
 });
 
@@ -317,7 +318,7 @@ app.get('/api/sites/:location', function(req, res) {
 });
 
 app.get('/api/sites', function(req, res) {  
-  res.send(200);  
+  res.sendStatus(200);  
   // exports.search(function(location) {
   //   res.json(location);
   // });
