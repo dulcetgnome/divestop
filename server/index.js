@@ -303,8 +303,8 @@ exports.wipeDatabase = function(cb) {
 };
 
 app.get('/', function(req, res) {
+  console.log('Tables created!');
   exports.createTables(function(){
-    console.log('Tables created!');
     res.sendStatus(200);
   });
 });
