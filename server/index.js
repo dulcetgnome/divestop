@@ -303,10 +303,7 @@ exports.wipeDatabase = function(cb) {
 };
 
 app.get('/', function(req, res) {
-  console.log('Tables created!');
-  exports.createTables(function(){
-    res.sendStatus(200);
-  });
+  res.sendStatus(200);
 });
 
 app.get('/api/sites/:location', function(req, res) {
@@ -319,7 +316,10 @@ app.get('/api/sites/:location', function(req, res) {
 
 app.get('/api/sites', function(req, res) { 
   console.log('In sites get!');
-  res.sendStatus(200);  
+  exports.createTables(function(){
+    console.log('Creating tables!');
+    res.sendStatus(200);
+  })
   // exports.search(function(location) {
   //   res.json(location);
   // });
