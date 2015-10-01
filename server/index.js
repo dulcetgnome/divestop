@@ -156,8 +156,8 @@ exports.addSite = function(cb, passedSite) {
           client.query(aquaticLifeString, function(err, result){
             if (err) { throw err; }
             /* If no site, add site */
-            client.query('INSERT INTO sites (site, location_id, lat, long) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
-              'location = \'' + passedSite.location + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
+            client.query('INSERT INTO sites (site, location_id) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
+              'location = \'' + passedSite.location + '\'), WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
               function(err, result) {
                 if (err) { 
                   console.error(err);
