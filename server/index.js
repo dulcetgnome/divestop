@@ -159,10 +159,13 @@ exports.addSite = function(cb, passedSite) {
             client.query('INSERT INTO sites (site, location_id, lat, long, max_depth, gradient, ' + 
               'description, comments) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
               'location = \'' + passedSite.location + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ', ' + 
-              passedSite.maxDepth + ', \'' + passedSite.gradient + '\', \'' + passedSite.description + '\', ' + 
-              '\'' + passedSite.comments + '\' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\')', 
+              '' + passedSite.maxDepth + ', \'' + passedSite.gradient + '\', \'' + passedSite.description + '\', ' + 
+              '\'' + passedSite.comments + '\' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
               function(err, result) {
-                if (err) { throw err; }
+                if (err) { 
+                  console.error(err);
+                  throw err;
+                }
                 var siteFeaturesString = '';
                 for (var q = 0; q < passedSite.features.length; q++) {
                   siteFeaturesString += 'INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
