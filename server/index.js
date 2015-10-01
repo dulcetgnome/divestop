@@ -93,6 +93,7 @@ exports.createTables = function(cb) {
                                   throw err;
                                 }
                                 done();
+                                client.end();
                               }
                             );
                           }
@@ -109,7 +110,6 @@ exports.createTables = function(cb) {
     );
   });
   cb();
-  pg.end();
 };
 
 /* DB Post Site Query */
