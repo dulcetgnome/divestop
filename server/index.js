@@ -302,10 +302,11 @@ app.get('/api/sites/:location', function(req, res) {
   }, location);
 });
 
-app.get('/api/sites', function(req, res) {    
-  exports.search(function(location) {
-    res.json(location);
-  });
+app.get('/api/sites', function(req, res) {  
+  res.send(200);  
+  // exports.search(function(location) {
+  //   res.json(location);
+  // });
 });
 
 app.get('/api/keys', function(req, res) {
