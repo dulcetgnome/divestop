@@ -176,9 +176,11 @@ exports.addSite = function(cb, passedSite) {
 /* DB Search Query */
 
 exports.search = function(cb, passedLocation) {
+  console.log('In search!');
   var locationQuery = '';
+  var params = [];
   if (passedLocation) {
-    var params = [passedLocation];
+    params = [passedLocation];
     locationQuery = ' WHERE (l.location = $1)';
   }
 
@@ -198,7 +200,7 @@ exports.search = function(cb, passedLocation) {
         throw err;
       }
       var siteObject = {};
-      var resultsArray = [];
+      var sites = [];
       for (var m = 0; m < result.rows.length; m++) {
         if (result.rows[m].site === siteObject.site) {
           if (siteObject.feature.indexOf(result.rows[m].feature) < 0) {
@@ -207,9 +209,17 @@ exports.search = function(cb, passedLocation) {
           if (siteObject.type.indexOf(result.rows[m].type) < 0) {
             siteObject.type.push(result.rows[m].type);
           }
+          if (siteObject.type.indexOf(result.rows[m].lat) < 0) {
+            siteObject.coordinates.lat = result.rows[m].lat;
+            delete siteObject['lat'];
+          }
+          if (siteObject.type.indexOf(result.rows[m].long) < 0) {
+            siteObject.coordinates.lng = result.rows[m].long;
+            delete siteObject['long'];
+          }
         } else {
           if (siteObject.hasOwnProperty('site')) {
-            resultsArray.push(siteObject);
+            sites.push(siteObject);
           }
           siteObject = result.rows[m];
 
@@ -218,14 +228,16 @@ exports.search = function(cb, passedLocation) {
           siteObject.type = [firstAquaticLife];
           var firstFeature = siteObject.feature;
           siteObject.feature = [firstFeature];
+          siteObject.coordinates = { 'lat': undefined, 'lng': undefined };
         }
       }
 
       if (siteObject.hasOwnProperty('site')) {
-        resultsArray.push(siteObject);
+        sites.push(siteObject);
       }
 
       done();
+      cb(sites);
     });
   });
 };
