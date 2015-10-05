@@ -118,4 +118,61 @@ angular.module('divestop.services', [])
       uploadPhoto: uploadPhoto
     };
 
-  });
+  })
+  .factory("AppMap", ['SharedProperties', 
+    function(SharedProperties) {
+
+    // this will add markers to the google map object, then store them in a markers array.
+    var addMarkers = function(sites, map){
+      // iterate over all markers, and add a Marker object to the map.
+      for (var i = 0; i < sites.length; i++) {
+        var site = sites[i];
+        addMarker(site, map);
+      }
+    };
+
+
+    var addMarker = function(site, map) {
+      var marker = new google.maps.Marker({
+          position: site.coordinates,
+          map: map,
+          title: site.name,
+          // store the site object in the marker to make it easier to access when clicking on the marker.
+          diveSite: site
+        });
+        marker.addListener('click', function(){
+          // show the site view, and change views when you click on a different marker.
+          SharedProperties.currentSite.site = this.diveSite;
+          // $scope.hideForm();
+
+          // $scope.$apply();
+        });
+        SharedProperties.markers.push(marker);
+    }
+
+    var hideNewMarker = function() {
+      SharedProperties.newSiteMarker.setMap(null);
+    };
+
+    var showNewMarker = function() {
+      SharedProperties.newSiteMarker.setMap(SharedProperties.map);
+    };
+
+    var moveNewMarker = function(event) {
+      var ll = event.latLng;
+      SharedProperties.newSite.lat = ll.lat();
+      SharedProperties.newSite.lng = ll.lng();
+      SharedProperties.newSiteMarker.setPosition({
+        lat: ll.lat(),
+        lng: ll.lng()
+      });
+    };
+
+    return {
+      addMarkers: addMarkers,
+      addMarker: addMarker,
+      hideNewMarker: hideNewMarker,
+      showNewMarker: showNewMarker,
+      moveNewMarker: moveNewMarker
+    }
+  }]);
