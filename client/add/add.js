@@ -77,13 +77,13 @@ angular.module('divestop.addsite', [])
     };
 
   })
-  .directive("fileread", [function () {
+  .directive('fileread', [function () {
     return {
         scope: {
-            fileread: "="
+            fileread: '='
         },
         link: function (scope, element, attributes) {
-            element.bind("change", function (changeEvent) {
+            element.bind('change', function (changeEvent) {
                 scope.$apply(function () {
                     scope.fileread = changeEvent.target.files[0];
                     // or all selected files:
@@ -94,7 +94,8 @@ angular.module('divestop.addsite', [])
     };
   }]).directive('ngEnter', function () {
     return function (scope, element, attrs) {
-      element.bind("keydown keypress", function (event) {
+      element.bind('keydown keypress', function (event) {
+        console.log(event.which);
         if(event.which === 13) {
           scope.$apply(function (){
             scope.$eval(attrs.ngEnter);
