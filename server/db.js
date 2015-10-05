@@ -7,12 +7,10 @@ var pg = require('pg');
 var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
 
 exports.createTables = function(cb) {
-  console.log('In create tables!');
   pg.connect(connectionString, function(err, client, done) {
     if (err) {
       throw err;
     }
-    console.log('About to being waterfall!');
 
     /*----------  Create Tables  ----------*/
     
@@ -21,6 +19,9 @@ exports.createTables = function(cb) {
       -- declaration of FOREIGN and PRIMARY KEYS (single line)
       -- single quotes only for values within queries
       -- don't use size when declaring INT column i.e. no INT(3)
+
+      -- The create table queries are nested inside the callbacks of the preceding query, due to the
+      -- asyncronous nature of database queries. They should be created in this order.
     */
 
     client.query('CREATE TABLE IF NOT EXISTS locations (' +
@@ -105,7 +106,11 @@ exports.createTables = function(cb) {
   });
 };
 
-/* DB Post Site Query */
+/* DB Post Site Query 
+-- The insert statements must be executed in the specified order. Due to the asyncronous nature of
+   database queries, each insert statement is nested inside the callback function of the preceding
+   insert statement.
+*/
 
 exports.addSite = function(cb, passedSite) {
   pg.connect(connectionString, function(err, client, done) {
@@ -117,7 +122,11 @@ exports.addSite = function(cb, passedSite) {
       passedSite.location], 
       function(err, result){
         if (err) { throw err; }
-        /* If no feature, add feature */
+
+        /* If no feature, add feature 
+           -- Build 'featureString' dynamically, creating an insert query for each feature in the
+              features array that is passed from client.
+        */
         var featureString = '';
         for (var n = 0; n < passedSite.features.length; n++) {
           featureString += 'INSERT INTO features (feature) SELECT \'' + passedSite.features[n] + '' +
@@ -125,6 +134,11 @@ exports.addSite = function(cb, passedSite) {
         }
         client.query(featureString, function(err, result){
           if (err) { throw err; }
+
+          /* Insert aquatic life
+            -- Build 'aquaticLifeString' dynamically, creating an insert query for each instance of aquatic life in the
+               aquatic life array that is passed from client.
+          */
           var aquaticLifeString = '';
           for (var p = 0; p < passedSite.aquaticLife.length; p++) {
             aquaticLifeString += 'INSERT INTO aquatic_life (type) SELECT \'' + passedSite.aquaticLife[p] + '' +
@@ -132,13 +146,17 @@ exports.addSite = function(cb, passedSite) {
           }
           client.query(aquaticLifeString, function(err, result){
             if (err) { throw err; }
+
             /* If no site, add site */
             client.query('INSERT INTO sites (site, location_id, lat, long, max_depth, gradient, description, comments) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
               'location = \'' + passedSite.location + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ', ' + passedSite.maxDepth + ', \'' + passedSite.gradient + '\', \'' + passedSite.description + '\', \'' + passedSite.comments + '\' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
               function(err, result) {
-                if (err) { 
-                  throw err;
-                }
+                if (err) { throw err; }
+
+                /* Insert ids into site_features join table
+                  -- Build 'siteFeaturesString' dynamically, creating an insert query for each site/feature that is 
+                     passed from client.
+                */
                 var siteFeaturesString = '';
                 for (var q = 0; q < passedSite.features.length; q++) {
                   siteFeaturesString += 'INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
@@ -146,6 +164,11 @@ exports.addSite = function(cb, passedSite) {
                 }
                 client.query(siteFeaturesString, function(err, result){
                   if (err) { throw err; }
+
+                  /* Insert photo urls
+                    -- Build 'photoString' dynamically, creating an insert query for each photo url in the
+                       photo array that is passed from client.
+                  */
                   var photosString = '';
                   for (var q = 0; q < passedSite.photos.length; q++) {
                     photosString += 'INSERT INTO pictures (site_id, picture) VALUES ((SELECT _id FROM sites ' + 
@@ -153,6 +176,11 @@ exports.addSite = function(cb, passedSite) {
                   }
                   client.query(photosString, function(err, result){
                     if (err) { throw err; }
+
+                    /* Insert ids into site_aquatic_life join table
+                      -- Build 'siteAquaticLifeString' dynamically, creating an insert query for each site/aquatic life that is 
+                         passed from client.
+                    */
                     var siteAquaticLifeString = '';
                     for (var q = 0; q < passedSite.aquaticLife.length; q++) {
                       siteAquaticLifeString += 'INSERT INTO site_aquatic_life (site_id, aquatic_life_id) ' + 
@@ -173,7 +201,10 @@ exports.addSite = function(cb, passedSite) {
   });
 };
 
-/* DB Search Query */
+/* DB Search Query 
+   -- This query grabs all dive site data if no passedLocation argument is passed in, and the dive
+   -- sites for a specific location if a passedLocation argument is passed in.
+*/
 
 exports.search = function(cb, passedLocation) {
   var locationQuery = '';
@@ -197,6 +228,11 @@ exports.search = function(cb, passedLocation) {
       if (err) {
         throw err;
       }
+
+      /* This code reconstitutes the data such that if a site has multiple features or aquatic life,
+         a single row for that site is created, with an array for the features/aquatic life. 
+      */
+
       var siteObject = {};
       var resultsArray = [];
       for (var m = 0; m < result.rows.length; m++) {
@@ -230,7 +266,7 @@ exports.search = function(cb, passedLocation) {
   });
 };
 
-
+// The wipeDatabase() method is used in the db tests.
 exports.wipeDatabase = function(cb) {
   var queryString = 'TRUNCATE site_aquatic_life, site_features, pictures,' + 
   ' sites, features, aquatic_life, locations;';
