@@ -1,8 +1,8 @@
 var expect = require('chai').expect;
 var request = require('supertest');
-var app = require('../../server/index.js').app;
+var app = require('../../server/server.js').app;
 
-xdescribe('RESTful api', function () {
+describe('RESTful api', function () {
 
   it('responds to GET requests at `/`', function (done) {
 
@@ -21,10 +21,9 @@ xdescribe('RESTful api', function () {
       .get('/api/sites')
       .end(function (err, res) {
         if (err) return done(err);
-        res.should.have.status(200);
-        // res.should.be.json;
-        res.body.should.be.a('array');
-        res.body[0].should.have.property('location');
+        expect(200);
+        expect('Content-Type', /json/);
+        /* Several sites coming back */
         done();
       });
   });
@@ -32,16 +31,16 @@ xdescribe('RESTful api', function () {
   it('responds to POST requests at `/api/sites`' , function (done) {
 
     var data = {
-      site: 'Martins Marina',
+      name: 'Martins Marina',
       location: 'Fiji',
-      lat: 45.345,
-      long: 65.154,
-      max_depth: 35,
+      coordinates: { 'lat': 45.345, 'lng': 65.154 },
+      maxDepth: 35,
       gradient: '25d',
-      feature: ['coral', 'shipwreck'],
-      type: ['clown fish', 'lion fish'],
+      features: ['coral', 'shipwreck'],
+      aquaticLife: ['clown fish', 'lion fish'],
       description: "spectacularly beautify dive spot!",
-      comments: "a must see if you are in the area"
+      comments: "a must see if you are in the area",
+      photos: ["some url"]
     };
 
     request(app)
@@ -50,19 +49,15 @@ xdescribe('RESTful api', function () {
       .expect(201)
       .end(function (err, res) {
         if (err) return done(err);
-        done();
-      });
-
-    request(app)
-      .get('/api/sites/fiji')
-      .end(function (err, res) {
-        if (err) return done(err);
-        res.should.have.status(200);
-        // res.should.be.json;
-        res.body.should.be.a('array');
-        res.body[0].should.have.property('location');
-        res.body[0].location.should.equal('fiji');  // Make sure "Fiji" gets converted to lower case!
-        done();
+        request(app)
+          .get('/api/sites/')
+          .end(function (err, res) {
+            if (err) return done(err);
+            expect(200);
+            expect('Content-Type', /json/);
+            expect(res.body[4].location, 'fiji');
+            done();
+          });
       });
 
   });
@@ -73,10 +68,7 @@ xdescribe('RESTful api', function () {
       .get('/api/sites/fiji')
       .end(function (err, res) {
         if (err) return done(err);
-        // res.should.be.json;
-        res.body.should.be.a('array');
-        res.body[0].should.have.property('location');
-        res.body[0].location.should.equal('fiji');  // Make sure "Fiji" gets converted to lower case!
+        expect(res.body[0].location, 'fiji');
         done();
       });
   });
