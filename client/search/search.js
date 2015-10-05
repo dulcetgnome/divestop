@@ -12,6 +12,7 @@ angular.module('divestop.search', [])
       geocoder.geocode({'address': address}, function(results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
           SharedProperties.map.setCenter(results[0].geometry.location);
+          SharedProperties.map.setZoom(11);
         } else {
           console.log('Geocode was not successful for the following reason: ' + status);
         }
