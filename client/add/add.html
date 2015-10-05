@@ -38,7 +38,7 @@
         <i class="material-icons">add</i></a>
       </div>
     </div>
-    <div class="chip" ng-repeat="aquaticLife in form.site.aquaticLife track by $index">
+    <div class="chip" ng-repeat="aquaticLife in form.site.aquaticLife">
       {{aquaticLife}}
       <i class="material-icons" ng-click="form.removeAquaticLife($index)">close</i>
     </div>
@@ -55,7 +55,7 @@
         <i class="material-icons">add</i></a>
       </div>
     </div>
-    <div class="chip" ng-repeat="feature in form.site.features track by $index">
+    <div class="chip" ng-repeat="feature in form.site.features">
       {{feature}}
       <i class="material-icons" ng-click="form.removeFeature($index)">close</i>
     </div>
