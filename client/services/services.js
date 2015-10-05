@@ -148,7 +148,7 @@ angular.module('divestop.services', [])
           // $scope.$apply();
         });
         SharedProperties.markers.push(marker);
-    }
+    };
 
     var hideNewMarker = function() {
       SharedProperties.newSiteMarker.setMap(null);
@@ -174,5 +174,5 @@ angular.module('divestop.services', [])
       hideNewMarker: hideNewMarker,
       showNewMarker: showNewMarker,
       moveNewMarker: moveNewMarker
-    }
+    };
   }]);
