@@ -26,9 +26,4 @@ angular.module('divestop.map', ['ngMap'])
         AppMap.hideNewMarker();
       }
     };
-
-    $scope.hideForm = function(){
-      SharedProperties.showForm.state = false;
-      AppMap.hideNewMarker();
-    };
 });

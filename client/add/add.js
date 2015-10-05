@@ -50,6 +50,7 @@ angular.module('divestop.addsite', [])
       // Deep copy the object so we can stringify coordinates before passing to server
       var newSite = deepCopy(this.site);
       AppMap.addMarker(newSite, SharedProperties.map);
+      this.hideForm();
       DiveSites.postNewSite(newSite).then(function(data) {
         this.clearForm();
       }.bind(this));
@@ -74,6 +75,11 @@ angular.module('divestop.addsite', [])
       return string.trim() === '';
     };
 
+    this.hideForm = function(){
+      SharedProperties.showForm.state = false;
+      AppMap.hideNewMarker();
+    };
+
   })
   .directive('fileread', [function () {
     return {
@@ -94,7 +100,6 @@ angular.module('divestop.addsite', [])
   .directive('ngEnter', function () {
     return function (scope, element, attrs) {
       element.bind('keydown keypress', function (event) {
-        console.log(event.which);
         if(event.which === 13) {
           scope.$apply(function (){
             scope.$eval(attrs.ngEnter);
