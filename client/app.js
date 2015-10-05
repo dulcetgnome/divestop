@@ -6,5 +6,6 @@ angular.module('divestop', [
   'divestop.divesite',
   'divestop.services',
   'divestop.search',
+  'divestop.splash',
   'divestop.addsite'
 ]);

@@ -1,8 +1,39 @@
-.addSiteForm
-  padding-top: 20px
-
 .btn-floating
   margin-top: 15px
+
+.brand-logo
+  font-family: 'Roboto Slab', Georgia, serif
+  font-weight: 700
+
+body.splash
+  overflow: hidden
+
+.splash
+  nav
+    background-image: url('https://farm3.staticflickr.com/2492/4143196658_eda660fed9_o_d.jpg')
+    background-size: 100vw
+    background-position: center
+    height: 100vh
+    padding-top: 40vh
+  .mapContainer
+    visibility: hidden
+  #search
+    background-color: #fff
+  .row .searchContainer
+    width: 75%
+  .brand-logo
+    text-shadow: 1px 1px 8px #555
+    font-size: 42px
+
+@media only screen and (max-width: 994px)
+  .splash
+    .row .searchContainer
+      width: 100%
+    .row .breaker
+      display: block !important
+
+.addDiveSite
+  margin: -45px 50px 80px 0
 
 @media only screen and (min-width: 601px)
   nav
