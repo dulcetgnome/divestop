@@ -14,6 +14,7 @@ angular.module('divestop.search', [])
           SharedProperties.map.setCenter(results[0].geometry.location);
           SharedProperties.map.setZoom(11);
           SharedProperties.splash.state = false;
+          $scope.$apply();
         } else {
           console.log('Geocode was not successful for the following reason: ' + status);
         }
