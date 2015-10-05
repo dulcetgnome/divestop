@@ -92,7 +92,8 @@ angular.module('divestop.addsite', [])
             });
         }
     };
-  }]).directive('ngEnter', function () {
+  }])
+  .directive('ngEnter', function () {
     return function (scope, element, attrs) {
       element.bind('keydown keypress', function (event) {
         console.log(event.which);
