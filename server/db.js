@@ -1,24 +1,10 @@
-var express = require('../node_modules/express');
-var parser = require('../node_modules/body-parser');
-var app = express();
-var port = process.env.PORT || 3000;
-
 /* Using pg-node https://github.com/brianc/node-postgres/wiki */
 /* To install pg, run the following command: npm install pg */
 
 var pg = require('pg');
 
 /* URL for hosted heroku postgresql database */
-var connectionString = process.env.DATABASE_URL;  // FORMAT THAT WORKS!
-// var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';  // TEST!
-// var connectionString = 'postgresql://localhost';
-
-/* Middleware */
-app.use(parser.json());
-
-/* Static File Serving */
-
-app.use(express.static('client'));
+var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
 
 exports.createTables = function(cb) {
   console.log('In create tables!');
@@ -44,7 +30,6 @@ exports.createTables = function(cb) {
         if (err) {
           throw err;
         }
-        console.log('Locations built with:', result);
         done();
         client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
           '_id SERIAL PRIMARY KEY, ' +
@@ -53,7 +38,6 @@ exports.createTables = function(cb) {
             if (err) {
               throw err;
             }
-            console.log('aquatic_life built with:', result);
             done();
             client.query('CREATE TABLE IF NOT EXISTS features (' +
               '_id SERIAL PRIMARY KEY, ' +
@@ -62,7 +46,6 @@ exports.createTables = function(cb) {
                 if (err) {
                   throw err;
                 }
-                console.log('features built with:', result);
                 done();
                 client.query('CREATE TABLE IF NOT EXISTS sites (' +
                   '_id SERIAL PRIMARY KEY, ' +
@@ -78,7 +61,6 @@ exports.createTables = function(cb) {
                     if (err) {
                       throw err;
                     }
-                    console.log('sites built with:', result);
                     done();
                     client.query('CREATE TABLE IF NOT EXISTS pictures (' +
                       '_id SERIAL PRIMARY KEY, ' +
@@ -88,7 +70,6 @@ exports.createTables = function(cb) {
                         if (err) {
                           throw err;
                         }
-                        console.log('pictures built with:', result);
                         done();
                         client.query('CREATE TABLE IF NOT EXISTS site_features (' +
                           'site_id INT NOT NULL REFERENCES sites (_id), ' +
@@ -98,7 +79,6 @@ exports.createTables = function(cb) {
                               throw err;
                             }
                             done();
-                            console.log('site_features built with:', result);
                             client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
                               'site_id INT NOT NULL REFERENCES sites (_id), ' +
                               'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
@@ -106,10 +86,8 @@ exports.createTables = function(cb) {
                                 if (err) {
                                   throw err;
                                 }
-                                console.log('site_features and done!', result);
                                 cb();
                                 done();
-                                // client.end();
                               }
                             );
                           }
@@ -132,7 +110,6 @@ exports.createTables = function(cb) {
 exports.addSite = function(cb, passedSite) {
   pg.connect(connectionString, function(err, client, done) {
     if (err) {throw err;}
-    console.log("Passed site", passedSite);
 
     /* If no location, add location */
     client.query('INSERT INTO locations (location) SELECT $1 WHERE NOT EXISTS ( ' +
@@ -144,14 +121,14 @@ exports.addSite = function(cb, passedSite) {
         var featureString = '';
         for (var n = 0; n < passedSite.features.length; n++) {
           featureString += 'INSERT INTO features (feature) SELECT \'' + passedSite.features[n] + '' +
-          '\' WHERE NOT EXISTS (SELECT feature FROM features WHERE feature = \'' + passedSite.features[n] + '\'); '
+          '\' WHERE NOT EXISTS (SELECT feature FROM features WHERE feature = \'' + passedSite.features[n] + '\'); ';
         }
         client.query(featureString, function(err, result){
           if (err) { throw err; }
           var aquaticLifeString = '';
           for (var p = 0; p < passedSite.aquaticLife.length; p++) {
             aquaticLifeString += 'INSERT INTO aquatic_life (type) SELECT \'' + passedSite.aquaticLife[p] + '' +
-            '\' WHERE NOT EXISTS (SELECT type FROM aquatic_life WHERE type = \'' + passedSite.aquaticLife[p] + '\'); '
+            '\' WHERE NOT EXISTS (SELECT type FROM aquatic_life WHERE type = \'' + passedSite.aquaticLife[p] + '\'); ';
           }
           client.query(aquaticLifeString, function(err, result){
             if (err) { throw err; }
@@ -160,20 +137,19 @@ exports.addSite = function(cb, passedSite) {
               'location = \'' + passedSite.location + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ', ' + passedSite.maxDepth + ', \'' + passedSite.gradient + '\', \'' + passedSite.description + '\', \'' + passedSite.comments + '\' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
               function(err, result) {
                 if (err) { 
-                  console.error(err);
                   throw err;
                 }
                 var siteFeaturesString = '';
                 for (var q = 0; q < passedSite.features.length; q++) {
                   siteFeaturesString += 'INSERT INTO site_features (site_id, feature_id) VALUES ((SELECT _id FROM sites ' + 
-                  'WHERE site = \'' + passedSite.name + '\'), (SELECT _id FROM features WHERE feature = \'' + passedSite.features[q] + '\')); '
+                  'WHERE site = \'' + passedSite.name + '\'), (SELECT _id FROM features WHERE feature = \'' + passedSite.features[q] + '\')); ';
                 }
                 client.query(siteFeaturesString, function(err, result){
                   if (err) { throw err; }
                   var photosString = '';
                   for (var q = 0; q < passedSite.photos.length; q++) {
                     photosString += 'INSERT INTO pictures (site_id, picture) VALUES ((SELECT _id FROM sites ' + 
-                    'WHERE site = \'' + passedSite.name + '\'), \'' + passedSite.photos[q] + '\'); '
+                    'WHERE site = \'' + passedSite.name + '\'), \'' + passedSite.photos[q] + '\'); ';
                   }
                   client.query(photosString, function(err, result){
                     if (err) { throw err; }
@@ -181,7 +157,7 @@ exports.addSite = function(cb, passedSite) {
                     for (var q = 0; q < passedSite.aquaticLife.length; q++) {
                       siteAquaticLifeString += 'INSERT INTO site_aquatic_life (site_id, aquatic_life_id) ' + 
                       'VALUES ((SELECT _id FROM sites WHERE site = \'' + passedSite.name + '\'), ' + 
-                      '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.aquaticLife[q] + '\')); '
+                      '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.aquaticLife[q] + '\')); ';
                     }
                     client.query(siteAquaticLifeString, function(err, result){
                       if (err) { throw err; }
@@ -223,10 +199,7 @@ exports.search = function(cb, passedLocation) {
       }
       var siteObject = {};
       var resultsArray = [];
-      // console.log(queryString);
-      // console.log("SELECT result.rows.length: " + result.rows.length);
       for (var m = 0; m < result.rows.length; m++) {
-        // console.log("row" + i + ": " + result.rows[i].site);
         if (result.rows[m].site === siteObject.site) {
           if (siteObject.feature.indexOf(result.rows[m].feature) < 0) {
             siteObject.feature.push(result.rows[m].feature);
@@ -252,9 +225,7 @@ exports.search = function(cb, passedLocation) {
         resultsArray.push(siteObject);
       }
 
-      // console.log("resultsArray.length: " + resultsArray.length);
       done();
-      cb(resultsArray);
     });
   });
 };
@@ -274,48 +245,3 @@ exports.wipeDatabase = function(cb) {
     });
   });
 };
-
-app.get('/', function(req, res) {
-  res.sendStatus(200);
-});
-
-app.get('/api/sites/:location', function(req, res) {
-  var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
-
-  exports.search(function(location) {
-    res.json(location);
-  }, location);
-});
-
-app.get('/api/sites', function(req, res) { 
-  console.log('In sites get!');
-  exports.createTables(function(){
-    console.log('Creating tables!');
-    exports.search(function(location) {
-      res.json(location);
-    });
-  })
-});
-
-app.get('/api/keys', function(req, res) {
-  // if (req.hostname === 'dulcetgnome.herokuapp.com') {
-    res.json({
-      'X-Parse-Application-Id': process.env['X-Parse-Application-Id'],
-      'X-Parse-REST-API-Key': process.env['X-Parse-REST-API-Key']
-    });
-  // } else {
-  //   res.send(401);
-  // }
-});
-
-app.post('/api/sites', function(req, res) {
-  exports.addSite(function() {
-    res.sendStatus(201);
-  }, req.body);
-});
-
-app.listen(port, function() {
-  console.log("Listening on port: " + port);
-});
-
-exports.app = app;

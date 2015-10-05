@@ -3,12 +3,16 @@ var Sites = require('../../server/index.js');
 
 // The `clearDB` helper function, when invoked, will clear the database
 var clearDB = function (done) {
-  Sites.wipeDatabase(done);
+  Sites.wipeDatabase(function(){ 
+    done();
+  });
 };
 
-xdescribe('Postgres Database Structure', function () {
+describe('Postgres Database Structure', function () {
   before(function (done) {
-    Sites.createTables(done);
+    Sites.createTables(function() {
+      done();
+    });
   });
 
   // Clear database before each test and then seed it with example `users` so that you can run tests
@@ -16,64 +20,79 @@ xdescribe('Postgres Database Structure', function () {
     clearDB(function() {
       var sites = [
         {
-          site: 'Oscars Oasis',
+          name: 'Oscars Oasis',
           location: 'Cuba',
-          lat: 54.343,
-          long: 56.454,
-          max_depth: 25,
+          coordinates: {
+            lat: 54.343,
+            lng: 56.454
+          },
+          maxDepth: 25,
           gradient: '25d',
-          feature: ['cave', 'shipwreck'],
-          type: ['clown fish', 'hammerhead sharks'],
+          features: ['cave', 'shipwreck'],
+          aquaticLife: ['clown fish', 'hammerhead sharks'],
           description: "A very nice dive with clear water",
-          comments: "This dive was both beautify and relaxing"
+          comments: "This dive was both beautify and relaxing",
+          photos: ['urlToPhoto']
         },
         {
-          site: 'Irenas Island',
+          name: 'Irenas Island',
           location: 'San Diego',
-          lat: 29.45,
-          long: 56.232,
-          max_depth: 20,
+          coordinates: {
+            lat: 29.45,
+            lng: 56.232
+          },
+          maxDepth: 20,
           gradient: '5d',
-          feature: ['shipwreck'],
-          type: ['giant tortoises', 'manta rays'],
+          features: ['shipwreck'],
+          aquaticLife: ['giant tortoises', 'manta rays'],
           description: "A shallow dive with lots of sea life",
-          comments: "Come for the shipwreck, stay for the manta rays"
+          comments: "Come for the shipwreck, stay for the manta rays",
+          photos: ['urlToPhoto']
         },
         {
-          site: 'Pauls Pier',
+          name: 'Pauls Pier',
           location: 'Ft. Lauderdale',
-          lat: 2.34,
-          long: 54.98,
-          max_depth: 30,
+          coordinates: {
+            lat: 2.34,
+            lng: 54.98
+          },
+          maxDepth: 30,
           gradient: '35d',
-          feature: ['coral'],
-          type: ['sea lions', 'giant tortoises'],
+          features: ['coral'],
+          aquaticLife: ['sea lions', 'giant tortoises'],
           description: "A shore dive with lots to offer",
-          comments: "The best Florida dive spot north of Key Largo"
+          comments: "The best Florida dive spot north of Key Largo",
+          photos: ['urlToPhoto']
         },
         {
-          site: 'Angies Abyss',
+          name: 'Angies Abyss',
           location: 'San Diego',
-          lat: 134.09,
-          long: 54.35,
-          max_depth: 100,
+          coordinates: {
+            lat: 134.09,
+            lng: 54.35
+          },
+          maxDepth: 100,
           gradient: '45d',
-          feature: ['deep abyss'],
-          type: ['clown fish', 'sharks'],
+          features: ['deep abyss'],
+          aquaticLife: ['clown fish', 'sharks'],
           description: "A deep dive experience right off the coast of Southern California",
-          comments: "How deep does that thing go?!"
+          comments: "How deep does that thing go?!",
+          photos: ['urlToPhoto']
         },
         {
-          site: 'Rogers Reef',
+          name: 'Rogers Reef',
           location: 'Rio de Janeiro',
-          lat: 94.5,
-          long: 34.12,
-          max_depth: 50,
+          coordinates: {
+            lat: 94.5,
+            lng: 34.12,
+          },
+          maxDepth: 50,
           gradient: '15d',
-          feature: ['coral', 'buried treasure'],
-          type: ['barracuda'],
+          features: ['coral', 'buried treasure'],
+          aquaticLife: ['barracuda'],
           description: "Exotic species and the chance for riches",
-          comments: "I didnt find any gold this trip but I plan to come back!"
+          comments: "I didnt find any gold this trip but I plan to come back!",
+          photos: ['urlToPhoto']
         }
       ];
       var promises = [];
@@ -106,11 +125,11 @@ xdescribe('Postgres Database Structure', function () {
       expect(sites.length).to.equal(2);
       expect(sites[0].location).to.equal('San Diego');
       expect(sites[1].location).to.equal('San Diego');
-      // done();
+      done();
     }, 'San Diego');
   });
 
-  xit('should have a method that given the data for a site, inserts that data into the database', function (done) {
+  it('should have a method that given the data for a site, inserts that data into the database', function (done) {
     Sites.addSite(function() {
       // done();
     }, {

@@ -2,7 +2,7 @@
   "name": "dulcetgnome",
   "version": "1.0.0",
   "description": "Greenfield Project",
-  "main": "server/index.js",
+  "main": "server/server.js",
   "scripts": {
     "test": "grunt test",
     "postinstall": "bower cache clean && bower install && grunt"
