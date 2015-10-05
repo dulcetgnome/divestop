@@ -1,7 +1,7 @@
 // Controller for the add site form
 
 angular.module('divestop.addsite', [])
-  .controller('AddSiteController', function(SharedProperties, DiveSites, Photos) {
+  .controller('AddSiteController', function(SharedProperties, DiveSites, Photos, AppMap) {
     this.site = {};
     this.site.features = [];
     this.site.aquaticLife = [];
@@ -49,11 +49,9 @@ angular.module('divestop.addsite', [])
     this.addSite = function() {
       // Deep copy the object so we can stringify coordinates before passing to server
       var newSite = deepCopy(this.site);
-      //newSite.coordinates = JSON.stringify(newSite.coordinates);
+      AppMap.addMarker(newSite, SharedProperties.map);
       DiveSites.postNewSite(newSite).then(function(data) {
         this.clearForm();
-        // call toggleForm on map controller
-        // Rerender map with new marker
       }.bind(this));
     };
 
