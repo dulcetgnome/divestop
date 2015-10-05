@@ -21,6 +21,7 @@
   // <script src="divesite/divesite.js"></script>
   // <script src="add/add.js"></script>
   // <script src="search/search.js"></script>
+  // <script src="splash/splash.js"></script>
   // <script src="services/services.js"></script>
   // <script src="app.js"></script> -->
 
@@ -32,7 +33,7 @@
 </head>
 
 <!-- these templateUrl files are referenced in each section's controller -->
-<body ng-app="divestop">
+<body ng-app="divestop" ng-class="{splash: splash.state}" ng-controller="SplashController">
   <nav class="blue-grey lighten-2" role="navigation">
     <div class="nav-wrapper container">
       <div class="row"> 
