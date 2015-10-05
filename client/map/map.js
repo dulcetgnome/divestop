@@ -1,6 +1,7 @@
 // this controller handles the functionality of working with the map
 
 angular.module('divestop.map', ['ngMap'])
+  // the controller is called OurMapController so it doesn't interfere with the ngMap MapController
   .controller("OurMapController", function($scope, SharedProperties, DiveSites) {
     $scope.newSite = SharedProperties.newSite; // Object with properties lat, lng
     $scope.showForm = SharedProperties.showForm;
