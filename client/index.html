@@ -48,7 +48,7 @@
   </nav>
   <div ng-controller="OurMapController" ng-include src="templateUrl"></div>
   <div class="container">
-    <div class="row" ng-controller="AddSiteController as form" ng-include src="form.templateUrl" ng-show="form.showForm.state"></div>
+    <div class="row addSiteForm" ng-controller="AddSiteController as form" ng-include src="form.templateUrl" ng-show="form.showForm.state"></div>
     <div class="row" id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable() && !showForm.state" ng-include src="templateUrl"></div>
   </div>
 
