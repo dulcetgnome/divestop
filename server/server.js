@@ -18,17 +18,23 @@ app.get('/', function(req, res) {
 app.get('/api/sites/:location', function(req, res) {
   var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
 
-  db.search(function(location) {
-    res.json(location);
+  db.search(function(sites) {
+    res.json(sites);
   }, location);
 });
 
-app.get('/api/sites', function(req, res) { 
+app.get('/api/sites', function(req, res) {
   db.createTables(function(){
-    db.search(function(location) {
-      res.json(location);
+    db.search(function(sites) {
+      res.json(sites);
     });
   });
+});
+
+app.post('/api/sites', function(req, res) {
+  db.addSite(function() {
+    res.sendStatus(201);
+  }, req.body);
 });
 
 app.get('/api/keys', function(req, res) {
@@ -38,11 +44,6 @@ app.get('/api/keys', function(req, res) {
     });
 });
 
-app.post('/api/sites', function(req, res) {
-  db.addSite(function() {
-    res.sendStatus(201);
-  }, req.body);
-});
 
 app.listen(port, function() {
   console.log("Listening on port: " + port);
