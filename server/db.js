@@ -251,7 +251,7 @@ exports.search = function(cb, passedLocation) {
           siteObject = result.rows[m];
 
           /* Nuke lat/long */
-          siteObject.coordinates = { 'lat': result.rows[m].lat, 'lng': result.rows[m].long };
+          siteObject.coordinates = { 'lat': +result.rows[m].lat, 'lng': +result.rows[m].long };
           delete siteObject.lat;
           delete siteObject.long;
           
