@@ -251,9 +251,9 @@ exports.search = function(cb, passedLocation) {
           siteObject = result.rows[m];
 
           /* Nuke lat/long */
+          siteObject.coordinates = { 'lat': result.rows[m].lat, 'lng': result.rows[m].long };
           delete siteObject.lat;
           delete siteObject.long;
-          siteObject.coordinates = { 'lat': result.rows[m].lat, 'lng': result.rows[m].long };
           
           // The following four lines ensure that the 'type' and 'feature' properties contain arrays.
           var firstAquaticLife = siteObject.type;
