@@ -66,6 +66,7 @@ angular.module('divestop.map', ['ngMap'])
 
           $scope.$apply();
         });
+        sharedProperties.markers.push(marker);
       }
     };
   });
