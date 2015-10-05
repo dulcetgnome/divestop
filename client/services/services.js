@@ -120,8 +120,8 @@ angular.module('divestop.services', [])
     };
 
   })
-  .factory("AppMap", ['SharedProperties', 
-    function(SharedProperties) {
+  .factory("AppMap", ['SharedProperties', '$rootScope',
+    function(SharedProperties, $rootScope) {
 
     // this will add markers to the google map object, then store them in a markers array.
     var addMarkers = function(sites, map){
@@ -144,9 +144,7 @@ angular.module('divestop.services', [])
         marker.addListener('click', function(){
           // show the site view, and change views when you click on a different marker.
           SharedProperties.currentSite.site = this.diveSite;
-          // $scope.hideForm();
-
-          // $scope.$apply();
+          $rootScope.$apply();
         });
         SharedProperties.markers.push(marker);
     };
