@@ -6,6 +6,7 @@ angular.module('divestop.services', [])
 
     sharedProperties.newSite = {coordinates: {}};
     sharedProperties.showForm = {state: false};
+    sharedProperties.markers = [];
     
     sharedProperties.currentSite = {site: {}};
 
