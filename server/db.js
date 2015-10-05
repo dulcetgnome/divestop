@@ -118,8 +118,8 @@ exports.addSite = function(cb, passedSite) {
 
     /* If no location, add location */
     client.query('INSERT INTO locations (location) SELECT $1 WHERE NOT EXISTS ( ' +
-      'SELECT location FROM locations WHERE location = $2)', [passedSite.location, 
-      passedSite.location], 
+      'SELECT location FROM locations WHERE location = $2)', [passedSite.location.toLowerCase(), 
+      passedSite.location.toLowerCase()], 
       function(err, result){
         if (err) { throw err; }
 
@@ -149,7 +149,7 @@ exports.addSite = function(cb, passedSite) {
 
             /* If no site, add site */
             client.query('INSERT INTO sites (site, location_id, lat, long, max_depth, gradient, description, comments) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
-              'location = \'' + passedSite.location + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ', ' + passedSite.maxDepth + ', \'' + passedSite.gradient + '\', \'' + passedSite.description + '\', \'' + passedSite.comments + '\' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
+              'location = \'' + passedSite.location.toLowerCase() + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ', ' + passedSite.maxDepth + ', \'' + passedSite.gradient + '\', \'' + passedSite.description + '\', \'' + passedSite.comments + '\' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
               function(err, result) {
                 if (err) { throw err; }
 
@@ -207,20 +207,19 @@ exports.addSite = function(cb, passedSite) {
 */
 
 exports.search = function(cb, passedLocation) {
-  console.log('In search!');
   var locationQuery = '';
   var params = [];
   if (passedLocation) {
-    params = [passedLocation];
+    params = [passedLocation.toLowerCase()];
     locationQuery = ' WHERE (l.location = $1)';
   }
 
   var queryString = 'SELECT s.site, l.location, s.lat, s.long, s.max_depth, ' + 
      's.gradient, s.description, s.comments, a.type, f.feature FROM sites s ' + 
-     'INNER JOIN locations l ON (s.location_id = l._id) INNER JOIN ' + 
-     'site_features sf ON (sf.site_id = s._id) INNER JOIN features f ' + 
-     'ON (sf.feature_id = f._id) INNER JOIN site_aquatic_life saq ' + 
-     'ON (saq.site_id = s._id) INNER JOIN aquatic_life a ' + 
+     'LEFT OUTER JOIN locations l ON (s.location_id = l._id) LEFT OUTER JOIN ' + 
+     'site_features sf ON (sf.site_id = s._id) LEFT OUTER JOIN features f ' + 
+     'ON (sf.feature_id = f._id) LEFT OUTER JOIN site_aquatic_life saq ' + 
+     'ON (saq.site_id = s._id) LEFT OUTER JOIN aquatic_life a ' + 
      'ON (a._id = saq.aquatic_life_id)' + 
      locationQuery + ';';
 
@@ -247,11 +246,11 @@ exports.search = function(cb, passedLocation) {
           }
           if (siteObject.type.indexOf(result.rows[m].lat) < 0) {
             siteObject.coordinates.lat = result.rows[m].lat;
-            delete siteObject['lat'];
+            delete siteObject.lat;
           }
           if (siteObject.type.indexOf(result.rows[m].long) < 0) {
             siteObject.coordinates.lng = result.rows[m].long;
-            delete siteObject['long'];
+            delete siteObject.long;
           }
         } else {
           if (siteObject.hasOwnProperty('site')) {
