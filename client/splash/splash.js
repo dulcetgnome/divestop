@@ -1,4 +1,4 @@
-// controller for the splash functionality of the page
+// controller for the splash page functionality
 
 angular.module('divestop.splash', [])
   .controller('SplashController', function($scope, SharedProperties) {
