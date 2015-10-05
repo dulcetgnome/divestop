@@ -7,7 +7,6 @@ var pg = require('pg');
 var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
 
 exports.createTables = function(cb) {
-  console.log('In create tables!');
   pg.connect(connectionString, function(err, client, done) {
     if (err) {
       throw err;
