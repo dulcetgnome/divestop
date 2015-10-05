@@ -244,26 +244,22 @@ exports.search = function(cb, passedLocation) {
           if (siteObject.type.indexOf(result.rows[m].type) < 0) {
             siteObject.type.push(result.rows[m].type);
           }
-          if (siteObject.type.indexOf(result.rows[m].lat) < 0) {
-            siteObject.coordinates.lat = result.rows[m].lat;
-            delete siteObject.lat;
-          }
-          if (siteObject.type.indexOf(result.rows[m].long) < 0) {
-            siteObject.coordinates.lng = result.rows[m].long;
-            delete siteObject.long;
-          }
         } else {
           if (siteObject.hasOwnProperty('site')) {
             sites.push(siteObject);
           }
           siteObject = result.rows[m];
 
+          /* Nuke lat/long */
+          delete siteObject.lat;
+          delete siteObject.long;
+          siteObject.coordinates = { 'lat': result.rows[m].lat, 'lng': result.rows[m].long };
+          
           // The following four lines ensure that the 'type' and 'feature' properties contain arrays.
           var firstAquaticLife = siteObject.type;
           siteObject.type = [firstAquaticLife];
           var firstFeature = siteObject.feature;
           siteObject.feature = [firstFeature];
-          siteObject.coordinates = { 'lat': undefined, 'lng': undefined };
         }
       }
 
