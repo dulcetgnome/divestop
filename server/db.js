@@ -237,7 +237,7 @@ exports.search = function(cb, passedLocation) {
       var siteObject = {};
       var sites = [];
       for (var m = 0; m < result.rows.length; m++) {
-        if (result.rows[m].site === siteObject.site) {
+        if (result.rows[m].site === siteObject.name) {
 
           if (siteObject.features.indexOf(result.rows[m].feature) < 0) {
             siteObject.features.push(result.rows[m].feature);
