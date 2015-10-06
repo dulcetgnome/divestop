@@ -215,12 +215,13 @@ exports.search = function(cb, passedLocation) {
   }
 
   var queryString = 'SELECT s.site, l.location, s.lat, s.long, s.max_depth, ' + 
-     's.gradient, s.description, s.comments, a.type, f.feature FROM sites s ' + 
+     's.gradient, s.description, s.comments, a.type, p.picture, f.feature FROM sites s ' + 
      'LEFT OUTER JOIN locations l ON (s.location_id = l._id) LEFT OUTER JOIN ' + 
      'site_features sf ON (sf.site_id = s._id) LEFT OUTER JOIN features f ' + 
      'ON (sf.feature_id = f._id) LEFT OUTER JOIN site_aquatic_life saq ' + 
      'ON (saq.site_id = s._id) LEFT OUTER JOIN aquatic_life a ' + 
-     'ON (a._id = saq.aquatic_life_id)' + 
+     'ON (a._id = saq.aquatic_life_id) LEFT OUTER JOIN pictures p ' +
+     'ON (p.site_id = s._id)' + 
      locationQuery + ';';
 
 
@@ -245,6 +246,9 @@ exports.search = function(cb, passedLocation) {
           if (siteObject.aquaticLife.indexOf(result.rows[m].type) < 0) {
             siteObject.aquaticLife.push(result.rows[m].type);
           }
+          if (siteObject.pictures.indexOf(result.rows[m].picture) < 0) {
+            siteObject.pictures.push(result.rows[m].picture);
+          }
         } else {
           if (siteObject.hasOwnProperty('name')) {
             sites.push(siteObject);
@@ -267,12 +271,18 @@ exports.search = function(cb, passedLocation) {
 
           siteObject.maxDepth = result.rows[m].max_depth;
           delete siteObject.max_depth;
+
+
+          siteObject.pictures = result.rows[m].picture;
+          delete siteObject.picture;
           
           // The following four lines ensure that the 'type' and 'feature' properties contain arrays.
           var firstAquaticLife = siteObject.aquaticLife;
           siteObject.aquaticLife = [firstAquaticLife];
           var firstFeature = siteObject.features;
           siteObject.features = [firstFeature];
+          var firstPicture = siteObject.pictures;
+          siteObject.pictures = [firstPicture];
         }
       }
 
