@@ -4,7 +4,11 @@ node_js:
 before_install: 
   - "sudo apt-get install ruby-compass"
   - "npm install -g grunt grunt-cli bower"
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
 script:
   - "bower install"
   - "npm test"
   - "grunt build"
+addons:
+  postgresql: "9.3"
