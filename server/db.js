@@ -220,7 +220,8 @@ exports.search = function(cb, passedLocation) {
      'site_features sf ON (sf.site_id = s._id) LEFT OUTER JOIN features f ' + 
      'ON (sf.feature_id = f._id) LEFT OUTER JOIN site_aquatic_life saq ' + 
      'ON (saq.site_id = s._id) LEFT OUTER JOIN aquatic_life a ' + 
-     'ON (a._id = saq.aquatic_life_id)' + 
+     'ON (a._id = saq.aquatic_life_id) LEFT OUTER JOIN pictures p ' +
+     'ON (p.site_id = s._id)' + 
      locationQuery + ';';
 
 
@@ -238,11 +239,11 @@ exports.search = function(cb, passedLocation) {
       var sites = [];
       for (var m = 0; m < result.rows.length; m++) {
         if (result.rows[m].site === siteObject.site) {
-          if (siteObject.feature.indexOf(result.rows[m].feature) < 0) {
-            siteObject.feature.push(result.rows[m].feature);
+          if (siteObject.features.indexOf(result.rows[m].feature) < 0) {
+            siteObject.features.push(result.rows[m].feature);
           }
-          if (siteObject.type.indexOf(result.rows[m].type) < 0) {
-            siteObject.type.push(result.rows[m].type);
+          if (siteObject.aquaticLife.indexOf(result.rows[m].type) < 0) {
+            siteObject.aquaticLife.push(result.rows[m].type);
           }
         } else {
           if (siteObject.hasOwnProperty('site')) {
@@ -254,12 +255,21 @@ exports.search = function(cb, passedLocation) {
           siteObject.coordinates = { 'lat': +result.rows[m].lat, 'lng': +result.rows[m].long };
           delete siteObject.lat;
           delete siteObject.long;
+
+          siteObject.features = result.rows[m].feature;
+          delete siteObject.feature;
+
+          siteObject.aquaticLife = result.rows[m].type;
+          delete siteObject.type;
+
+          siteObject.maxDepth = result.rows[m].max_depth;
+          delete siteObject.max_depth;
           
           // The following four lines ensure that the 'type' and 'feature' properties contain arrays.
-          var firstAquaticLife = siteObject.type;
-          siteObject.type = [firstAquaticLife];
-          var firstFeature = siteObject.feature;
-          siteObject.feature = [firstFeature];
+          var firstAquaticLife = siteObject.aquaticLife;
+          siteObject.aquaticLife = [firstAquaticLife];
+          var firstFeature = siteObject.features;
+          siteObject.features = [firstFeature];
         }
       }
 
