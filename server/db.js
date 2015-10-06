@@ -256,6 +256,9 @@ exports.search = function(cb, passedLocation) {
           delete siteObject.lat;
           delete siteObject.long;
 
+          siteObject.name = result.rows[m].site;
+          delete siteObject.site;
+
           siteObject.features = result.rows[m].feature;
           delete siteObject.feature;
 
