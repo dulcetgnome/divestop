@@ -220,8 +220,7 @@ exports.search = function(cb, passedLocation) {
      'site_features sf ON (sf.site_id = s._id) LEFT OUTER JOIN features f ' + 
      'ON (sf.feature_id = f._id) LEFT OUTER JOIN site_aquatic_life saq ' + 
      'ON (saq.site_id = s._id) LEFT OUTER JOIN aquatic_life a ' + 
-     'ON (a._id = saq.aquatic_life_id) LEFT OUTER JOIN pictures p ' +
-     'ON (p.site_id = s._id)' + 
+     'ON (a._id = saq.aquatic_life_id)' + 
      locationQuery + ';';
 
 
@@ -239,6 +238,7 @@ exports.search = function(cb, passedLocation) {
       var sites = [];
       for (var m = 0; m < result.rows.length; m++) {
         if (result.rows[m].site === siteObject.site) {
+
           if (siteObject.features.indexOf(result.rows[m].feature) < 0) {
             siteObject.features.push(result.rows[m].feature);
           }
@@ -246,18 +246,18 @@ exports.search = function(cb, passedLocation) {
             siteObject.aquaticLife.push(result.rows[m].type);
           }
         } else {
-          if (siteObject.hasOwnProperty('site')) {
+          if (siteObject.hasOwnProperty('name')) {
             sites.push(siteObject);
           }
           siteObject = result.rows[m];
+
+          siteObject.name = result.rows[m].site;
+          delete siteObject.site;
 
           /* Nuke lat/long */
           siteObject.coordinates = { 'lat': +result.rows[m].lat, 'lng': +result.rows[m].long };
           delete siteObject.lat;
           delete siteObject.long;
-
-          siteObject.name = result.rows[m].site;
-          delete siteObject.site;
 
           siteObject.features = result.rows[m].feature;
           delete siteObject.feature;
@@ -276,7 +276,7 @@ exports.search = function(cb, passedLocation) {
         }
       }
 
-      if (siteObject.hasOwnProperty('site')) {
+      if (siteObject.hasOwnProperty('name')) {
         sites.push(siteObject);
       }
 
