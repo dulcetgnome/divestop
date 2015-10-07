@@ -12,7 +12,7 @@ angular.module('divestop.addsite', [])
     this.site.comments = "testComment";
     this.site.gradient = "tG";
 
-    this.templateUrl = 'add/add.html';
+    // this.templateUrl = 'add/add.html';
 
     var addToArray = function(item, array) {
       if(array.indexOf(item) === -1 && !isBlank(item)){

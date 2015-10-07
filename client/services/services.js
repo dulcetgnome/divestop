@@ -9,13 +9,15 @@ angular.module('divestop.services', [])
     sharedProperties.markers = [];
     
     sharedProperties.currentSite = {site: {}};
-    sharedProperties.splash = {state: true};
+    sharedProperties.splash = {state: false};
 
     return sharedProperties;
 
   })
   .factory('DiveSites', function($http) {
 
+    // should be refactored to take queries -- Edgar
+    // should not get every site available in the database -- Edgar
     var getAllDiveSites = function() {
       return $http.get('/api/sites')
         .then(function(resp) {

@@ -13,12 +13,11 @@ angular.module('divestop', [
   'satellizer'
 ])
 
-.config(function ($routeProvider, $httpProvider, $authProvider) {
+.config(function ($routeProvider, $httpProvider) {
   $routeProvider
     // home page will automatically point to the map
     .when('/', {
-      templateUrl: '/map/map.html',
-      controller: 'OurMapController'
+      templateUrl: '/map/map.html'
     })
     .when('/signup', {
       templateUrl: '/users/signup.html',
@@ -46,14 +45,14 @@ angular.module('divestop', [
     })
     .otherwise('/');
 
-  // use satellizer for user authentication
-  $authProvider.facebook({
-    clientId: 'Facebook App ID'
-  });
+  // // use satellizer for user authentication
+  // $authProvider.facebook({
+  //   clientId: 'Facebook App ID'
+  // });
 
-  $authProvider.google({
-    clientId: 'Google Client ID'
-  });
+  // $authProvider.google({
+  //   clientId: 'Google Client ID'
+  // });
 
 });
 
