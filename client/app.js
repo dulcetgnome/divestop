@@ -4,7 +4,7 @@
 angular.module('divestop', [
   'divestop.map',
   'divestop.divesite',
-  'divestop.users',
+  // 'divestop.users',
   'divestop.services',
   'divestop.search',
   'divestop.splash',
@@ -13,12 +13,11 @@ angular.module('divestop', [
   'satellizer'
 ])
 
-.config(function ($routeProvider, $httpProvider, $authProvider) {
+.config(function ($routeProvider, $httpProvider) {
   $routeProvider
     // home page will automatically point to the map
     .when('/', {
-      templateUrl: '/map/map.html',
-      controller: 'OurMapController'
+      templateUrl: '/map/map.html'
     })
     .when('/signup', {
       templateUrl: '/users/signup.html',
@@ -44,16 +43,16 @@ angular.module('divestop', [
       templateUrl: '/add/add.html',
       controller: 'AddSiteController'
     })
-    .otherwise('/add/add.html');
+    .otherwise('/');
 
-  // use satellizer for user authentication
-  $authProvider.facebook({
-    clientId: 'Facebook App ID'
-  });
+  // // use satellizer for user authentication
+  // $authProvider.facebook({
+  //   clientId: 'Facebook App ID'
+  // });
 
-  $authProvider.google({
-    clientId: 'Google Client ID'
-  });
+  // $authProvider.google({
+  //   clientId: 'Google Client ID'
+  // });
 
 });
 
