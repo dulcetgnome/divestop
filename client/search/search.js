@@ -2,7 +2,6 @@
 
 angular.module('divestop.search', [])
   .controller('SearchController', function($scope, SharedProperties) {
-    $scope.templateUrl = 'search/search.html';
 
     // geocoder querys the google map api to get lat lng coordinates for an address
     var geocoder = new google.maps.Geocoder();
