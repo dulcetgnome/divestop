@@ -3,14 +3,12 @@
 angular.module('divestop.map', ['ngMap'])
   // the controller is called OurMapController so it doesn't interfere with the ngMap MapController
   .controller("OurMapController", function($scope, SharedProperties, DiveSites, AppMap) {
-    console.log("inside map controller");
     $scope.newSite = SharedProperties.newSite; // Object with properties lat, lng
     $scope.showForm = SharedProperties.showForm;
     $scope.moveNewMarker = AppMap.moveNewMarker;
     SharedProperties.newSiteMarker = new google.maps.Marker();
 
     $scope.$on("mapInitialized", function(e, map) {
-      console.log("map initialized!!!");
       SharedProperties.map = map;
       DiveSites.getAllDiveSites()
         .then(function(sites) {
