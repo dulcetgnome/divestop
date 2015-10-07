@@ -89,6 +89,18 @@ exports.createTables = function(cb) {
                                 }
                                 cb();
                                 done();
+                                client.query('CREATE TABLE IF NOT EXISTS users (' +
+                                  '_id SERIAL PRIMARY KEY, ' +
+                                  'fb_id VARCHAR(250), ' +
+                                  'username VARCHAR(250), ' +
+                                  'first_name VARCHAR(250), ' +
+                                  'last_name VARCHAR(250), ' +
+                                  'email VARCHAR(250), ' +
+                                  ')', function(err, result){
+                                    if (err) {
+                                      throw err;
+                                    }
+                                  });
                               }
                             );
                           }
