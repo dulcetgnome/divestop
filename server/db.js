@@ -352,18 +352,24 @@ exports.addUser = function (fbdata, cb) {
       fbdata.fb_id], 
       function(err, result){
         if (err) { throw err; }
+        done();
+        cb();
       });
   });
 };
 
-exports.findUser = function (id) {
+exports.findUser = function (id, cb) {
   pg.connect(connectionString, function(err, client, done) {
     if (err) {throw err;}
 
     /* find user by his facebook id */
     client.query('SELECT * FROM users (user) WHERE user._id = $1)', [id], 
       function(err, result){
-        if (err) { throw err; }
+        if (err) { 
+          throw err; 
+        }
+        done();
+        cb(result);
       });
   });
 };
