@@ -87,7 +87,6 @@ exports.createTables = function(cb) {
                                 if (err) {
                                   throw err;
                                 }
-                                cb();
                                 done();
                                 client.query('CREATE TABLE IF NOT EXISTS users (' +
                                   '_id SERIAL PRIMARY KEY, ' +
@@ -100,6 +99,17 @@ exports.createTables = function(cb) {
                                     if (err) {
                                       throw err;
                                     }
+                                    done();
+                                    client.query('CREATE TABLE IF NOT EXISTS bars_visited (' +
+                                      'user_id INT NOT NULL REFERENCES users (_id), ' +
+                                      'bar_id INT NOT NULL REFERENCES sites (_id) ' +
+                                      ')', function(err, result){
+                                        if (err) {
+                                          throw err;
+                                        }
+                                        done();
+                                        cb();
+                                      });
                                   });
                               }
                             );
@@ -323,3 +333,17 @@ exports.wipeDatabase = function(cb) {
     });
   });
 };
+
+// Add a user to the database 
+exports.addUser = function (fbdata, cb) {
+  pg.connect(connectionString, function(err, client, done) {
+    if (err) {throw err;}
+
+    /* If no location, add location */
+    client.query('INSERT INTO users (user) SELECT $1 WHERE NOT EXISTS ( ' +
+      'SELECT user FROM users WHERE user = $2)', [fbdata.fb_id, 
+      fbdata.fb_id], 
+      function(err, result){
+        if (err) { throw err; }
+      })
+  })}
