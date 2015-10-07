@@ -229,11 +229,14 @@ exports.addSite = function(cb, passedSite) {
 */
 
 exports.search = function(cb, passedLocation) {
+  // passedlocation is array of long and latitude
+  // should be integers
   var locationQuery = '';
   var params = [];
   if (passedLocation) {
-    params = [passedLocation.toLowerCase()];
-    locationQuery = ' WHERE (l.location = $1)';
+    params = passedlocation
+    // need to get lat and long from search 
+    locationQuery = ' WHERE l.lat BETWEEN ($1 - 10) AND ($1 - 10) AND l.long BETWEEN ($1 + 10) AND ($2 - 10)';
   }
 
   var queryString = 'SELECT s.site, l.location, s.lat, s.long, s.max_depth, ' + 
@@ -345,5 +348,20 @@ exports.addUser = function (fbdata, cb) {
       fbdata.fb_id], 
       function(err, result){
         if (err) { throw err; }
-      })
-  })}
+      });
+  });
+};
+
+exports.findUser = function (id) {
+  pg.connect(connectionString, function(err, client, done) {
+    if (err) {throw err;}
+
+    /* find user by his facebook id */
+    client.query('SELECT * FROM users (user) WHERE user._id = $1)', [id], 
+      function(err, result){
+        if (err) { throw err; }
+      });
+  });
+};
+
+
