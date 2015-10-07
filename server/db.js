@@ -233,7 +233,9 @@ exports.search = function(cb, passedLocation) {
   var params = [];
   if (passedLocation) {
     params = [passedLocation.toLowerCase()];
+    // need to get lat and long from search 
     locationQuery = ' WHERE (l.location = $1)';
+
   }
 
   var queryString = 'SELECT s.site, l.location, s.lat, s.long, s.max_depth, ' + 
@@ -339,10 +341,22 @@ exports.addUser = function (fbdata, cb) {
   pg.connect(connectionString, function(err, client, done) {
     if (err) {throw err;}
 
-    /* If no location, add location */
+    /* If no users, add user */
     client.query('INSERT INTO users (user) SELECT $1 WHERE NOT EXISTS ( ' +
       'SELECT user FROM users WHERE user = $2)', [fbdata.fb_id, 
       fbdata.fb_id], 
+      function(err, result){
+        if (err) { throw err; }
+      });
+  });
+}
+
+exports.findUser = function (id) {
+  pg.connect(connectionString, function(err, client, done) {
+    if (err) {throw err;}
+
+    /* find user by his facebook id */
+    client.query('SELECT * FROM users (user) WHERE user._id = $1)', [id], 
       function(err, result){
         if (err) { throw err; }
       });
