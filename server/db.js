@@ -341,7 +341,7 @@ exports.addUser = function (fbdata, cb) {
   pg.connect(connectionString, function(err, client, done) {
     if (err) {throw err;}
 
-    /* If no users, add user */
+    /* If no location, add location */
     client.query('INSERT INTO users (user) SELECT $1 WHERE NOT EXISTS ( ' +
       'SELECT user FROM users WHERE user = $2)', [fbdata.fb_id, 
       fbdata.fb_id], 
@@ -349,7 +349,7 @@ exports.addUser = function (fbdata, cb) {
         if (err) { throw err; }
       });
   });
-}
+};
 
 exports.findUser = function (id) {
   pg.connect(connectionString, function(err, client, done) {
@@ -361,4 +361,6 @@ exports.findUser = function (id) {
         if (err) { throw err; }
       });
   });
-}
+};
+
+
