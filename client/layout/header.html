@@ -1,0 +1,32 @@
+<!-- <nav class="blue-grey lighten-2" role="navigation">
+    <div class="nav-wrapper container">
+      <div class="row"> 
+        <div class="col s12 m8 logoContainer">
+          <a href="/#" class="brand-logo">Dive Stop</a>
+        </div>
+        <div class="hide-on-med-and-up breaker"><br \></div>
+        <div class="right col s12 m4 searchContainer">
+          <span ng-controller="SearchController"></span>
+        </div>
+      </div>
+    </div>
+</nav> -->
+
+<div class="navbar-fixed">
+  <nav class="navbar navbar-inverse navbar-fixed-top navColor" role="navigation">
+    <div class="nav-wrapper">
+        <a href="#/" class="brand-logo">
+          <i class="fa fa-beer"></i>
+          Dive Bar
+        </a>
+      
+      <ul id="nav-mobile" class="hide-on-med-and-down">
+        <li id="browse"><a href="#/bars">Bars Nearby</a></li>
+        <li id="profile"><a href="#/profile">Profile</a></li>
+        <li class="right"><span ng-controller="SearchController"></span></li>
+        <li class="right"><a href="#/signup">Signup</a></li>
+        <li class="right"><a href="#/login">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>
