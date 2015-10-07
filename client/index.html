@@ -11,6 +11,7 @@
   <link type="text/css" rel="stylesheet" href="/libs/Materialize/dist/css/materialize.min.css"  media="screen,projection"/>
 
   <script src="/libs/angular/angular.js"></script>
+  <script src="/libs/angular-route/angular-route.min.js"></script>
 
   <script src="//maps.google.com/maps/api/js"></script>
   <script src="/libs/ngmap/build/scripts/ng-map.js"></script>
@@ -35,11 +36,14 @@
 
 <!-- these templateUrl files are referenced in each section's controller -->
 <body ng-app="divestop" ng-class="{splash: splash.state}" ng-controller="SplashController">
+
   <div id="header" ng-include src="'layout/header.html'"></div>
   
   <div class="main row">
     <div id="sidebar"  class="col s3" ng-include src="'layout/sidebar.html'"></div>
-    <div class="col s9" ng-view></div>
+    <div class="col s9">
+      <div ng-view></div>
+    </div>
   </div>
 
 

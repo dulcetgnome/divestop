@@ -17,8 +17,7 @@ angular.module('divestop', [
   $routeProvider
     // home page will automatically point to the map
     .when('/', {
-      templateUrl: '/map/map.html',
-      controller: 'OurMapController'
+      templateUrl: '/map/map.html'
     })
     .when('/signup', {
       templateUrl: '/users/signup.html',
@@ -44,7 +43,7 @@ angular.module('divestop', [
       templateUrl: '/add/add.html',
       controller: 'AddSiteController'
     })
-    .otherwise('/add/add.html');
+    .otherwise('/');
 
   // use satellizer for user authentication
   $authProvider.facebook({

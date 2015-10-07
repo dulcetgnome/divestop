@@ -22,6 +22,7 @@
     "angular-mocks": "~1.4.6",
     "Materialize": "materialize#~0.97.1",
     "ngmap": "~1.13.4",
-    "satellizer": "~0.12.5"
+    "satellizer": "~0.12.5",
+    "angular-route": "~1.4.7"
   }
 }

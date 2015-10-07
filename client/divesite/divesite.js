@@ -5,7 +5,7 @@ angular.module('divestop.divesite', [])
     $scope.currentSite = SharedProperties.currentSite;
     $scope.showForm = SharedProperties.showForm;
 
-    $scope.templateUrl = 'divesite/divesite.html';
+    // $scope.templateUrl = 'divesite/divesite.html';
     // This is called by ng-show in the HTML to indicate that a marker for a divesite has actually been selected.
     // It then gives the information to the view to display the information for that specific dive site.
     $scope.isSiteAvailable = function() {
