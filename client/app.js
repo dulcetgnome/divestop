@@ -4,7 +4,7 @@
 angular.module('divestop', [
   'divestop.map',
   'divestop.divesite',
-  'divestop.users',
+  // 'divestop.users',
   'divestop.services',
   'divestop.search',
   'divestop.splash',
@@ -44,7 +44,7 @@ angular.module('divestop', [
       templateUrl: '/add/add.html',
       controller: 'AddSiteController'
     })
-    .otherwise('/add/add.html');
+    .otherwise('/');
 
   // use satellizer for user authentication
   $authProvider.facebook({

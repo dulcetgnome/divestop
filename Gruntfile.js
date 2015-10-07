@@ -7,16 +7,16 @@ module.exports = function(grunt){
     pkg: grunt.file.readJSON('package.json'),
 
     /* Uglify with concat & sourceMap */
-    uglify: {
-      options: {
-        mangle: false,
-        sourceMap: true
-      },
-      build: {
-        src: ['client/**/*.js', '!client/libs/**/*.js'],
-        dest: 'client/build/ugly.min.js'
-      }
-    },
+    // uglify: {
+    //   options: {
+    //     mangle: false,
+    //     sourceMap: true
+    //   },
+    //   build: {
+    //     src: ['client/**/*.js', '!client/libs/**/*.js'],
+    //     dest: 'client/build/ugly.min.js'
+    //   }
+    // },
 
     jshint: {
       all: ['client/**/*.js', 'server/**/*.js', '!client/libs/**/*.js', '!client/stub.js', '!client/build/**/*', 'test/**/*.js'],
