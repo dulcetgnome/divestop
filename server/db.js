@@ -229,13 +229,14 @@ exports.addSite = function(cb, passedSite) {
 */
 
 exports.search = function(cb, passedLocation) {
+  // passedlocation is array of long and latitude
+  // should be integers
   var locationQuery = '';
   var params = [];
   if (passedLocation) {
-    params = [passedLocation.toLowerCase()];
+    params = passedlocation
     // need to get lat and long from search 
-    locationQuery = ' WHERE (l.location = $1)';
-
+    locationQuery = ' WHERE l.lat BETWEEN ($1 - 10) AND ($1 - 10) AND l.long BETWEEN ($1 + 10) AND ($2 - 10)';
   }
 
   var queryString = 'SELECT s.site, l.location, s.lat, s.long, s.max_depth, ' + 
