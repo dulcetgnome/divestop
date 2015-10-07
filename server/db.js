@@ -94,7 +94,7 @@ exports.createTables = function(cb) {
                                   'username VARCHAR(250), ' +
                                   'first_name VARCHAR(250), ' +
                                   'last_name VARCHAR(250), ' +
-                                  'email VARCHAR(250), ' +
+                                  'email VARCHAR(250) ' +
                                   ')', function(err, result){
                                     if (err) {
                                       throw err;

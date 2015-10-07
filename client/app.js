@@ -9,32 +9,36 @@ angular.module('divestop', [
   'divestop.search',
   'divestop.splash',
   'divestop.addsite',
+  'divestop.login',
+  'divestop.logout',
   'ngRoute',
   'satellizer'
 ])
 
-.config(function ($routeProvider, $httpProvider) {
+.config(function ($routeProvider, $httpProvider, $authProvider) {
   $routeProvider
     // home page will automatically point to the map
     .when('/', {
       templateUrl: '/map/map.html'
     })
-    .when('/signup', {
-      templateUrl: '/users/signup.html',
-      controller: 'userController'
-    })
+    // We don't need signup at the moment - maybe later functionality
+    // .when('/signup', {
+    //   templateUrl: '/users/signup.html',
+    //   controller: 'userController'
+    // })
     .when('/login', {
       templateUrl: '/users/login.html',
-      controller: 'userController'
+      controller: 'LoginCtrl'
     })
     .when('/profile', {
       templateUrl: '/users/profile.html',
-      controller: 'userController'
+      controller: 'ProfileCtrl'
     })
-    .when('/settings', {
-      templateUrl: '/users/settings.html',
-      controller: 'userController'
-    })
+    // We don't need signup at the moment - maybe later functionality
+    // .when('/settings', {
+    //   templateUrl: '/users/settings.html',
+    //   controller: 'userController'
+    // })
     .when('/bars', {
       templateUrl: '/divesite/divesite.html',
       controller: 'DiveSiteController'
@@ -43,16 +47,15 @@ angular.module('divestop', [
       templateUrl: '/add/add.html',
       controller: 'AddSiteController'
     })
+    .when('/profile', {
+      template: null,
+      controller: 'LogoutCtrl'
+    })
     .otherwise('/');
 
-  // // use satellizer for user authentication
-  // $authProvider.facebook({
-  //   clientId: 'Facebook App ID'
-  // });
-
-  // $authProvider.google({
-  //   clientId: 'Google Client ID'
-  // });
-
+  // use satellizer for user authentication
+  $authProvider.facebook({
+    clientId: 'Facebook App ID'
+  });
 });
 
