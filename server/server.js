@@ -1,5 +1,6 @@
 var express = require('../node_modules/express');
 var parser = require('../node_modules/body-parser');
+var path = require('path');
 var db = require('./db.js');
 var app = express();
 var port = process.env.PORT || 3000;
@@ -8,7 +9,9 @@ var port = process.env.PORT || 3000;
 app.use(parser.json());
 
 /* Static File Serving */
-app.use(express.static('client'));
+app.use(express.static(path.join(__dirname, '../client')));
+
+
 
 /* Routes */
 app.get('/', function(req, res) {
