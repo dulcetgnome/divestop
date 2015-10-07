@@ -236,7 +236,7 @@ exports.search = function(cb, passedLocation) {
   if (passedLocation) {
     params = passedlocation
     // need to get lat and long from search 
-    locationQuery = ' WHERE l.lat BETWEEN ($1 - 10) AND ($1 - 10) AND l.long BETWEEN ($1 + 10) AND ($2 - 10)';
+    locationQuery = ' WHERE l.lat BETWEEN ($1 - 1) AND ($1 - 1) AND l.long BETWEEN ($2 + 1) AND ($2 - 1)';
   }
 
   var queryString = 'SELECT s.site, l.location, s.lat, s.long, s.max_depth, ' + 
