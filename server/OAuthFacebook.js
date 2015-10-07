@@ -1,124 +1,181 @@
-var express = require('express')
-  , passport = require('passport')
-  , util = require('util')
-  , FacebookStrategy = require('passport-facebook').Strategy
-  , logger = require('morgan')
-  , session = require('express-session')
-  , bodyParser = require("body-parser")
-  , cookieParser = require("cookie-parser")
-  , methodOverride = require('method-override');
+var path = require('path');
+var qs = require('querystring');
 
-var FACEBOOK_APP_ID = "898772140217593"
-var FACEBOOK_APP_SECRET = "77feb138228b9472f2abb6a49ed10bad";
+var async = require('async');
+var bodyParser = require('body-parser');
+var colors = require('colors');
+var cors = require('cors');
+var express = require('express');
+var logger = require('morgan');
+var jwt = require('jwt-simple');
+var moment = require('moment');
+var request = require('request');
 
-
-// Passport session setup.
-//   To support persistent login sessions, Passport needs to be able to
-//   serialize users into and deserialize users out of the session.  Typically,
-//   this will be as simple as storing the user ID when serializing, and finding
-//   the user by ID when deserializing.  However, since this example does not
-//   have a database of user records, the complete Facebook profile is serialized
-//   and deserialized.
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
-
-
-// Use the FacebookStrategy within Passport.
-//   Strategies in Passport require a `verify` function, which accept
-//   credentials (in this case, an accessToken, refreshToken, and Facebook
-//   profile), and invoke a callback with a user object.
-passport.use(new FacebookStrategy({
-    clientID: FACEBOOK_APP_ID,
-    clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
-    process.nextTick(function () {
-      
-      // To keep the example simple, the user's Facebook profile is returned to
-      // represent the logged-in user.  In a typical application, you would want
-      // to associate the Facebook account with a user record in your database,
-      // and return that user instead.
-      return done(null, profile);
-    });
-  }
-));
-
-
-
+var config = require('./config');
 
 var app = express();
 
-// configure Express
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'ejs');
-  app.use(logger());
-  app.use(cookieParser());
-  app.use(bodyParser());
-  app.use(methodOverride());
-  app.use(session({ secret: 'keyboard cat' }));
-  // Initialize Passport!  Also use passport.session() middleware, to support
-  // persistent login sessions (recommended).
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(express.static(__dirname + '/public'));
+app.set('port', process.env.PORT || 3000);
+app.use(cors());
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-
-app.get('/', function(req, res){
-  res.render('index', { user: req.user });
-});
-
-app.get('/account', ensureAuthenticated, function(req, res){
-  res.render('account', { user: req.user });
-});
-
-app.get('/login', function(req, res){
-  res.render('login', { user: req.user });
-});
-
-// GET /auth/facebook
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  The first step in Facebook authentication will involve
-//   redirecting the user to facebook.com.  After authorization, Facebook will
-//   redirect the user back to this application at /auth/facebook/callback
-app.get('/auth/facebook',
-  passport.authenticate('facebook'),
-  function(req, res){
-    // The request will be redirected to Facebook for authentication, so this
-    // function will not be called.
+// Force HTTPS on Heroku
+if (app.get('env') === 'production') {
+  app.use(function(req, res, next) {
+    var protocol = req.get('x-forwarded-proto');
+    protocol == 'https' ? next() : res.redirect('https://' + req.hostname + req.url);
   });
-
-// GET /auth/facebook/callback
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  If authentication fails, the user will be redirected back to the
-//   login page.  Otherwise, the primary route function function will be called,
-//   which, in this example, will redirect the user to the home page.
-app.get('/auth/facebook/callback', 
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/');
-  });
-
-app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
-});
-
-app.listen(3000);
-
-
-// Simple route middleware to ensure user is authenticated.
-//   Use this route middleware on any resource that needs to be protected.  If
-//   the request is authenticated (typically via a persistent login session),
-//   the request will proceed.  Otherwise, the user will be redirected to the
-//   login page.
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login')
 }
+app.use(express.static(path.join(__dirname, '../client')));
+
+function ensureAuthenticated(req, res, next) {
+  if (!req.headers.authorization) {
+    return res.status(401).send({ message: 'Please make sure your request has an Authorization header' });
+  }
+  var token = req.headers.authorization.split(' ')[1];
+
+  var payload = null;
+  try {
+    payload = jwt.decode(token, config.TOKEN_SECRET);
+  }
+  catch (err) {
+    return res.status(401).send({ message: err.message });
+  }
+
+  if (payload.exp <= moment().unix()) {
+    return res.status(401).send({ message: 'Token has expired' });
+  }
+  req.user = payload.sub;
+  next();
+}
+
+function createJWT(user) {
+  var payload = {
+    sub: user._id,
+    iat: moment().unix(),
+    exp: moment().add(14, 'days').unix()
+  };
+  return jwt.encode(payload, config.TOKEN_SECRET);
+}
+
+
+app.get('/api/me', ensureAuthenticated, function(req, res) {
+  User.findById(req.user, function(err, user) {
+    res.send(user);
+  });
+});
+
+app.put('/api/me', ensureAuthenticated, function(req, res) {
+  User.findById(req.user, function(err, user) {
+    if (!user) {
+      return res.status(400).send({ message: 'User not found' });
+    }
+    user.displayName = req.body.displayName || user.displayName;
+    user.email = req.body.email || user.email;
+    user.save(function(err) {
+      res.status(200).end();
+    });
+  });
+});
+
+
+
+
+// Log in Facebook
+app.post('/auth/facebook', function(req, res) {
+  var accessTokenUrl = 'https://graph.facebook.com/v2.3/oauth/access_token';
+  var graphApiUrl = 'https://graph.facebook.com/v2.3/me';
+  var params = {
+    code: req.body.code,
+    client_id: config.clientId,
+    client_secret: config.FACEBOOK_SECRET,
+    redirect_uri: req.body.redirectUri
+  };
+
+  // Step 1. Exchange authorization code for access token.
+  request.get({ url: accessTokenUrl, qs: params, json: true }, function(err, response, accessToken) {
+    if (response.statusCode !== 200) {
+      return res.status(500).send({ message: accessToken.error.message });
+    }
+
+    // Step 2. Retrieve profile information about the current user.
+    request.get({ url: graphApiUrl, qs: accessToken, json: true }, function(err, response, profile) {
+      if (response.statusCode !== 200) {
+        return res.status(500).send({ message: profile.error.message });
+      }
+      if (req.headers.authorization) {
+        User.findOne({ facebook: profile.id }, function(err, existingUser) {
+          if (existingUser) {
+            return res.status(409).send({ message: 'There is already a Facebook account that belongs to you' });
+          }
+          var token = req.headers.authorization.split(' ')[1];
+          var payload = jwt.decode(token, config.TOKEN_SECRET);
+          User.findById(payload.sub, function(err, user) {
+            if (!user) {
+              return res.status(400).send({ message: 'User not found' });
+            }
+            user.facebook = profile.id;
+            user.picture = user.picture || 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large';
+            user.displayName = user.displayName || profile.name;
+            user.save(function() {
+              var token = createJWT(user);
+              res.send({ token: token });
+            });
+          });
+        });
+      } else {
+        // Step 3b. Create a new user account or return an existing one.
+        User.findOne({ facebook: profile.id }, function(err, existingUser) {
+          if (existingUser) {
+            var token = createJWT(existingUser);
+            return res.send({ token: token });
+          }
+          var user = new User();
+          user.facebook = profile.id;
+          user.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
+          user.displayName = profile.name;
+          user.save(function() {
+            var token = createJWT(user);
+            res.send({ token: token });
+          });
+        });
+      }
+    });
+  });
+});
+
+/*
+ |--------------------------------------------------------------------------
+ | Unlink Provider
+ |--------------------------------------------------------------------------
+ */
+app.post('/auth/unlink', ensureAuthenticated, function(req, res) {
+  var provider = req.body.provider;
+  var providers = ['facebook', 'foursquare', 'google', 'github', 'instagram',
+    'linkedin', 'live', 'twitter', 'twitch', 'yahoo'];
+
+  if (providers.indexOf(provider) === -1) {
+    return res.status(400).send({ message: 'Unknown OAuth Provider' });
+  }
+
+  User.findById(req.user, function(err, user) {
+    if (!user) {
+      return res.status(400).send({ message: 'User Not Found' });
+    }
+    user[provider] = undefined;
+    user.save(function() {
+      res.status(200).end();
+    });
+  });
+});
+
+/*
+ |--------------------------------------------------------------------------
+ | Start the Server
+ |--------------------------------------------------------------------------
+ */
+app.listen(app.get('port'), function() {
+  console.log('Express server listening on port ' + app.get('port'));
+});
