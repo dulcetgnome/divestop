@@ -25,6 +25,7 @@
     "angular-route": "~1.4.7",
     "angular-toastr": "~1.5.0",
     "ngmap": "~1.13.4",
-    "satellizer": "~0.12.5"
+    "satellizer": "~0.12.5",
+    "angular-ui-router": "~0.2.15"
   }
 }

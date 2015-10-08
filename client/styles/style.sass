@@ -1,36 +1,76 @@
 html
   font-family: "Lato", Arial, sans-serif
 
+
+ 
+
+
+footer
+  position: fixed
+  height: 35px
+  width: 25%
+  padding-top: 10px
+  background-color: #08577D
+  font-size: 12px
+  bottom: 0
+  left: 0
+
 .btn-floating
   margin-top: 15px
 
 #sidebar
-  // background-color: #424242
-  background-color: rgba(56, 56, 62, 1)
+ 
+  background-color: rgba(9, 103, 148, 1)
   // position: absolute
   color: white
   font-size: 20px
   height: 100vh
-  margin-right: 0
+  z-index: 100
+  position: fixed
 
 #sidebar
   a
     text-decoration: none
     color: white
   a:hover
-    color: black
+    color: #eeeeee
 
-.head 
-  ul
-    margin: 0 10px
+.header
+  margin-top: 20px
+  text-align: center
+  font-size: 32px
 
-.head ul li
-  margin: 0 5px
+#welcome
+  background-image: url('/images/divebar1.jpg')
+  margin-left: -10px
+  margin-right: -10px
+  background-repeat: no-repeat
+  background-size: 100% 100vh
+  overflow-y: hidden
+  overflow-x: hidden
 
-// .currentView
-//   margin-left: -50px
-//   margin-top: -15px
-//   z-index: 0
+#main 
+  margin-left: 25vw
+
+
+
+.searchBar
+  padding-top: 45vh
+  padding-bottom: 45vh
+  padding-left: 10vw
+  padding-right: 10vw
+  // padding-left: 10vw
+
+#search
+  background-color: white
+  opacity: 0.9
+  box-shadow: none
+  border: 1px solid #e4e4e4
+  // margin-top: 20px
+  font-size: 16px
+  text-indent: 10px
+
+
 
 .logoContainer
   margin: 0 20px
@@ -41,59 +81,13 @@ html
 
 
 .brand-logo
-  font-family: 'Roboto Slab', Georgia, serif
+  font-family: 'Lato', Arial, serif
   font-weight: 700
 
 body.splash
   overflow: hidden
 
-// .splash
-//   nav
-//     background-image: url('https://farm3.staticflickr.com/2492/4143196658_eda660fed9_o_d.jpg')
-//     background-size: 100vw
-//     background-position: center
-//     height: 100vh
-//     padding-top: 40vh
-//   .mapContainer
-//     visibility: hidden
-//   #search
-//     background-color: #fff
-//   .row 
-//     // margin-left: 50vw
-//     width: 75%
-//   .searchContainer
-//     margin-left: 50vw
-//   .brand-logo
-//     margin-left: 20vw
-//     text-shadow: 1px 1px 8px #555
-//     font-size: 42px
 
-.searchContainer
-  // padding-right: 20vw
-  // margin-left: 25vw
-
-.searchContainer 
-  form
-    width: 400px
-
-.searchContainer form div
-  // margin-top: 15px
-  // height: 38px
-  // margin-left: 35vw
-  // padding-bottom: 10px
-
-
-
-// .searchContainer 
-//   input
-//     padding-bottom: 30px
-//   label
-//     padding-bottom: 30px
-//   i
-//     padding-bottom: 30px
-
-// .searchContainer:hover
-//   background-color: rgba(0, 131, 143, 0.8)
 
 
 @media only screen and (max-width: 994px)
