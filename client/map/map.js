@@ -11,19 +11,32 @@ angular.module('divestop.map', ['ngMap'])
     $scope.$on("mapInitialized", function(e, map) {
       SharedProperties.map = map;
       // sends a request to get divesites around a certain location (based on long and lat)
-      var coordinates = SharedProperties.map.center.J + "-" + SharedProperties.map.center.M;
+      var coords = [SharedProperties.map.center.J, SharedProperties.map.center.M]
+      var coordinates = coords[0] + "-" + coords[1];
       DiveSites.getDiveSites(coordinates)
         .then(function(sites) {
           if(sites.length > 0) {
             AppMap.addMarkers(sites, map);
           }
           else {
-            // make API request to google places 
+            console.log('no divebars in db so else statement was fired.');
+            // make API request to google places
+            var pyrmont = new google.maps.LatLng(coords[0], coords[1]);
+
+            var service = new google.maps.places.PlacesService(map);
+              service.nearbySearch(request, function(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                  for (var i = 0; i < results.length; i++) {
+                    console.log(results[i]);
+                    var place = results[i];
+                  }
+                }
+              });
+            } 
             // get those places in the database 
             // AppMap.addMarkers(sites, map)
-          }
+          });
         });
-    });
 
     // $scope.templateUrl = 'map/map.html';
 
