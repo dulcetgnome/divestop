@@ -6,7 +6,6 @@ var app = express();
 var port = process.env.PORT || 3000;
 
 var qs = require('querystring');
-var async = require('async');
 var bodyParser = require('body-parser');
 var colors = require('colors');
 var cors = require('cors');
@@ -143,66 +142,26 @@ app.post('/auth/facebook', function(req, res) {
       if (response.statusCode !== 200) {
         return res.status(500).send({ message: profile.error.message });
       }
-      if (req.headers.authorization) {
-        User.findOne({ facebook: profile.id }, function(err, existingUser) {
+      // Step 3b. Create a new user account or return an existing one.
+      db.findUser(profile.id, function(err, existingUser) {
+        if (existingUser) {
+          var token = createJWT(existingUser);
+          return res.send({ token: token });
+        }
+        var fbdata = {
+          user.fb_id = profile.id,        
+        }
+        db.addUser(fbdata, function (newUser) {
           if (existingUser) {
-            return res.status(409).send({ message: 'There is already a Facebook account that belongs to you' });
-          }
-          var token = req.headers.authorization.split(' ')[1];
-          var payload = jwt.decode(token, config.TOKEN_SECRET);
-          User.findById(payload.sub, function(err, user) {
-            if (!user) {
-              return res.status(400).send({ message: 'User not found' });
-            }
-            user.facebook = profile.id;
-            user.picture = user.picture || 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large';
-            user.displayName = user.displayName || profile.name;
-            user.save(function() {
-              var token = createJWT(user);
-              res.send({ token: token });
-            });
-          });
-        });
-      } else {
-        // Step 3b. Create a new user account or return an existing one.
-        User.findOne({ facebook: profile.id }, function(err, existingUser) {
-          if (existingUser) {
-            var token = createJWT(existingUser);
+            var token = createJWT(newUser);
             return res.send({ token: token });
           }
-          var user = new User();
-          user.facebook = profile.id;
-          user.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
-          user.displayName = profile.name;
-          user.save(function() {
-            var token = createJWT(user);
-            res.send({ token: token });
-          });
         });
-      }
+     });
     });
   });
 });
 
-app.post('/auth/unlink', ensureAuthenticated, function(req, res) {
-  var provider = req.body.provider;
-  var providers = ['facebook', 'foursquare', 'google', 'github', 'instagram',
-    'linkedin', 'live', 'twitter', 'twitch', 'yahoo'];
-
-  if (providers.indexOf(provider) === -1) {
-    return res.status(400).send({ message: 'Unknown OAuth Provider' });
-  }
-
-  User.findById(req.user, function(err, user) {
-    if (!user) {
-      return res.status(400).send({ message: 'User Not Found' });
-    }
-    user[provider] = undefined;
-    user.save(function() {
-      res.status(200).end();
-    });
-  });
-});
 
 
 /* Auth stuff */
