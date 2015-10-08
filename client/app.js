@@ -12,6 +12,7 @@ angular.module('divestop', [
   'divestop.login',
   'divestop.logout',
   'divestop.profile',
+  'divestop.authbar',
   'ngRoute',
   'satellizer'
 ])
