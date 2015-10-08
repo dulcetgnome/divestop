@@ -4,7 +4,7 @@
 var pg = require('pg');
 
 /* URL for hosted heroku postgresql database */
-var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
+var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost/bowen';
 
 exports.createTables = function(cb) {
   pg.connect(connectionString, function(err, client, done) {
@@ -338,10 +338,42 @@ exports.wipeDatabase = function(cb) {
         throw err;
       }
       done();
-      cb();
+      if(cb)
+        cb();
     });
   });
 };
 
+// Add a user to the database 
+exports.addUser = function (fbdata, cb) {
+  pg.connect(connectionString, function(err, client, done) {
+    if (err) {throw err;}
+
+    /* If no location, add location */
+    client.query('INSERT INTO users (fb_id, first_name, last_name) VALUES ($1, $2, $3)', [fbdata.fb_id, fbdata.first_name, fbdata.last_name], 
+      function(err, result){
+        if (err) { throw err; }
+        done();
+        cb(result);
+      });
+  });
+};
+
+exports.findUser = function (id, cb) {
+  pg.connect(connectionString, function(err, client, done) {
+    if (err) {throw err;}
+
+    /* find user by his facebook id */
+    console.log("checking database ", id)
+    client.query('SELECT * FROM users WHERE fb_id = $1', [id], 
+      function(err, result){
+        if (err) { 
+          throw err; 
+        }
+        done();
+        cb(result.rows);
+      });
+  });
+};
 
 

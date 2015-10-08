@@ -16,7 +16,7 @@ angular.module('divestop.map', ['ngMap'])
         });
     });
 
-    $scope.templateUrl = 'map/map.html';
+    // $scope.templateUrl = 'map/map.html';
 
     $scope.toggleForm = function() {
       $scope.showForm.state = !$scope.showForm.state;

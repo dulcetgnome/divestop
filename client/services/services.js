@@ -9,13 +9,15 @@ angular.module('divestop.services', [])
     sharedProperties.markers = [];
     
     sharedProperties.currentSite = {site: {}};
-    sharedProperties.splash = {state: true};
+    // sharedProperties.splash = {state: true};
 
     return sharedProperties;
 
   })
   .factory('DiveSites', function($http) {
 
+    // should be refactored to take queries -- Edgar
+    // should not get every site available in the database -- Edgar
     var getAllDiveSites = function() {
       return $http.get('/api/sites')
         .then(function(resp) {
@@ -174,4 +176,14 @@ angular.module('divestop.services', [])
       showNewMarker: showNewMarker,
       moveNewMarker: moveNewMarker
     };
-  }]);
+  }])
+  .factory('Account', function($http) {
+    return {
+      getProfile: function() {
+        return $http.get('/api/me');
+      },
+      updateProfile: function(profileData) {
+        return $http.put('/api/me', profileData);
+      }
+    };
+  });
