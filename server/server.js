@@ -131,6 +131,7 @@ app.post('/auth/facebook', function(req, res) {
     client_secret: config.FACEBOOK_SECRET,
     redirect_uri: req.body.redirectUri
   };
+  console.log('auth', params.code)
   // Step 1. Exchange authorization code for access token.
   request.get({ url: accessTokenUrl, qs: params, json: true }, function(err, response, accessToken) {
     if (response.statusCode !== 200) {
@@ -142,7 +143,6 @@ app.post('/auth/facebook', function(req, res) {
       if (response.statusCode !== 200) {
         return res.status(500).send({ message: profile.error.message });
       }
-      console.log('auth', req.headers.authorization)
       // Step 3b. Create a new user account or return an existing one.
 
       db.findUser(profile.id, function(existingUser) {

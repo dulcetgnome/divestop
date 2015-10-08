@@ -362,7 +362,6 @@ exports.findUser = function (id, cb) {
     if (err) {throw err;}
 
     /* find user by his facebook id */
-    console.log("checking database ", id)
     client.query('SELECT * FROM users WHERE fb_id = $1', [id], 
       function(err, result){
         if (err) { 
