@@ -65,7 +65,7 @@ describe('RESTful api', function () {
   it('responds to GET requests at `/api/sites/:location` by returning site data for specified location', function (done) {
 
     request(app)
-      .get('/api/sites/fiji')
+      .get('/api/sites/45.345-65.154')
       .end(function (err, res) {
         if (err) return done(err);
         expect(res.body[0].location, 'fiji');

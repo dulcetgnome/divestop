@@ -1,7 +1,14 @@
+/**
+ * Satellizer Node.js Example
+ * (c) 2015 Sahat Yalkabov
+ * License: MIT
+ */
+
 var path = require('path');
 var qs = require('querystring');
 
 var async = require('async');
+var bcrypt = require('bcryptjs');
 var bodyParser = require('body-parser');
 var colors = require('colors');
 var cors = require('cors');
@@ -9,9 +16,53 @@ var express = require('express');
 var logger = require('morgan');
 var jwt = require('jwt-simple');
 var moment = require('moment');
+var mongoose = require('mongoose');
 var request = require('request');
 
 var config = require('./config');
+
+var userSchema = new mongoose.Schema({
+  email: { type: String, unique: true, lowercase: true },
+  password: { type: String, select: false },
+  displayName: String,
+  picture: String,
+  facebook: String,
+  foursquare: String,
+  google: String,
+  github: String,
+  instagram: String,
+  linkedin: String,
+  live: String,
+  yahoo: String,
+  twitter: String,
+  twitch: String
+});
+
+userSchema.pre('save', function(next) {
+  var user = this;
+  if (!user.isModified('password')) {
+    return next();
+  }
+  bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash(user.password, salt, function(err, hash) {
+      user.password = hash;
+      next();
+    });
+  });
+});
+
+userSchema.methods.comparePassword = function(password, done) {
+  bcrypt.compare(password, this.password, function(err, isMatch) {
+    done(err, isMatch);
+  });
+};
+
+var User = mongoose.model('User', userSchema);
+
+mongoose.connect(config.MONGO_URI);
+mongoose.connection.on('error', function(err) {
+  console.log('Error: Could not connect to MongoDB. Did you forget to run `mongod`?'.red);
+});
 
 var app = express();
 
@@ -28,8 +79,13 @@ if (app.get('env') === 'production') {
     protocol == 'https' ? next() : res.redirect('https://' + req.hostname + req.url);
   });
 }
-app.use(express.static(path.join(__dirname, '../client')));
+app.use(express.static(path.join(__dirname, '../../client')));
 
+/*
+ |--------------------------------------------------------------------------
+ | Login Required Middleware
+ |--------------------------------------------------------------------------
+ */
 function ensureAuthenticated(req, res, next) {
   if (!req.headers.authorization) {
     return res.status(401).send({ message: 'Please make sure your request has an Authorization header' });
@@ -51,6 +107,11 @@ function ensureAuthenticated(req, res, next) {
   next();
 }
 
+/*
+ |--------------------------------------------------------------------------
+ | Generate JSON Web Token
+ |--------------------------------------------------------------------------
+ */
 function createJWT(user) {
   var payload = {
     sub: user._id,
@@ -60,13 +121,22 @@ function createJWT(user) {
   return jwt.encode(payload, config.TOKEN_SECRET);
 }
 
-
+/*
+ |--------------------------------------------------------------------------
+ | GET /api/me
+ |--------------------------------------------------------------------------
+ */
 app.get('/api/me', ensureAuthenticated, function(req, res) {
   User.findById(req.user, function(err, user) {
     res.send(user);
   });
 });
 
+/*
+ |--------------------------------------------------------------------------
+ | PUT /api/me
+ |--------------------------------------------------------------------------
+ */
 app.put('/api/me', ensureAuthenticated, function(req, res) {
   User.findById(req.user, function(err, user) {
     if (!user) {
@@ -81,15 +151,58 @@ app.put('/api/me', ensureAuthenticated, function(req, res) {
 });
 
 
+/*
+ |--------------------------------------------------------------------------
+ | Log in with Email
+ |--------------------------------------------------------------------------
+ */
+app.post('/auth/login', function(req, res) {
+  User.findOne({ email: req.body.email }, '+password', function(err, user) {
+    if (!user) {
+      return res.status(401).send({ message: 'Wrong email and/or password' });
+    }
+    user.comparePassword(req.body.password, function(err, isMatch) {
+      if (!isMatch) {
+        return res.status(401).send({ message: 'Wrong email and/or password' });
+      }
+      res.send({ token: createJWT(user) });
+    });
+  });
+});
+
+/*
+ |--------------------------------------------------------------------------
+ | Create Email and Password Account
+ |--------------------------------------------------------------------------
+ */
+app.post('/auth/signup', function(req, res) {
+  User.findOne({ email: req.body.email }, function(err, existingUser) {
+    if (existingUser) {
+      return res.status(409).send({ message: 'Email is already taken' });
+    }
+    var user = new User({
+      displayName: req.body.displayName,
+      email: req.body.email,
+      password: req.body.password
+    });
+    user.save(function() {
+      res.send({ token: createJWT(user) });
+    });
+  });
+});
 
 
-// Log in Facebook
+/*
+ |--------------------------------------------------------------------------
+ | Login with Facebook
+ |--------------------------------------------------------------------------
+ */
 app.post('/auth/facebook', function(req, res) {
   var accessTokenUrl = 'https://graph.facebook.com/v2.3/oauth/access_token';
   var graphApiUrl = 'https://graph.facebook.com/v2.3/me';
   var params = {
     code: req.body.code,
-    client_id: config.clientId,
+    client_id: req.body.clientId,
     client_secret: config.FACEBOOK_SECRET,
     redirect_uri: req.body.redirectUri
   };
@@ -105,6 +218,7 @@ app.post('/auth/facebook', function(req, res) {
       if (response.statusCode !== 200) {
         return res.status(500).send({ message: profile.error.message });
       }
+      // 3a
       if (req.headers.authorization) {
         User.findOne({ facebook: profile.id }, function(err, existingUser) {
           if (existingUser) {
@@ -146,6 +260,12 @@ app.post('/auth/facebook', function(req, res) {
   });
 });
 
+
+/*
+ |--------------------------------------------------------------------------
+ | Unlink Provider
+ |--------------------------------------------------------------------------
+ */
 app.post('/auth/unlink', ensureAuthenticated, function(req, res) {
   var provider = req.body.provider;
   var providers = ['facebook', 'foursquare', 'google', 'github', 'instagram',
@@ -166,6 +286,11 @@ app.post('/auth/unlink', ensureAuthenticated, function(req, res) {
   });
 });
 
+/*
+ |--------------------------------------------------------------------------
+ | Start the Server
+ |--------------------------------------------------------------------------
+ */
 app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });

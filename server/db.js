@@ -52,8 +52,8 @@ exports.createTables = function(cb) {
                   '_id SERIAL PRIMARY KEY, ' +
                   'site VARCHAR(250), ' +
                   'location_id INT REFERENCES locations (_id), ' +
-                  'lat NUMERIC, ' +
-                  'long NUMERIC, ' +
+                  'lat NUMERIC(5), ' +
+                  'long NUMERIC(5), ' +
                   'max_depth INT, ' +
                   'gradient VARCHAR(10), ' +
                   'description VARCHAR, ' +
@@ -167,13 +167,16 @@ exports.addSite = function(cb, passedSite) {
             '\' WHERE NOT EXISTS (SELECT type FROM aquatic_life WHERE type = \'' + passedSite.aquaticLife[p] + '\'); ';
           }
           client.query(aquaticLifeString, function(err, result){
-            if (err) { throw err; }
-
-            /* If no site, add site */
+    
+            if (err) { 
+              throw err; 
+            }
             client.query('INSERT INTO sites (site, location_id, lat, long, max_depth, gradient, description, comments) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
               'location = \'' + passedSite.location.toLowerCase() + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ', ' + passedSite.maxDepth + ', \'' + passedSite.gradient + '\', \'' + passedSite.description + '\', \'' + passedSite.comments + '\' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
               function(err, result) {
-                if (err) { throw err; }
+                if (err) {
+                  throw err; 
+                }
 
                 /* Insert ids into site_features join table
                   -- Build 'siteFeaturesString' dynamically, creating an insert query for each site/feature that is 
@@ -234,13 +237,13 @@ exports.search = function(cb, passedLocation) {
   var locationQuery = '';
   var upperLat, upperLong, lowerLat, lowerLong, params;
   if (passedLocation) {
-    upperLat = passedlocation[0] - 1;
-    lowerLat = passedlocation[0] + 1;
-    upperLong = passedlocation[1] - 1;
-    lowerLong = passedlocation[1] + 1;
+    upperLat = passedLocation[0] + 1;
+    lowerLat = passedLocation[0] - 1;
+    upperLong = passedLocation[1] + 1;
+    lowerLong = passedLocation[1] - 1;
     params = [lowerLat, upperLat, lowerLong, upperLong];
     // need to get lat and long from search 
-    locationQuery = ' WHERE l.lat BETWEEN $1 AND $2 AND l.long BETWEEN $3 AND $4';
+    locationQuery = ' WHERE s.lat BETWEEN $1 AND $2 AND s.long BETWEEN $3 AND $4';
   }
 
   var queryString = 'SELECT s.site, l.location, s.lat, s.long, s.max_depth, ' + 
@@ -318,16 +321,15 @@ exports.search = function(cb, passedLocation) {
       if (siteObject.hasOwnProperty('name')) {
         sites.push(siteObject);
       }
-
-      done();
       cb(sites);
+      done();
     });
   });
 };
 
 // The wipeDatabase() method is used in the db tests.
 exports.wipeDatabase = function(cb) {
-  var queryString = 'TRUNCATE site_aquatic_life, site_features, pictures,' + 
+  var queryString = 'TRUNCATE bars_visited, users, site_aquatic_life, site_features, pictures,' + 
   ' sites, features, aquatic_life, locations;';
 
   pg.connect(connectionString, function(error, client, done) {
@@ -336,7 +338,8 @@ exports.wipeDatabase = function(cb) {
         throw err;
       }
       done();
-      cb();
+      if(cb)
+        cb();
     });
   });
 };
@@ -347,9 +350,7 @@ exports.addUser = function (fbdata, cb) {
     if (err) {throw err;}
 
     /* If no location, add location */
-    client.query('INSERT INTO users (user) SELECT $1 WHERE NOT EXISTS ( ' +
-      'SELECT user FROM users WHERE user = $2)', [fbdata.fb_id, 
-      fbdata.fb_id], 
+    client.query('INSERT INTO users (fb_id, first_name, last_name) VALUES ($1, $2, $3)', [fbdata.fb_id, fbdata.first_name, fbdata.last_name], 
       function(err, result){
         if (err) { throw err; }
         done();
@@ -363,13 +364,13 @@ exports.findUser = function (id, cb) {
     if (err) {throw err;}
 
     /* find user by his facebook id */
-    client.query('SELECT * FROM users (user) WHERE user._id = $1)', [id], 
+    client.query('SELECT * FROM users WHERE fb_id = $1', [id], 
       function(err, result){
         if (err) { 
           throw err; 
         }
         done();
-        cb(result);
+        cb(result.rows);
       });
   });
 };
