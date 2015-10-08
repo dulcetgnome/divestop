@@ -55,7 +55,7 @@ angular.module('divestop', [
       templateUrl: '/divesite/divesite.html',
       controller: 'DiveSiteController'
     })
-    .when('/bars/new', {
+    .when('/new', {
       templateUrl: '/add/add.html',
       controller: 'AddSiteController'
     })
