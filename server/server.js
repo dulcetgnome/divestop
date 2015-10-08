@@ -149,7 +149,7 @@ app.post('/auth/facebook', function(req, res) {
           return res.send({ token: token });
         }
         var fbdata = {
-          user.fb_id = profile.id,        
+          fb_id: profile.id,        
         }
         db.addUser(fbdata, function (newUser) {
           if (existingUser) {

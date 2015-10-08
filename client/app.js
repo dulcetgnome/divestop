@@ -55,7 +55,7 @@ angular.module('divestop', [
 
   // use satellizer for user authentication
   $authProvider.facebook({
-    clientId: 'Facebook App ID'
+    clientId: '898772140217593'
   });
 });
 
