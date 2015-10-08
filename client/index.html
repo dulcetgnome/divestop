@@ -63,6 +63,11 @@
         <li><a href="#/bars/new">Add dive</a></li>
         <li><a href="#/bars">Bars Nearby</a></li>
       </ul>
+      <div ng-controller="AuthbarCtrl">
+        <ul ng-if="isAuthenticated()"><li><a href="#/profile">Profile</a></li></ul>
+        <ul ng-if="isAuthenticated()"><li><a href="#/logout">Logout</a></li></ul>
+        <ul ng-if="!isAuthenticated()"><li><a href="#/login">Login</a></li></ul>
+      </div>
       <footer>
         <div class="footer-copyright">
           <div class="container">
