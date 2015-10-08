@@ -4,7 +4,7 @@
 var pg = require('pg');
 
 /* URL for hosted heroku postgresql database */
-var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
+var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost/bowen';
 
 exports.createTables = function(cb) {
   pg.connect(connectionString, function(err, client, done) {
@@ -229,13 +229,18 @@ exports.addSite = function(cb, passedSite) {
 */
 
 exports.search = function(cb, passedLocation) {
+  // passedlocation is array of long and latitude
+  // should be integers
   var locationQuery = '';
-  var params = [];
+  var upperLat, upperLong, lowerLat, lowerLong, params;
   if (passedLocation) {
-    params = [passedLocation.toLowerCase()];
+    upperLat = passedlocation[0] - 1;
+    lowerLat = passedlocation[0] + 1;
+    upperLong = passedlocation[1] - 1;
+    lowerLong = passedlocation[1] + 1;
+    params = [lowerLat, upperLat, lowerLong, upperLong];
     // need to get lat and long from search 
-    locationQuery = ' WHERE (l.location = $1)';
-
+    locationQuery = ' WHERE l.lat BETWEEN $1 AND $2 AND l.long BETWEEN $3 AND $4';
   }
 
   var queryString = 'SELECT s.site, l.location, s.lat, s.long, s.max_depth, ' + 
@@ -347,18 +352,24 @@ exports.addUser = function (fbdata, cb) {
       fbdata.fb_id], 
       function(err, result){
         if (err) { throw err; }
+        done();
+        cb(result);
       });
   });
 };
 
-exports.findUser = function (id) {
+exports.findUser = function (id, cb) {
   pg.connect(connectionString, function(err, client, done) {
     if (err) {throw err;}
 
     /* find user by his facebook id */
     client.query('SELECT * FROM users (user) WHERE user._id = $1)', [id], 
       function(err, result){
-        if (err) { throw err; }
+        if (err) { 
+          throw err; 
+        }
+        done();
+        cb(result);
       });
   });
 };

@@ -82,8 +82,7 @@ module.exports = function(grunt){
 
   /* Register custom tasks. Default is just a building */
   grunt.registerTask('default', [
-    'sass',
-    'uglify'
+    'sass'
   ]);
   
   grunt.registerTask('test', [
@@ -93,7 +92,7 @@ module.exports = function(grunt){
 
   grunt.registerTask('build', [
     'sass',
-    'uglify'
+    // 'uglify'
   ]);
 
   grunt.registerTask('test-server', [
