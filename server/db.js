@@ -4,7 +4,7 @@
 var pg = require('pg');
 
 /* URL for hosted heroku postgresql database */
-var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost/bowen';
+var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
 
 exports.createTables = function(cb) {
   pg.connect(connectionString, function(err, client, done) {
@@ -364,7 +364,6 @@ exports.findUser = function (id, cb) {
     if (err) {throw err;}
 
     /* find user by his facebook id */
-    console.log("checking database ", id)
     client.query('SELECT * FROM users WHERE fb_id = $1', [id], 
       function(err, result){
         if (err) { 
