@@ -59,10 +59,10 @@ angular.module('divestop', [
       templateUrl: '/add/add.html',
       controller: 'AddSiteController'
     })
-    // .when('/profile', {
-    //   template: null,
-    //   controller: 'LogoutCtrl'
-    // })
+    .when('/logout', {
+      template: null,
+      controller: 'LogoutCtrl'
+    })
     .otherwise('/');
 
 
