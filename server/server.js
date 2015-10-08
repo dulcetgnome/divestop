@@ -6,7 +6,6 @@ var app = express();
 var port = process.env.PORT || 3000;
 
 var qs = require('querystring');
-var async = require('async');
 var bodyParser = require('body-parser');
 var colors = require('colors');
 var cors = require('cors');

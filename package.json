@@ -41,6 +41,7 @@
     "passport-facebook": "^2.0.0",
     "pg": "^4.4.2",
     "phantomjs": "^1.9.18",
+    "request": "^2.64.0",
     "sinon": "^1.17.1",
     "supertest": "^1.1.0"
   },
