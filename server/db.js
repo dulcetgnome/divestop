@@ -32,7 +32,6 @@ exports.createTables = function(cb) {
           throw err;
         }
         done();
-        console.log(1);
         client.query('CREATE TABLE IF NOT EXISTS aquatic_life (' +
           '_id SERIAL PRIMARY KEY, ' +
           'type VARCHAR(100) ' +
@@ -41,7 +40,6 @@ exports.createTables = function(cb) {
               throw err;
             }
             done();
-            console.log(1);
             client.query('CREATE TABLE IF NOT EXISTS features (' +
               '_id SERIAL PRIMARY KEY, ' +
               'feature VARCHAR(100) ' +
@@ -50,13 +48,12 @@ exports.createTables = function(cb) {
                   throw err;
                 }
                 done();
-                console.log(1);
                 client.query('CREATE TABLE IF NOT EXISTS sites (' +
                   '_id SERIAL PRIMARY KEY, ' +
                   'site VARCHAR(250), ' +
                   'location_id INT REFERENCES locations (_id), ' +
-                  'lat NUMERIC, ' +
-                  'long NUMERIC, ' +
+                  'lat NUMERIC(5), ' +
+                  'long NUMERIC(5), ' +
                   'max_depth INT, ' +
                   'gradient VARCHAR(10), ' +
                   'description VARCHAR, ' +
@@ -66,7 +63,6 @@ exports.createTables = function(cb) {
                       throw err;
                     }
                     done();
-                    console.log(1);
                     client.query('CREATE TABLE IF NOT EXISTS pictures (' +
                       '_id SERIAL PRIMARY KEY, ' +
                       'site_id INT NOT NULL REFERENCES sites (_id), ' +
@@ -76,7 +72,6 @@ exports.createTables = function(cb) {
                           throw err;
                         }
                         done();
-                        console.log(1);
                         client.query('CREATE TABLE IF NOT EXISTS site_features (' +
                           'site_id INT NOT NULL REFERENCES sites (_id), ' +
                           'feature_id INT NOT NULL REFERENCES features (_id) ' +
@@ -85,7 +80,6 @@ exports.createTables = function(cb) {
                               throw err;
                             }
                             done();
-                            console.log(1);
                             client.query('CREATE TABLE IF NOT EXISTS site_aquatic_life (' +
                               'site_id INT NOT NULL REFERENCES sites (_id), ' +
                               'aquatic_life_id INT NOT NULL REFERENCES aquatic_life (_id) ' +
@@ -94,7 +88,6 @@ exports.createTables = function(cb) {
                                   throw err;
                                 }
                                 done();
-                                console.log(1);
                                 client.query('CREATE TABLE IF NOT EXISTS users (' +
                                   '_id SERIAL PRIMARY KEY, ' +
                                   'fb_id VARCHAR(250), ' +
@@ -107,7 +100,6 @@ exports.createTables = function(cb) {
                                       throw err;
                                     }
                                     done();
-                                    console.log(1);
                                     client.query('CREATE TABLE IF NOT EXISTS bars_visited (' +
                                       'user_id INT NOT NULL REFERENCES users (_id), ' +
                                       'bar_id INT NOT NULL REFERENCES sites (_id) ' +
@@ -151,7 +143,6 @@ exports.addSite = function(cb, passedSite) {
       'SELECT location FROM locations WHERE location = $2)', [passedSite.location.toLowerCase(), 
       passedSite.location.toLowerCase()], 
       function(err, result){
-        console.log(2);
         if (err) { throw err; }
 
         /* If no feature, add feature 
@@ -164,7 +155,6 @@ exports.addSite = function(cb, passedSite) {
           '\' WHERE NOT EXISTS (SELECT feature FROM features WHERE feature = \'' + passedSite.features[n] + '\'); ';
         }
         client.query(featureString, function(err, result){
-          console.log(2);
           if (err) { throw err; }
 
           /* Insert aquatic life
@@ -177,16 +167,14 @@ exports.addSite = function(cb, passedSite) {
             '\' WHERE NOT EXISTS (SELECT type FROM aquatic_life WHERE type = \'' + passedSite.aquaticLife[p] + '\'); ';
           }
           client.query(aquaticLifeString, function(err, result){
-            console.log(3);
-            if (err) { throw err; }
-
-            /* If no site, add site */
+    
+            if (err) { 
+              throw err; 
+            }
             client.query('INSERT INTO sites (site, location_id, lat, long, max_depth, gradient, description, comments) SELECT \'' + passedSite.name + '\', (SELECT _id FROM locations WHERE ' + 
               'location = \'' + passedSite.location.toLowerCase() + '\'), ' + passedSite.coordinates.lat + ', ' + passedSite.coordinates.lng + ', ' + passedSite.maxDepth + ', \'' + passedSite.gradient + '\', \'' + passedSite.description + '\', \'' + passedSite.comments + '\' WHERE NOT EXISTS (SELECT site FROM sites WHERE site = \'' + passedSite.name + '\');', 
               function(err, result) {
-                
                 if (err) {
-                  console.log(4);
                   throw err; 
                 }
 
@@ -200,7 +188,6 @@ exports.addSite = function(cb, passedSite) {
                   'WHERE site = \'' + passedSite.name + '\'), (SELECT _id FROM features WHERE feature = \'' + passedSite.features[q] + '\')); ';
                 }
                 client.query(siteFeaturesString, function(err, result){
-                  console.log(5);
                   if (err) { throw err; }
 
                   /* Insert photo urls
@@ -213,7 +200,6 @@ exports.addSite = function(cb, passedSite) {
                     'WHERE site = \'' + passedSite.name + '\'), \'' + passedSite.photos[q] + '\'); ';
                   }
                   client.query(photosString, function(err, result){
-                    console.log(6);
                     if (err) { throw err; }
 
                     /* Insert ids into site_aquatic_life join table
@@ -227,7 +213,6 @@ exports.addSite = function(cb, passedSite) {
                       '(SELECT _id FROM aquatic_life WHERE type = \'' + passedSite.aquaticLife[q] + '\')); ';
                     }
                     client.query(siteAquaticLifeString, function(err, result){
-                      console.log(7);
                       if (err) { throw err; }
                       done();
                       cb();
@@ -252,13 +237,13 @@ exports.search = function(cb, passedLocation) {
   var locationQuery = '';
   var upperLat, upperLong, lowerLat, lowerLong, params;
   if (passedLocation) {
-    upperLat = passedlocation[0] - 1;
-    lowerLat = passedlocation[0] + 1;
-    upperLong = passedlocation[1] - 1;
-    lowerLong = passedlocation[1] + 1;
+    upperLat = passedLocation[0] + 1;
+    lowerLat = passedLocation[0] - 1;
+    upperLong = passedLocation[1] + 1;
+    lowerLong = passedLocation[1] - 1;
     params = [lowerLat, upperLat, lowerLong, upperLong];
     // need to get lat and long from search 
-    locationQuery = ' WHERE l.lat BETWEEN $1 AND $2 AND l.long BETWEEN $3 AND $4';
+    locationQuery = ' WHERE s.lat BETWEEN $1 AND $2 AND s.long BETWEEN $3 AND $4';
   }
 
   var queryString = 'SELECT s.site, l.location, s.lat, s.long, s.max_depth, ' + 
@@ -336,9 +321,8 @@ exports.search = function(cb, passedLocation) {
       if (siteObject.hasOwnProperty('name')) {
         sites.push(siteObject);
       }
-
-      done();
       cb(sites);
+      done();
     });
   });
 };
@@ -359,37 +343,5 @@ exports.wipeDatabase = function(cb) {
   });
 };
 
-// Add a user to the database 
-exports.addUser = function (fbdata, cb) {
-  pg.connect(connectionString, function(err, client, done) {
-    if (err) {throw err;}
-
-    /* If no location, add location */
-    client.query('INSERT INTO users (user) SELECT $1 WHERE NOT EXISTS ( ' +
-      'SELECT user FROM users WHERE user = $2)', [fbdata.fb_id, 
-      fbdata.fb_id], 
-      function(err, result){
-        if (err) { throw err; }
-        done();
-        cb(result);
-      });
-  });
-};
-
-exports.findUser = function (id, cb) {
-  pg.connect(connectionString, function(err, client, done) {
-    if (err) {throw err;}
-
-    /* find user by his facebook id */
-    client.query('SELECT * FROM users (user) WHERE user._id = $1)', [id], 
-      function(err, result){
-        if (err) { 
-          throw err; 
-        }
-        done();
-        cb(result);
-      });
-  });
-};
 
 
