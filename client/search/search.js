@@ -12,12 +12,10 @@ angular.module('divestop.search', [])
       // console.log(address);
       // Takes in an address (String) and sets map postion
       geocoder.geocode({'address': address}, function(results, status) {
-        // console.log("results", results);
-        // console.log("status", status);
+        console.log("results", results);
         if (status === google.maps.GeocoderStatus.OK) {
           SharedProperties.map.setCenter(results[0].geometry.location);
           SharedProperties.map.setZoom(11);
-          // SharedProperties.splash.state = false;
           $scope.$apply();
         } else {
           console.log('Geocode was not successful for the following reason: ' + status);

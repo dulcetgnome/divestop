@@ -11,6 +11,7 @@ angular.module('divestop', [
   'divestop.addsite',
   'divestop.login',
   'divestop.logout',
+  'divestop.profile',
   'ngRoute',
   'satellizer'
 ])
@@ -51,7 +52,12 @@ angular.module('divestop', [
       templateUrl: '/add/add.html',
       controller: 'AddSiteController'
     })
-    .otherwise("/");
+    // .when('/profile', {
+    //   template: null,
+    //   controller: 'LogoutCtrl'
+    // })
+    .otherwise('/');
+
 
   // use satellizer for user authentication
   $authProvider.facebook({

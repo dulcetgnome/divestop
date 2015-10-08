@@ -1,6 +1,6 @@
 angular.module('divestop.profile', [])
   .controller('ProfileCtrl', function($scope, $auth, Account) {
-   
+   $scope.user = {};
     // Retrieve the profile information from database
     $scope.getProfile = function () {
       Account.getProfile()
