@@ -116,7 +116,8 @@ app.get('/api/me', ensureAuthenticated, function(req, res) {
   db.findUser(req.user, function (user) {
     user = user[0];
     res.send({
-      displayName: user.first_name + ' ' + user.last_name
+      displayName: user.first_name + ' ' + user.last_name,
+      picture: 'https://graph.facebook.com/v2.3/' + user.fb_id + '/picture?type=large'
     });
   });
 });
