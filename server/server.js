@@ -40,11 +40,14 @@ app.get('/', function(req, res) {
 });
 
 app.get('/api/sites/:location', function(req, res) {
-  var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
+  console.log(req.params.location);
+  var location = req.params.location.split('-');
+  var coordinates = [location[0], location[1]]; 
+  // regex /\%20/g, ' '
 
   db.search(function(sites) {
     res.json(sites);
-  }, location);
+  }, coordinates);
 });
 
 app.get('/api/sites', function(req, res) {
@@ -79,6 +82,7 @@ if (app.get('env') === 'production') {
 app.use(express.static(path.join(__dirname, '../client')));
 
 function ensureAuthenticated(req, res, next) {
+  console.log('inside ensureAuthenticated', req.headers.authorization)
   if (!req.headers.authorization) {
     return res.status(401).send({ message: 'Please make sure your request has an Authorization header' });
   }
@@ -124,15 +128,12 @@ app.put('/api/me', ensureAuthenticated, function(req, res) {
 app.post('/auth/facebook', function(req, res) {
   var accessTokenUrl = 'https://graph.facebook.com/v2.3/oauth/access_token';
   var graphApiUrl = 'https://graph.facebook.com/v2.3/me';
-  console.log(config.clientId)
-  console.log(config.FACEBOOK_SECRET)
   var params = {
     code: req.body.code,
-    client_id: config.clientId,
+    client_id: req.body.clientId,
     client_secret: config.FACEBOOK_SECRET,
     redirect_uri: req.body.redirectUri
   };
-
   // Step 1. Exchange authorization code for access token.
   request.get({ url: accessTokenUrl, qs: params, json: true }, function(err, response, accessToken) {
     if (response.statusCode !== 200) {
@@ -144,14 +145,19 @@ app.post('/auth/facebook', function(req, res) {
       if (response.statusCode !== 200) {
         return res.status(500).send({ message: profile.error.message });
       }
+      console.log('auth', req.headers.authorization)
       // Step 3b. Create a new user account or return an existing one.
-      db.findUser(profile.id, function(err, existingUser) {
-        if (existingUser) {
+
+      db.findUser(profile.id, function(existingUser) {
+        // console.log(profile)
+        if (existingUser.length !== 0) {
           var token = createJWT(existingUser);
           return res.send({ token: token });
         }
         var fbdata = {
-          fb_id: profile.id,        
+          fb_id: profile.id,
+          first_name: profile.name.split(' ')[0],
+          last_name: profile.name.split(' ')[1]
         }
         db.addUser(fbdata, function (newUser) {
           if (existingUser) {
@@ -159,15 +165,13 @@ app.post('/auth/facebook', function(req, res) {
             return res.send({ token: token });
           }
         });
-     });
+       });
     });
   });
 });
 
-
-
+// db.wipeDatabase();
 /* Auth stuff */
-
 
 app.listen(port, function() {
   console.log("Listening on port: " + port);
