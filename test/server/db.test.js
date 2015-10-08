@@ -23,8 +23,8 @@ describe('Postgres Database Structure', function () {
           name: 'Oscars Oasis',
           location: 'Cuba',
           coordinates: {
-            lat: 54.343,
-            lng: 56.454
+            lat: 54.545,
+            lng: 56.455
           },
           maxDepth: 25,
           gradient: '25d',
@@ -82,13 +82,21 @@ describe('Postgres Database Structure', function () {
       done();
     });
   });
+  
+  it('should have a method that, given a latitude and longitude, retrieves all dive sites in that location from the database', function (done) {
+    var params = [54.233, 56.454];
+    db.search(function(allSites) {
+      expect(allSites).to.have.length(1);
+      done(); 
+    }, params);
+  });
 
   it('should have a method that given the data for a site, inserts that data into the database', function (done) {
     db.addSite(function() {
       db.search(function(sites) { 
         expect(sites[0].location).to.equal('sicily');
         done();
-      }, 'Sicily');
+      }, [114.27, 54.89]);
     }, {
       name: 'Giuseppes Jetty',
       location: 'Sicily',

@@ -27,10 +27,10 @@ html
 .head ul li
   margin: 0 5px
 
-.currentView
-  margin-left: -50px
-  margin-top: -15px
-  z-index: 0
+// .currentView
+//   margin-left: -50px
+//   margin-top: -15px
+//   z-index: 0
 
 .logoContainer
   margin: 0 20px
@@ -47,30 +47,58 @@ html
 body.splash
   overflow: hidden
 
-.splash
-  nav
-    background-image: url('https://farm3.staticflickr.com/2492/4143196658_eda660fed9_o_d.jpg')
-    background-size: 100vw
-    background-position: center
-    height: 100vh
-    padding-top: 40vh
-  .mapContainer
-    visibility: hidden
-  #search
-    background-color: #fff
-  .row 
-    // margin-left: 50vw
-    width: 75%
-  .searchContainer
-    margin-left: 50vw
-  .brand-logo
-    margin-left: 20vw
-    text-shadow: 1px 1px 8px #555
-    font-size: 42px
+// .splash
+//   nav
+//     background-image: url('https://farm3.staticflickr.com/2492/4143196658_eda660fed9_o_d.jpg')
+//     background-size: 100vw
+//     background-position: center
+//     height: 100vh
+//     padding-top: 40vh
+//   .mapContainer
+//     visibility: hidden
+//   #search
+//     background-color: #fff
+//   .row 
+//     // margin-left: 50vw
+//     width: 75%
+//   .searchContainer
+//     margin-left: 50vw
+//   .brand-logo
+//     margin-left: 20vw
+//     text-shadow: 1px 1px 8px #555
+//     font-size: 42px
+
+.searchContainer
+  // padding-right: 20vw
+  // margin-left: 25vw
+
+.searchContainer 
+  form
+    width: 400px
+
+.searchContainer form div
+  // margin-top: 15px
+  // height: 38px
+  // margin-left: 35vw
+  // padding-bottom: 10px
+
+
+
+// .searchContainer 
+//   input
+//     padding-bottom: 30px
+//   label
+//     padding-bottom: 30px
+//   i
+//     padding-bottom: 30px
+
+// .searchContainer:hover
+//   background-color: rgba(0, 131, 143, 0.8)
+
 
 @media only screen and (max-width: 994px)
   .splash
-    .row .searchContainer
+    .row 
       width: 100%
     .row .breaker
       display: block !important
