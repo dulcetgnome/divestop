@@ -21,7 +21,7 @@
  --> 
   <script src="/libs/angular-route/angular-route.min.js"></script>
   <!-- // <script src="/libs/angular-toastr/dist/angular-toastr.tpls.js"></script> -->
-  <script src="/libs/satellizer/satellizer.min.js"></script>
+  <script src="/libs/satellizer/satellizer.js"></script>
   <script src="//maps.google.com/maps/api/js"></script>
   <script src="/libs/ngmap/build/scripts/ng-map.js"></script>
   <script src="/add/canvas-to-blob.js"></script>
@@ -37,6 +37,8 @@
   <script src="profile/profile.js"></script>
   <script src="auth/login.js"></script>
   <script src="auth/logout.js"></script>
+  <script src="layout/authbar.js"></script>
+
 
   <script src="app.js"></script>
 
@@ -61,6 +63,11 @@
         <li><a href="#/bars/new">Add dive</a></li>
         <li><a href="#/bars">Bars Nearby</a></li>
       </ul>
+      <div ng-controller="AuthbarCtrl">
+        <ul ng-if="isAuthenticated()"><li><a href="#/profile">Profile</a></li></ul>
+        <ul ng-if="isAuthenticated()"><li><a href="#/logout">Logout</a></li></ul>
+        <ul ng-if="!isAuthenticated()"><li><a href="#/login">Login</a></li></ul>
+      </div>
       <footer>
         <div class="footer-copyright">
           <div class="container">
