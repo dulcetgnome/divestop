@@ -10,8 +10,11 @@ angular.module('divestop.map', ['ngMap'])
 
     $scope.$on("mapInitialized", function(e, map) {
       SharedProperties.map = map;
-      DiveSites.getAllDiveSites()
+      // sends a request to get divesites around a certain location (based on long and lat)
+      var coordinates = SharedProperties.map.center.J + "-" + SharedProperties.map.center.M;
+      DiveSites.getDiveSites(coordinates)
         .then(function(sites) {
+          console.log(sites);
           AppMap.addMarkers(sites, map);
         });
     });

@@ -40,11 +40,11 @@ app.get('/', function(req, res) {
 });
 
 app.get('/api/sites/:location', function(req, res) {
-  console.log(req.params.location);
+  // location in url is formatted as api/sites/3.456-50.267
   var location = req.params.location.split('-');
   var coordinates = [location[0], location[1]]; 
   // regex /\%20/g, ' '
-
+  // pass down coordinates to db for query
   db.search(function(sites) {
     res.json(sites);
   }, coordinates);
