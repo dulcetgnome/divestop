@@ -142,10 +142,7 @@ app.post('/auth/facebook', function(req, res) {
       if (response.statusCode !== 200) {
         return res.status(500).send({ message: profile.error.message });
       }
-      if (req.headers.authorization) {
-        var token = req.headers.authorization.split(' ')[1];
-        var payload = jwt.decode(token, config.TOKEN_SECRET);
-      }
+      console.log('auth', req.headers.authorization)
       // Step 3b. Create a new user account or return an existing one.
 
       db.findUser(profile.id, function(existingUser) {
