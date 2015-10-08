@@ -114,11 +114,11 @@ function createJWT(user) {
 
 
 app.get('/api/me', ensureAuthenticated, function(req, res) {
-  res.send('you made a get request logged in!')
+  res.send();
 });
 
 app.put('/api/me', ensureAuthenticated, function(req, res) {
-  res.send('you made a put request logged in which is: ',req.body)
+  res.send()
 });
 
 
@@ -134,7 +134,6 @@ app.post('/auth/facebook', function(req, res) {
     client_secret: config.FACEBOOK_SECRET,
     redirect_uri: req.body.redirectUri
   };
-  console.log('auth', params.code)
   // Step 1. Exchange authorization code for access token.
   request.get({ url: accessTokenUrl, qs: params, json: true }, function(err, response, accessToken) {
     if (response.statusCode !== 200) {
