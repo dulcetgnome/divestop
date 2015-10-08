@@ -15,7 +15,7 @@ describe('RESTful api', function () {
       });
   });
 
-  xit('responds to GET requests at `/api/sites` by returning data for all sites', function (done) {
+  it('responds to GET requests at `/api/sites` by returning data for all sites', function (done) {
 
     request(app)
       .get('/api/sites')
@@ -28,7 +28,7 @@ describe('RESTful api', function () {
       });
   });
 
-  xit('responds to POST requests at `/api/sites`' , function (done) {
+  it('responds to POST requests at `/api/sites`' , function (done) {
 
     var data = {
       name: 'Martins Marina',
@@ -62,10 +62,10 @@ describe('RESTful api', function () {
 
   });
 
-  xit('responds to GET requests at `/api/sites/:location` by returning site data for specified location', function (done) {
+  it('responds to GET requests at `/api/sites/:location` by returning site data for specified location', function (done) {
 
     request(app)
-      .get('/api/sites/fiji')
+      .get('/api/sites/45.345-65.154')
       .end(function (err, res) {
         if (err) return done(err);
         expect(res.body[0].location, 'fiji');

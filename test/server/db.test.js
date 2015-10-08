@@ -76,7 +76,7 @@ describe('Postgres Database Structure', function () {
     });
   });
 
-  xit('should have a method that, given no location, retrieves all dive sites from the database', function (done) {
+  it('should have a method that, given no location, retrieves all dive sites from the database', function (done) {
     db.search(function(allSites) {
       expect(allSites.length).to.equal(3);
       done();
@@ -91,12 +91,12 @@ describe('Postgres Database Structure', function () {
     }, params);
   });
 
-  xit('should have a method that given the data for a site, inserts that data into the database', function (done) {
+  it('should have a method that given the data for a site, inserts that data into the database', function (done) {
     db.addSite(function() {
       db.search(function(sites) { 
         expect(sites[0].location).to.equal('sicily');
         done();
-      }, 'Sicily');
+      }, [114.27, 54.89]);
     }, {
       name: 'Giuseppes Jetty',
       location: 'Sicily',
