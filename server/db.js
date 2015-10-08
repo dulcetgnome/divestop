@@ -4,7 +4,7 @@
 var pg = require('pg');
 
 /* URL for hosted heroku postgresql database */
-var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
+var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost/bowen';
 
 exports.createTables = function(cb) {
   pg.connect(connectionString, function(err, client, done) {
@@ -327,8 +327,8 @@ exports.search = function(cb, passedLocation) {
 
 // The wipeDatabase() method is used in the db tests.
 exports.wipeDatabase = function(cb) {
-  var queryString = 'TRUNCATE site_aquatic_life, site_features, pictures,' + 
-  ' sites, features, aquatic_life, locations;';
+  var queryString = 'TRUNCATE users, site_aquatic_life, site_features, pictures,' + 
+  ' sites, features, aquatic_life, locations, bars_visited, users;';
 
   pg.connect(connectionString, function(error, client, done) {
     client.query(queryString, function(err, result) {
@@ -336,7 +336,8 @@ exports.wipeDatabase = function(cb) {
         throw err;
       }
       done();
-      cb();
+      if(cb)
+        cb();
     });
   });
 };
@@ -347,9 +348,7 @@ exports.addUser = function (fbdata, cb) {
     if (err) {throw err;}
 
     /* If no location, add location */
-    client.query('INSERT INTO users (user) SELECT $1 WHERE NOT EXISTS ( ' +
-      'SELECT user FROM users WHERE user = $2)', [fbdata.fb_id, 
-      fbdata.fb_id], 
+    client.query('INSERT INTO users (fb_id, first_name, last_name) VALUES ($1, $2, $3)', [fbdata.fb_id, fbdata.first_name, fbdata.last_name], 
       function(err, result){
         if (err) { throw err; }
         done();
@@ -363,13 +362,14 @@ exports.findUser = function (id, cb) {
     if (err) {throw err;}
 
     /* find user by his facebook id */
-    client.query('SELECT * FROM users (user) WHERE user._id = $1)', [id], 
+    console.log("checking database ", id)
+    client.query('SELECT * FROM users WHERE fb_id = $1', [id], 
       function(err, result){
         if (err) { 
           throw err; 
         }
         done();
-        cb(result);
+        cb(result.rows);
       });
   });
 };
