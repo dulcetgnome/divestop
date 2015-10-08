@@ -17,15 +17,20 @@ angular.module('divestop', [
 
 .config(function ($routeProvider, $httpProvider, $authProvider) {
   $routeProvider
-    // home page will automatically point to the map
+
     .when('/', {
-      templateUrl: '/map/map.html'
+      templateUrl: '/welcome/welcome.html',
+      controller: 'SearchController'
     })
     // We don't need signup at the moment - maybe later functionality
     // .when('/signup', {
     //   templateUrl: '/users/signup.html',
     //   controller: 'userController'
     // })
+    .when('/map', {
+      templateUrl: '/map/map.html',
+      controller: 'OurMapController'
+    })
     .when('/login', {
       templateUrl: '/users/login.html',
       controller: 'LoginCtrl'
@@ -34,11 +39,10 @@ angular.module('divestop', [
       templateUrl: '/users/profile.html',
       controller: 'ProfileCtrl'
     })
-    // We don't need signup at the moment - maybe later functionality
-    // .when('/settings', {
-    //   templateUrl: '/users/settings.html',
-    //   controller: 'userController'
-    // })
+    .when('/settings', {
+      templateUrl: '/users/settings.html',
+      controller: 'userController'
+    })
     .when('/bars', {
       templateUrl: '/divesite/divesite.html',
       controller: 'DiveSiteController'
@@ -47,11 +51,7 @@ angular.module('divestop', [
       templateUrl: '/add/add.html',
       controller: 'AddSiteController'
     })
-    .when('/profile', {
-      template: null,
-      controller: 'LogoutCtrl'
-    })
-    .otherwise('/');
+    .otherwise("/");
 
   // use satellizer for user authentication
   $authProvider.facebook({
