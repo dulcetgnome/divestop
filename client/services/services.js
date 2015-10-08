@@ -26,6 +26,15 @@ angular.module('divestop.services', [])
           throw err;
         });
     };
+    // gets dive sites around the center coordinates (lat,lng) of the map
+    var getDiveSites = function(coordinates) {
+      return $http.get('/api/sites/' + coordinates)
+        .then(function(resp) {
+          return resp.data;
+        }, function(err) {
+          throw err;
+        });
+    };
 
     var postNewSite = function(site) {
       // site is a JSON object with information about the divesite in the following format:
@@ -62,6 +71,7 @@ angular.module('divestop.services', [])
 
     return {
       getAllDiveSites: getAllDiveSites,
+      getDiveSites: getDiveSites,
       postNewSite: postNewSite
     };
   })
