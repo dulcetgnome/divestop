@@ -232,13 +232,13 @@ exports.search = function(cb, passedLocation) {
   // passedlocation is array of long and latitude
   // should be integers
   var locationQuery = '';
-  var upperLat = passedlocation[0] - 1;
-  var lowerLat = passedlocation[0] + 1;
-  var upperLong = passedlocation[1] - 1;
-  var lowerLong = passedlocation[1] + 1;
-  var params = [lowerLat, upperLat, lowerLong, upperLong];
+  var upperLat, upperLong, lowerLat, lowerLong, params;
   if (passedLocation) {
-    params = passedlocation
+    upperLat = passedlocation[0] - 1;
+    lowerLat = passedlocation[0] + 1;
+    upperLong = passedlocation[1] - 1;
+    lowerLong = passedlocation[1] + 1;
+    params = [lowerLat, upperLat, lowerLong, upperLong];
     // need to get lat and long from search 
     locationQuery = ' WHERE l.lat BETWEEN $1 AND $2 AND l.long BETWEEN $3 AND $4';
   }
@@ -353,7 +353,7 @@ exports.addUser = function (fbdata, cb) {
       function(err, result){
         if (err) { throw err; }
         done();
-        cb();
+        cb(result);
       });
   });
 };
