@@ -21,23 +21,24 @@ angular.module('divestop.map', ['ngMap'])
           else {
             console.log('no divebars in db so else statement was fired.');
             // make API request to google places
-            var pyrmont = new google.maps.LatLng(coords[0], coords[1]);
-
+            var center = {lat: coords[0], lng: coords[1]};
             var service = new google.maps.places.PlacesService(map);
-              service.nearbySearch(request, function(results, status) {
-                if (status == google.maps.places.PlacesServiceStatus.OK) {
-                  for (var i = 0; i < results.length; i++) {
-                    console.log(results[i]);
-                    var place = results[i];
-                  }
-                }
-              });
-            } 
-            // get those places in the database 
-            // AppMap.addMarkers(sites, map)
-          });
-        });
+              service.nearbySearch({
+                location: center,
+                radius: 500,
+                types: ['dive bar']
+              }, callback);
 
+            function callback(results, status) {
+              if (status === google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                  console.log(results[i]);
+                }
+              }
+            }
+          }
+        }) 
+      });
     // $scope.templateUrl = 'map/map.html';
 
     $scope.toggleForm = function() {
