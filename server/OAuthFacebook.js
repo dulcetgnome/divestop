@@ -1,11 +1,7 @@
-var express = require('../node_modules/express');
-var parser = require('../node_modules/body-parser');
 var path = require('path');
-var db = require('./db.js');
-var app = express();
-var port = process.env.PORT || 3000;
-
 var qs = require('querystring');
+
+var async = require('async');
 var bodyParser = require('body-parser');
 var colors = require('colors');
 var cors = require('cors');
@@ -25,50 +21,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-/* Middleware */
-app.use(parser.json());
-
-/* Static File Serving */
-app.use(express.static(path.join(__dirname, '../client')));
-
-
-
-/* Routes for general user */
-app.get('/', function(req, res) {
-  res.sendStatus(200);
-});
-
-app.get('/api/sites/:location', function(req, res) {
-  var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
-
-  db.search(function(sites) {
-    res.json(sites);
-  }, location);
-});
-
-app.get('/api/sites', function(req, res) {
-  db.createTables(function(){
-    db.search(function(sites) {
-      res.json(sites);
-    });
-  });
-});
-
-app.post('/api/sites', function(req, res) {
-  db.addSite(function() {
-    res.sendStatus(201);
-  }, req.body);
-});
-
-app.get('/api/keys', function(req, res) {
-    res.json({
-      'X-Parse-Application-Id': process.env['X-Parse-Application-Id'],
-      'X-Parse-REST-API-Key': process.env['X-Parse-REST-API-Key']
-    });
-});
-
-/* Routes for logged in user */
 // Force HTTPS on Heroku
 if (app.get('env') === 'production') {
   app.use(function(req, res, next) {
@@ -110,11 +62,22 @@ function createJWT(user) {
 
 
 app.get('/api/me', ensureAuthenticated, function(req, res) {
-  res.send('you made a get request logged in!')
+  User.findById(req.user, function(err, user) {
+    res.send(user);
+  });
 });
 
 app.put('/api/me', ensureAuthenticated, function(req, res) {
-  res.send('you made a put request logged in which is: ',req.body)
+  User.findById(req.user, function(err, user) {
+    if (!user) {
+      return res.status(400).send({ message: 'User not found' });
+    }
+    user.displayName = req.body.displayName || user.displayName;
+    user.email = req.body.email || user.email;
+    user.save(function(err) {
+      res.status(200).end();
+    });
+  });
 });
 
 
@@ -142,33 +105,67 @@ app.post('/auth/facebook', function(req, res) {
       if (response.statusCode !== 200) {
         return res.status(500).send({ message: profile.error.message });
       }
-      // Step 3b. Create a new user account or return an existing one.
-      db.findUser(profile.id, function(err, existingUser) {
-        if (existingUser) {
-          var token = createJWT(existingUser);
-          return res.send({ token: token });
-        }
-        var fbdata = {
-          user.fb_id = profile.id,        
-        }
-        db.addUser(fbdata, function (newUser) {
+      if (req.headers.authorization) {
+        User.findOne({ facebook: profile.id }, function(err, existingUser) {
           if (existingUser) {
-            var token = createJWT(newUser);
+            return res.status(409).send({ message: 'There is already a Facebook account that belongs to you' });
+          }
+          var token = req.headers.authorization.split(' ')[1];
+          var payload = jwt.decode(token, config.TOKEN_SECRET);
+          User.findById(payload.sub, function(err, user) {
+            if (!user) {
+              return res.status(400).send({ message: 'User not found' });
+            }
+            user.facebook = profile.id;
+            user.picture = user.picture || 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large';
+            user.displayName = user.displayName || profile.name;
+            user.save(function() {
+              var token = createJWT(user);
+              res.send({ token: token });
+            });
+          });
+        });
+      } else {
+        // Step 3b. Create a new user account or return an existing one.
+        User.findOne({ facebook: profile.id }, function(err, existingUser) {
+          if (existingUser) {
+            var token = createJWT(existingUser);
             return res.send({ token: token });
           }
+          var user = new User();
+          user.facebook = profile.id;
+          user.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
+          user.displayName = profile.name;
+          user.save(function() {
+            var token = createJWT(user);
+            res.send({ token: token });
+          });
         });
-     });
+      }
     });
   });
 });
 
+app.post('/auth/unlink', ensureAuthenticated, function(req, res) {
+  var provider = req.body.provider;
+  var providers = ['facebook', 'foursquare', 'google', 'github', 'instagram',
+    'linkedin', 'live', 'twitter', 'twitch', 'yahoo'];
 
+  if (providers.indexOf(provider) === -1) {
+    return res.status(400).send({ message: 'Unknown OAuth Provider' });
+  }
 
-/* Auth stuff */
-
-
-app.listen(port, function() {
-  console.log("Listening on port: " + port);
+  User.findById(req.user, function(err, user) {
+    if (!user) {
+      return res.status(400).send({ message: 'User Not Found' });
+    }
+    user[provider] = undefined;
+    user.save(function() {
+      res.status(200).end();
+    });
+  });
 });
 
-exports.app = app;
+app.listen(app.get('port'), function() {
+  console.log('Express server listening on port ' + app.get('port'));
+});
