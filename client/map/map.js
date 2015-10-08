@@ -14,8 +14,14 @@ angular.module('divestop.map', ['ngMap'])
       var coordinates = SharedProperties.map.center.J + "-" + SharedProperties.map.center.M;
       DiveSites.getDiveSites(coordinates)
         .then(function(sites) {
-          console.log(sites);
-          AppMap.addMarkers(sites, map);
+          if(sites.length > 0) {
+            AppMap.addMarkers(sites, map);
+          }
+          else {
+            // make API request to google places 
+            // get those places in the database 
+            // AppMap.addMarkers(sites, map)
+          }
         });
     });
 
