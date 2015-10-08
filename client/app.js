@@ -35,11 +35,17 @@ angular.module('divestop', [
     })
     .when('/login', {
       templateUrl: '/users/login.html',
-      controller: 'LoginCtrl'
+      controller: 'LoginCtrl',
+      resolve: {
+        skipIfLoggedIn: skipIfLoggedIn
+      }
     })
     .when('/profile', {
       templateUrl: '/users/profile.html',
-      controller: 'ProfileCtrl'
+      controller: 'ProfileCtrl',
+      resolve: {
+        loginRequired: loginRequired
+      }
     })
     .when('/settings', {
       templateUrl: '/users/settings.html',
@@ -64,5 +70,26 @@ angular.module('divestop', [
   $authProvider.facebook({
     clientId: '898772140217593'
   });
+
+  function skipIfLoggedIn($q, $auth) {
+    var deferred = $q.defer();
+    if ($auth.isAuthenticated()) {
+      deferred.reject();
+    } else {
+      deferred.resolve();
+    }
+    return deferred.promise;
+  }
+
+  function loginRequired($q, $location, $auth) {
+    var deferred = $q.defer();
+    if ($auth.isAuthenticated()) {
+      deferred.resolve();
+    } else {
+      $location.path('/login');
+    }
+    return deferred.promise;
+  }
+
 });
 
