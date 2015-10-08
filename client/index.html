@@ -6,8 +6,9 @@
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
+<!--   <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'> -->
   <!--Import materialize.css-->
+  <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
   <link type="text/css" rel="stylesheet" href="/libs/Materialize/dist/css/materialize.min.css"  media="screen,projection"/>
 
   <script src="/libs/angular/angular.js"></script>
@@ -41,7 +42,7 @@
   
   <div class="main row">
     <div id="sidebar"  class="col s3" ng-include src="'layout/sidebar.html'"></div>
-    <div class="col s9">
+    <div class="currentView col s9">
       <div ng-view></div>
     </div>
   </div>
