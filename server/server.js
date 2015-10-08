@@ -40,11 +40,14 @@ app.get('/', function(req, res) {
 });
 
 app.get('/api/sites/:location', function(req, res) {
-  var location = req.params.location.toLowerCase().replace(/\%20/g, ' ');
+  console.log(req.params.location);
+  var location = req.params.location.split('-');
+  var coordinates = [location[0], location[1]]; 
+  // regex /\%20/g, ' '
 
   db.search(function(sites) {
     res.json(sites);
-  }, location);
+  }, coordinates);
 });
 
 app.get('/api/sites', function(req, res) {
