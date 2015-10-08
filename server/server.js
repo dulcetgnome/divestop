@@ -101,7 +101,7 @@ function ensureAuthenticated(req, res, next) {
 
 function createJWT(user) {
   var payload = {
-    sub: user._id,
+    sub: user.fb_id,
     iat: moment().unix(),
     exp: moment().add(14, 'days').unix()
   };
@@ -124,6 +124,8 @@ app.put('/api/me', ensureAuthenticated, function(req, res) {
 app.post('/auth/facebook', function(req, res) {
   var accessTokenUrl = 'https://graph.facebook.com/v2.3/oauth/access_token';
   var graphApiUrl = 'https://graph.facebook.com/v2.3/me';
+  console.log(config.clientId)
+  console.log(config.FACEBOOK_SECRET)
   var params = {
     code: req.body.code,
     client_id: config.clientId,
@@ -149,7 +151,7 @@ app.post('/auth/facebook', function(req, res) {
           return res.send({ token: token });
         }
         var fbdata = {
-          user.fb_id = profile.id,        
+          fb_id: profile.id,        
         }
         db.addUser(fbdata, function (newUser) {
           if (existingUser) {
