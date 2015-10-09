@@ -159,8 +159,9 @@ angular.module('divestop.services', [])
         var service = new google.maps.places.PlacesService(SharedProperties.map);
           service.nearbySearch({
             location: center,
-            radius: 500,
-            types: ['bar']
+            radius: 8000,
+            types: ['cafe', 'bar'],
+            keyword:['dive']
           }, callback);
 
         function callback(results, status) {
@@ -173,7 +174,6 @@ angular.module('divestop.services', [])
 
     var addMarkers = function(sites, map){
       // iterate over all markers, and add a Marker object to the map.
-      console.log('in add markerSSSS');
       for (var i = 0; i < sites.length; i++) {
         var site = sites[i];
         addMarker(site, map);
@@ -181,7 +181,7 @@ angular.module('divestop.services', [])
     };
     var addMarker = function(site, map) {
       var marker = new google.maps.Marker({
-          position: site.coordinates,
+          position: site.geometry.location,
           map: map,
           title: site.name,
           // store the site object in the marker to make it easier to access when clicking on the marker.
