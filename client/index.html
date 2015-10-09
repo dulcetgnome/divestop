@@ -41,6 +41,7 @@
   <script src="auth/login.js"></script>
   <script src="auth/logout.js"></script>
   <script src="layout/authbar.js"></script>
+  <script src="layout/barsvisited.js"></script>
 
 
   <script src="app.js"></script>
@@ -61,9 +62,15 @@
         <i class="fa fa-beer"></i>
         <a href="#/" class="brand-logo">DiveStop</a>
       </div>
-
+      <div ng-controller="AuthbarCtrl" class="userHeader">
+          <span ng-if="isAuthenticated()" ng-controller="ProfileCtrl">
+            <img class="profile-picture" ng-src="{{user.picture || 'http://placehold.it/100x100'}}">
+            <p>Hey {{ user.displayName}}</p>
+          </span>
+          
+      </div>
       <ul>
-        <li><a href="#/bars/new">Add dive</a></li>
+        <li><a href="#/bars/new">Add Dive</a></li>
         <li><a href="#/bars">Bars Nearby</a></li>
       </ul>
       <div ng-controller="AuthbarCtrl">
@@ -71,11 +78,13 @@
         <ul ng-if="isAuthenticated()"><li><a href="#/logout">Logout</a></li></ul>
         <ul ng-if="!isAuthenticated()"><li><a href="#/login">Login</a></li></ul>
       </div>
+      <div ng-include src="'/layout/barsvisited.html'"></div>
+
       <footer>
         <div class="footer-copyright">
           <div class="container">
           © 2015 DiveStop
-          <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+          
           </div>
         </div>
       </footer>

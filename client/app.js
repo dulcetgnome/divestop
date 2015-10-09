@@ -13,6 +13,7 @@ angular.module('divestop', [
   'divestop.logout',
   'divestop.profile',
   'divestop.authbar',
+  'divestop.barsvisited',
   'ngRoute',
   'satellizer'
 ])
@@ -24,38 +25,29 @@ angular.module('divestop', [
       templateUrl: '/welcome/welcome.html',
       controller: 'SearchController'
     })
-    // We don't need signup at the moment - maybe later functionality
-    // .when('/signup', {
-    //   templateUrl: '/users/signup.html',
-    //   controller: 'userController'
-    // })
     .when('/map', {
       templateUrl: '/map/map.html',
       controller: 'OurMapController'
     })
     .when('/login', {
-      templateUrl: '/users/login.html',
+      templateUrl: '/auth/login.html',
       controller: 'LoginCtrl',
       resolve: {
         skipIfLoggedIn: skipIfLoggedIn
       }
     })
     .when('/profile', {
-      templateUrl: '/users/profile.html',
+      templateUrl: '/profile/profile.html',
       controller: 'ProfileCtrl',
       resolve: {
         loginRequired: loginRequired
       }
     })
-    .when('/settings', {
-      templateUrl: '/users/settings.html',
-      controller: 'userController'
-    })
-    .when('/bars', {
-      templateUrl: '/divesite/divesite.html',
-      controller: 'DiveSiteController'
-    })
-    .when('/bars/new', {
+    // .when('/bars', {
+    //   templateUrl: '/divesite/divesite.html',
+    //   controller: 'DiveSiteController'
+    // })
+    .when('/new-dive', {
       templateUrl: '/add/add.html',
       controller: 'AddSiteController'
     })

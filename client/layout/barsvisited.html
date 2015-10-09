@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="row">
+    <div id="barsvisited" class="col s3" ng-controller="BarsVisitedCtrl">
+      <h5> Bars Visited </h5>
+      <ul class="collection">
+        <li class="collection-item avatar" ng-repeat="name in bars"> 
+            <img src="../images/divebar1.jpg" alt="" class="circle">
+            <span class="title">{{ name }}</span>
+            <!-- <p> First Line <br> Second thing </p> -->
+            <a href="#!" class="secondary-content"><i class="small material-icons target">my_location</i><i class="material-icons star">grade</i></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
