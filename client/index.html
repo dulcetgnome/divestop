@@ -59,44 +59,54 @@
   <div class="row">
     <!-- <div id="header" ng-include src="'layout/header.html'"></div> -->
     <div id="sidebar" class="col s3">
-      <div class="header">
-        <i class="fa fa-beer"></i>
-        <a href="#/" class="brand-logo">DiveStop</a>
-      </div>
-      <div ng-controller="AuthbarCtrl">
-        <div class="userHeader" ng-if="isAuthenticated()">
-          <div ng-controller="ProfileCtrl">
-            <img class="profile-picture" ng-src="{{user.picture || 'http://placehold.it/100x100'}}">
-              <!-- Dropdown Trigger -->
-            
-            <div class="sideDivs">
-              <a class='dropdown-button' href='#' data-activates='dropdown1'>Hey {{ user.displayName}}<i class="material-icons">arrow_drop_down</i></a>
-              
-                <!-- Dropdown Structure -->
-              <ul id='dropdown1' class='dropdown-content'>
-                <li><a href="#/profile">Profile</a></li>
-                <li><a href="#/logout">Logout</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <ul>
-        <li><a href="#/new-dive">Add Dive</a></li>
-        <li><a href="#/map">Bars Nearby</a></li>
+      <div class="header sideDivs" ng-controller="AuthbarCtrl">
+  <div ng-if="isAuthenticated()">
+    <i class="fa fa-beer"></i>
+    <a class='dropdown-button' href='#' data-activates='dropdown1' data-beloworigin="true">DiveStop<i class="material-icons">arrow_drop_down</i></a>
+      <ul id='dropdown1' class='dropdown-content'>
+        <li><a href="#/profile">Profile</a></li>
+        <li><a href="#/logout">Logout</a></li>
       </ul>
-      <div ng-controller="AuthbarCtrl">
-        <ul ng-if="!isAuthenticated()"><li><a href="#/login">Login</a></li></ul>
+  </div>
+
+  <div ng-if="!isAuthenticated()">
+    <i class="fa fa-beer"></i>
+    <a class='dropdown-button' href='#' data-activates='dropdown2' data-beloworigin="true">DiveStop<i class="material-icons">arrow_drop_down</i></a>
+      <ul id='dropdown2' class='dropdown-content'>
+        <li><a href="#/login">Login</a></li>
+      </ul>
+    </div>
+</div>
+
+
+
+<div ng-controller="AuthbarCtrl">
+  <div class="userHeader" ng-if="isAuthenticated()">
+    <div ng-controller="ProfileCtrl">
+      <img class="profile-picture" ng-src="{{user.picture || 'http://placehold.it/100x100'}}">
+        <!-- Dropdown Trigger -->
+      <div class="sideDivs">
+        <p>Hey {{ user.displayName}}</p>
       </div>
-      <div ng-include src="'/layout/barsvisited.html'"></div>
-      <footer>
-        <div class="footer-copyright">
-          <div class="container">
-          © 2015 DiveStop
-          
-          </div>
-        </div>
-      </footer>
+    </div>
+  </div>
+</div>
+
+<ul class="menu">
+  <li><a href="#/new-dive">Add Dive</a></li>
+  <li><a href="#/map">Bars Nearby</a></li>
+</ul>
+      
+<div ng-include src="'/layout/barsvisited.html'"></div>
+
+<footer>
+  <div class="footer-copyright">
+    <div class="container">
+    © 2015 DiveStop
+    
+    </div>
+  </div>
+</footer>
     </div>
       <div id="main" class="currentView col s9">
         <div ng-view></div>

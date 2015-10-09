@@ -4,8 +4,8 @@
 var pg = require('pg');
 // 'postgresql://localhost';
 /* URL for hosted heroku postgresql database */
-// var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
-var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost';
+var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
+// var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost';
 
 
 exports.createTables = function (cb) {
