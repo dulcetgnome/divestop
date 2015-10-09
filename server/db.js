@@ -7,6 +7,7 @@ var pg = require('pg');
 var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
 // var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost';
 
+
 exports.createTables = function (cb) {
   pg.connect(connectionString, function (err, client, done) {
     if (err) {
@@ -175,12 +176,15 @@ exports.search = function (cb, passedLocation) {
   var locationQuery = '';
   var upperLat, upperLong, lowerLat, lowerLong, params;
   if (passedLocation) {
-    upperLat = passedLocation[0] + 1;
-    lowerLat = passedLocation[0] - 1;
-    upperLong = passedLocation[1] + 1;
-    lowerLong = passedLocation[1] - 1;
+    upperLat = + passedLocation[0] + 1;
+    lowerLat = + passedLocation[0] - 1;
+    upperLong = + passedLocation[1] + 1;
+    lowerLong = + passedLocation[1] - 1;
   }
-
+  console.log('upperlat');
+  console.log(upperLat);
+  console.log('search was called');
+  console.log(passedLocation);
   params = [lowerLat, upperLat, lowerLong, upperLong];
   // need to get lat and long from search 
   locationQuery = ' WHERE s.lat BETWEEN $1 AND $2 AND s.long BETWEEN $3 AND $4';
@@ -198,8 +202,12 @@ exports.search = function (cb, passedLocation) {
         throw err;
       }
       results = results.rows;
+      console.log('results');
+      console.log(results);
       var filtered_sites = results.filter(function (result) {
-        return result.site.upvote-downvote>-5;
+        console.log('result');
+        console.log(result);
+        return (+ result.upvote - result.downvote) > -5;
       })
       cb(filtered_sites);
       done();
