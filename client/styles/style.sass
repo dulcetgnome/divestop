@@ -1,33 +1,221 @@
+html
+  font-family: "Lato", Arial, sans-serif
+
+footer
+  position: fixed
+  height: 35px
+  width: 25%
+  padding-top: 10px
+  background-color: rgba(8, 87, 125, 1)
+  font-size: 12px
+  bottom: 0
+  left: 0
+  color: rgba(171, 163, 163, 0.55)
+
+.submit
+  background-color: #064A6B
+
+.submit:hover
+  background-color: #106088
+
+
+
 .btn-floating
   margin-top: 15px
 
+.sideDivs
+  // margin-left: -10px
+  padding-top: 5px
+  padding-bottom: 5px
+  background-color: #106088
+
+
+.sideDivs
+  a:hover
+    background-color: #064A6B
+  ul 
+    background-color: #106088
+  i 
+    padding-top: 10px
+
+
+.sideDivs:hover
+  // background-color: #064A6B
+  background-color: rgba(9, 93, 134, 0.98)
+
+.menu
+  width: 25vw
+  margin-left: -10px
+  border-bottom: 1px solid rgba(238, 238, 238, 0.24)
+  margin-top: -5px
+
+
+
+.menu p
+  font-size: 20px
+  margin-bottom: 0
+  padding-bottom: 10px
+  padding-top: 10px
+
+.menu li
+  font-size: 20px
+  margin-bottom: 0
+  padding-bottom: 10px
+  border-bottom: 1px solid rgba(238, 238, 238, 0.15)
+  padding-top: 10px
+
+.menu li:hover
+  background-color: rgba(9, 93, 134, 0.98)
+
+#barsvisited
+  background-color: rgba(9, 103, 148, 1)
+  margin-left: -10px
+  color: black
+  font-size: 8px
+  height: 100vh
+  width: 25vw
+
+#barsvisited
+  h5
+    text-align: center
+    color: #eeeeee
+
+  li:hover
+    background-color: #e0e0e0
+
+#sidebar
+  padding-top: 80px
+  padding-bottom: 50px
+  text-align: center
+
+  overflow: scroll
+  background-color: rgba(9, 103, 148, 1)
+  // position: absolute
+  color: white
+  font-size: 16px
+  height: 100vh
+  z-index: 1
+  position: fixed
+
+#sidebar
+  a
+    text-decoration: none
+    color: white
+
+  a:hover
+    color: #eeeeee
+
+.header
+  position: fixed
+  width: 25%
+  top: 0
+  left: 0
+  padding-top: 10px
+  padding-bottom: 10px
+  margin-bottom: 20px
+  background-color: rgba(8, 87, 125, 1)
+  text-align: center
+  font-size: 32px
+  z-index: 5
+
+#welcome
+  background-image: url('/images/divebar1.jpg')
+  margin-left: -10px
+  margin-right: -10px
+  background-repeat: no-repeat
+  background-size: 100% 100vh
+  overflow-y: hidden
+  overflow-x: hidden
+
+.barList 
+  li 
+    height: 50px
+    margin-bottom: 20px
+    background-color: #eeeeee
+    border-bottom: 1px solid #212121
+    font-size: 20px
+    padding-top: 10px
+  p 
+    margin-top: 4px
+
+table
+  td 
+    padding-left: 20px
+    padding-right: 20px
+    padding-top: 20
+    padding-bottom: 20
+    font-size: 16px
+    margin-top: 40
+
+#main 
+  margin-left: 25vw
+
+.userHeader
+  margin-top: -40px
+  // margin-bottom: 10px
+  margin-left: -10px
+  margin-right: -10px
+  padding-top: 40px
+  border-bottom: 1px solid rgba(238, 238, 238, 0.24)
+  font-size: 18px
+  background-color: #106088
+
+.profile-picture
+  border-radius: 100%
+  border: 2px solid #CCC3C3
+
+  text-align: center
+  height: 75px
+  width: 75px
+
+.searchBar
+  padding-top: 45vh
+  padding-bottom: 45vh
+  padding-left: 10vw
+  padding-right: 10vw
+  // padding-left: 10vw
+
+#search
+  background-color: white
+  opacity: 0.9
+  box-shadow: none
+  border: 1px solid #e4e4e4
+  // margin-top: 20px
+  font-size: 16px
+  text-indent: 10px
+
+
+
+.logoContainer
+  margin: 0 20px
+
+.navColor
+  background-color: rgba(0, 131, 143, 0.8)
+  z-index: 100
+
+
 .brand-logo
-  font-family: 'Roboto Slab', Georgia, serif
+  font-family: 'Lato', Arial, serif
   font-weight: 700
 
 body.splash
   overflow: hidden
 
-.splash
-  nav
-    background-image: url('https://farm3.staticflickr.com/2492/4143196658_eda660fed9_o_d.jpg')
-    background-size: 100vw
-    background-position: center
-    height: 100vh
-    padding-top: 40vh
-  .mapContainer
-    visibility: hidden
-  #search
-    background-color: #fff
-  .row .searchContainer
-    width: 75%
-  .brand-logo
-    text-shadow: 1px 1px 8px #555
-    font-size: 42px
+.target
+  color: rgba(0, 131, 143, 0.8)
+
+.star
+  color: rgba(0, 131, 143, 0.8)
+
+#map-canvas
+  height: 80%
+
+
+
 
 @media only screen and (max-width: 994px)
   .splash
-    .row .searchContainer
+    .row 
       width: 100%
     .row .breaker
       display: block !important

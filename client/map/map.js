@@ -6,24 +6,42 @@ angular.module('divestop.map', ['ngMap'])
     $scope.newSite = SharedProperties.newSite; // Object with properties lat, lng
     $scope.showForm = SharedProperties.showForm;
     $scope.moveNewMarker = AppMap.moveNewMarker;
+    
     SharedProperties.newSiteMarker = new google.maps.Marker();
 
     $scope.$on("mapInitialized", function(e, map) {
-      SharedProperties.map = map;
-      DiveSites.getAllDiveSites()
-        .then(function(sites) {
-          AppMap.addMarkers(sites, map);
-        });
+      // make API call to google maps on drag event
+      google.maps.event.addListener(map, 'dragend', function() {
+        var custom = {lat: map.getCenter().lat(), lng: map.getCenter().lng()};
+        AppMap.getMap(map, custom);
+      });
+      // if map is initialized getMap without custom drag location
+      AppMap.getMap(map);  
     });
 
-    $scope.templateUrl = 'map/map.html';
+    $scope.toggle = false;
+    $scope.toggleMe = function() {
+      $scope.toggle = !$scope.toggle;
 
-    $scope.toggleForm = function() {
-      $scope.showForm.state = !$scope.showForm.state;
-      if($scope.showForm.state) {
-        AppMap.showNewMarker();
-      } else {
-        AppMap.hideNewMarker();
-      }
-    };
+      if($scope.toggle) {
+        console.log("showing marker")
+         AppMap.showNewMarker();
+       } else {
+         AppMap.hideNewMarker();
+       }
+
+
+      return $scope.toggle;
+    }
+
+    // $scope.toggleForm = function() {
+    //   var toggle = true;
+    //   console.log(toggle);
+    //   $scope.showForm.state = !$scope.showForm.state;
+    //   if($scope.showForm.state) {
+    //     AppMap.showNewMarker();
+    //   } else {
+    //     AppMap.hideNewMarker();
+    //   }
+    // };
 });

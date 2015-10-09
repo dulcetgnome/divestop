@@ -6,18 +6,30 @@ angular.module('divestop.services', [])
 
     sharedProperties.newSite = {coordinates: {}};
     sharedProperties.showForm = {state: false};
+    sharedProperties.map = {};
+    sharedProperties.location = '';
     sharedProperties.markers = [];
-    
     sharedProperties.currentSite = {site: {}};
-    sharedProperties.splash = {state: true};
+    // sharedProperties.splash = {state: true};
 
     return sharedProperties;
 
   })
   .factory('DiveSites', function($http) {
 
+    // should be refactored to take queries -- Edgar
+    // should not get every site available in the database -- Edgar
     var getAllDiveSites = function() {
       return $http.get('/api/sites')
+        .then(function(resp) {
+          return resp.data;
+        }, function(err) {
+          throw err;
+        });
+    };
+    // gets dive sites around the center coordinates (lat,lng) of the map
+    var getDiveSites = function(coordinates) {
+      return $http.get('/api/sites/' + coordinates)
         .then(function(resp) {
           return resp.data;
         }, function(err) {
@@ -60,6 +72,7 @@ angular.module('divestop.services', [])
 
     return {
       getAllDiveSites: getAllDiveSites,
+      getDiveSites: getDiveSites,
       postNewSite: postNewSite
     };
   })
@@ -120,10 +133,82 @@ angular.module('divestop.services', [])
     };
 
   })
-  .factory("AppMap", ['SharedProperties', '$rootScope',
-    function(SharedProperties, $rootScope) {
+  .factory("AppMap", ['SharedProperties', '$rootScope', 'DiveSites', '$http',
+    function(SharedProperties, $rootScope, DiveSites, $http) {
+    var getMap = function (map, custom) {
+      // make geocoder variable
+      var geocoder = new google.maps.Geocoder();
+      // set map variable on sharedprops
+      SharedProperties.map = map;
+      address = SharedProperties.location;
+      // sends a request to get divesites around a certain location (based on long and lat)
+        geocoder.geocode({'address': address}, function(results, status) {
+          var center = {};
+          if (status === google.maps.GeocoderStatus.OK) {
+            // location is either a dragged location or the address supplies by the user
+            center = custom || results[0].geometry.location;
+            console.log('correct syntax');
+            console.log(results[0].geometry.location);
+            SharedProperties.map.setCenter(center);
+            // SharedProperties.map.setZoom(14);
+            // will search for divebars (In our db OR google places API)
+            getDiveBars();
+          } else {
+            console.log('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+    };
 
+    var getDiveBars = function (loop) {
+      var coords = [SharedProperties.map.center.J, SharedProperties.map.center.M];
+      var coordinates = coords[0] + '_' + coords[1];
+      DiveSites.getDiveSites(coordinates)
+        .then(function(sites) {
+          if(sites.length > 0) {
+            console.log('found some divebars in db');
+            addMarkers(sites, SharedProperties.map);
+            // callback(sites);
+          }
+          else {
+            if(!loop) {
+              console.log('no divebars in db so we make google places API call.');
+              // make API request to google places
+              getGooglePlaces(coords);
+            }
+          }
+        }); 
+    };
     // this will add markers to the google map object, then store them in a markers array.
+    var getGooglePlaces = function(coords) {
+        var center = {lat: coords[0], lng: coords[1]};
+        var service = new google.maps.places.PlacesService(SharedProperties.map);
+          service.nearbySearch({
+            location: center,
+            radius: 5000,
+            types: ['cafe', 'bar'],
+            keyword:['dive']
+          }, callback);
+
+        function callback(results, status) {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+              savePlaces(results);
+          }
+        }
+    };
+    var savePlaces = function (places) {
+      return $http.post('/api/sites', JSON.stringify(places))
+        .then(function(resp) {
+          console.log('run get dive bars agaain')
+          getDiveBars(true);
+          return resp.data;
+            // put marker on map? 
+        }, function(err) {
+          throw err;
+        });
+      // logic for posting places to db goes here
+    };
+
+
     var addMarkers = function(sites, map){
       // iterate over all markers, and add a Marker object to the map.
       for (var i = 0; i < sites.length; i++) {
@@ -131,13 +216,12 @@ angular.module('divestop.services', [])
         addMarker(site, map);
       }
     };
-
-
     var addMarker = function(site, map) {
+      var loc = {lat: + site.lat, lng: + site.long};
       var marker = new google.maps.Marker({
-          position: site.coordinates,
+          position: loc,
           map: map,
-          title: site.name,
+          title: site.site,
           // store the site object in the marker to make it easier to access when clicking on the marker.
           diveSite: site
         });
@@ -168,10 +252,23 @@ angular.module('divestop.services', [])
     };
 
     return {
+      getMap: getMap,
+      getDiveBars: getDiveBars,
+      getGooglePlaces: getGooglePlaces,
       addMarkers: addMarkers,
       addMarker: addMarker,
       hideNewMarker: hideNewMarker,
       showNewMarker: showNewMarker,
       moveNewMarker: moveNewMarker
     };
-  }]);
+  }])
+  .factory('Account', function($http) {
+    return {
+      getProfile: function() {
+        return $http.get('/api/me');
+      },
+      updateProfile: function(profileData) {
+        return $http.put('/api/me', profileData);
+      }
+    };
+  });

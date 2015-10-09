@@ -1,18 +1,48 @@
-
-<div class="col m8 s12">
-  <h3>{{currentSite.site.name}}</h3>
-<p>{{currentSite.site.description}}</p>
-</div>
-<div class="col m4 s12">
-  <div class="card-panel blue-grey lighten-2">
-    <h6>Maximum Depth:</h6>
-    <div>{{currentSite.site.maxDepth}} meters</div>
-    <h6>Aquatic Life:</h6>
-    <div class="chip" ng-repeat="life in currentSite.site.aquaticLife">{{life}}</div>
-    <h6>Features:</h6>
-    <div class="chip" ng-repeat="feature in currentSite.site.features">{{feature}}</div>
+<!-- <div class="container">
+  <div class="row" id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable() && !showForm.state" ng-include src="templateUrl">
+    <div class="col m8 s12">
+      <h3> Dive Site </h3>
+      <h4>{{currentSite.site.name}}</h2>
+    <p>{{currentSite.site.description}}</p>
+    </div>
+    <div class="col m4 s12">
+      <div class="card-panel blue-grey lighten-2">
+        <h6>Maximum Depth:</h6>
+        <div>{{currentSite.site.maxDepth}} meters</div>
+        <h6>Aquatic Life:</h6>
+        <div class="chip" ng-repeat="life in currentSite.site.aquaticLife">{{life}}</div>
+        <h6>Features:</h6>
+        <div class="chip" ng-repeat="feature in currentSite.site.features">{{feature}}</div>
+      </div>
+    </div>
+    <div ng-repeat="picture in currentSite.site.pictures" class="col s12 m6 l4">
+      <img class="responsive-img" ng-src="{{picture}}" alt="">
+    </div>
   </div>
-</div>
-<div ng-repeat="picture in currentSite.site.pictures" class="col s12 m6 l4">
-  <img class="responsive-img" ng-src="{{picture}}" alt="">
+</div> -->
+
+<div class="container">
+  <h4>Nearby Dives</h4>
+    <table class="highlight">
+      <tbody>
+        <tr>
+          <td><i class="fa fa-map-signs"></i></td>
+          <td>Sad Bar</td>
+          <td><span class="btn">Check In</span></td>
+          <td><span class="btn">Rate</span></td>
+        </tr>
+        <tr>
+          <td><i class="fa fa-map-signs"></i></td>
+          <td>Jellybean</td>
+          <td><span class="btn">Check In</span></td>
+          <td><span class="btn">Rate</span></td>
+        </tr>
+        <tr>
+          <td><i class="fa fa-map-signs"></i></td>
+          <td>Lollipop</td>
+          <td><span class="btn">Check In</span></td>
+          <td><span class="btn">Rate</span></td>
+        </tr>
+      </tbody>
+    </table>
 </div>

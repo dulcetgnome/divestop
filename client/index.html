@@ -5,25 +5,47 @@
   <title>Dive Stop</title>
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+<!--   <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'> -->
   <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
+  <link href="//cdn.jsdelivr.net/animatecss/3.2.0/animate.css" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="/styles/angular-toastr.css" > -->
   <!--Import materialize.css-->
+  <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
   <link type="text/css" rel="stylesheet" href="/libs/Materialize/dist/css/materialize.min.css"  media="screen,projection"/>
 
+  <script src="/libs/underscore/underscore-min.js"></script>
   <script src="/libs/angular/angular.js"></script>
+  <!-- // <script src="/libs/angular-ui-router/release/angular-ui-router.min.js"></script> -->
+<!--   <script src="/libs/angular-animate/angular-animate.min.js"></script>
+ --> 
+  <script src="/libs/angular-route/angular-route.min.js"></script>
+  <!-- // <script src="/libs/angular-toastr/dist/angular-toastr.tpls.js"></script> -->
+  <script src="/libs/satellizer/satellizer.min.js"></script>
+  <!-- <script src="//maps.google.com/maps/api/js"></script> -->
+  <!--<script src="https://maps.googleapis.com/maps/api/js"></script> -->
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBA6ZwynlnNch3N9v0yj0aUImYWU6K3wBE&libraries=places,geocoder"></script>
 
-  <script src="//maps.google.com/maps/api/js"></script>
   <script src="/libs/ngmap/build/scripts/ng-map.js"></script>
-  <!-- // <script src="/add/canvas-to-blob.js"></script> -->
-  <script src="/build/ugly.min.js"></script>
+  <script src="/add/canvas-to-blob.js"></script>
+  <!-- // <script src="/build/ugly.min.js"></script> -->
  
-<!--   // <script src="stub.js"></script>
-  // <script src="map/map.js"></script>
-  // <script src="divesite/divesite.js"></script>
-  // <script src="add/add.js"></script>
-  // <script src="search/search.js"></script>
-  // <script src="splash/splash.js"></script>
-  // <script src="services/services.js"></script>
-  // <script src="app.js"></script> -->
+  <script src="stub.js"></script>
+  <script src="map/map.js"></script>
+  <script src="divesite/divesite.js"></script>
+  <script src="add/add.js"></script>
+  <script src="search/search.js"></script>
+  <script src="splash/splash.js"></script>
+  <script src="services/services.js"></script>
+  <script src="profile/profile.js"></script>
+  <script src="auth/login.js"></script>
+  <script src="auth/logout.js"></script>
+  <script src="layout/authbar.js"></script>
+  <script src="layout/barsvisited.js"></script>
+
+
+  <script src="app.js"></script>
 
 
   <link rel="stylesheet" href="/build/style.css">
@@ -33,25 +55,66 @@
 </head>
 
 <!-- these templateUrl files are referenced in each section's controller -->
-<body ng-app="divestop" ng-class="{splash: splash.state}" ng-controller="SplashController">
-  <nav class="blue-grey lighten-2" role="navigation">
-    <div class="nav-wrapper container">
-      <div class="row"> 
-        <div class="col s12 m8 logoContainer">
-          <a href="#" class="brand-logo">Dive Stop</a>
-        </div>
-        <div class="hide-on-med-and-up breaker"><br \></div>
-        <div class="right col s12 m4 searchContainer">
-          <span ng-controller="SearchController" ng-include src="templateUrl"></span>
-        </div>
+<body ng-app="divestop" ng-controller="SplashController">
+  <div class="row">
+    <!-- <div id="header" ng-include src="'layout/header.html'"></div> -->
+    <div id="sidebar" class="col s3">
+      <div class="header sideDivs" ng-controller="AuthbarCtrl">
+  <div ng-if="isAuthenticated()">
+    <i class="fa fa-beer"></i>
+    <a class='dropdown-button' href='#' data-activates='dropdown1' data-beloworigin="true">DiveStop<i class="material-icons">arrow_drop_down</i></a>
+      <ul id='dropdown1' class='dropdown-content'>
+        <li><a href="#/profile">Profile</a></li>
+        <li><a href="#/logout">Logout</a></li>
+      </ul>
+  </div>
+
+  <div ng-if="!isAuthenticated()">
+    <i class="fa fa-beer"></i>
+    <a class='dropdown-button' href='#' data-activates='dropdown2' data-beloworigin="true">DiveStop<i class="material-icons">arrow_drop_down</i></a>
+      <ul id='dropdown2' class='dropdown-content'>
+        <li><a href="#/login">Login</a></li>
+      </ul>
+    </div>
+</div>
+
+
+
+<div ng-controller="AuthbarCtrl">
+  <div class="userHeader" ng-if="isAuthenticated()">
+    <div ng-controller="ProfileCtrl">
+      <img class="profile-picture" ng-src="{{user.picture || 'http://placehold.it/100x100'}}">
+        <!-- Dropdown Trigger -->
+      <div class="sideDivs">
+        <p>Hey {{ user.displayName}}</p>
       </div>
     </div>
-  </nav>
-  <div class="mapContainer" ng-controller="OurMapController" ng-include src="templateUrl"></div>
-  <div class="container">
-    <div class="row addSiteForm" ng-controller="AddSiteController as form" ng-include src="form.templateUrl" ng-show="form.showForm.state"></div>
-    <div class="row" id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable() && !showForm.state" ng-include src="templateUrl"></div>
   </div>
+</div>
+
+<ul class="menu">
+  <li><a href="#/new-dive">Add Dive</a></li>
+  <li><a href="#/map">Bars Nearby</a></li>
+</ul>
+      
+<div ng-include src="'/layout/barsvisited.html'"></div>
+
+<footer>
+  <div class="footer-copyright">
+    <div class="container">
+    © 2015 DiveStop
+    
+    </div>
+  </div>
+</footer>
+    </div>
+      <div id="main" class="currentView col s9">
+        <div ng-view></div>
+      </div>
+
+  </div>
+
+
 
   <!--Import jQuery before materialize.js-->
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>

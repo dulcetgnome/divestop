@@ -1,4 +1,18 @@
-<map center='33.688895, 130.295930' zoom="11" on-click="moveNewMarker()" scrollwheel="false"></map>
-<div class="addDiveSite">
-  <a ng-click="toggleForm()" class="right btn waves-effect waves-light red">Add Dive Site</a>
+<div class="mapContainer">
+    <map id="map-canvas" center="37.773972, -122.431297" zoom="12" on-click="moveNewMarker()" scrollwheel="false"></map>
+  </div>
+
+  <div class="addDiveSite">
+    <a ng-show="!toggle" ng-click="toggleMe()" class="right btn waves-effect waves-light">Add Dive Site</a>
+    <a ng-show="toggle" ng-click="toggleMe()" class="right btn waves-effect waves-light">See Nearby Dives</a>
+  </div>
+
+  <div ng-show="!toggle">
+      <div ng-include src="'../divesite/divesite.html'"></div>
+  </div>
+
+  <div ng-show="toggle">  
+    <div ng-include src="'../add/add.html'"></div>
+  </div>
+
 </div>
