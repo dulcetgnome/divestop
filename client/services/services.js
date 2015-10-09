@@ -147,6 +147,8 @@ angular.module('divestop.services', [])
           if (status === google.maps.GeocoderStatus.OK) {
             // location is either a dragged location or the address supplies by the user
             center = custom || results[0].geometry.location;
+            console.log('correct syntax');
+            console.log(results[0].geometry.location);
             SharedProperties.map.setCenter(center);
             SharedProperties.map.setZoom(14);
             // will search for divebars (In our db OR google places API)
@@ -157,15 +159,15 @@ angular.module('divestop.services', [])
         });
     };
 
-    var getDiveBars = function (callback) {
+    var getDiveBars = function () {
       var coords = [SharedProperties.map.center.J, SharedProperties.map.center.M];
       var coordinates = coords[0] + '_' + coords[1];
       DiveSites.getDiveSites(coordinates)
         .then(function(sites) {
           if(sites.length > 0) {
             console.log('found some divebars in db');
-            addMarkers(sites, map);
-            callback(sites);
+            addMarkers(sites, SharedProperties.map);
+            // callback(sites);
           }
           else {
             console.log('no divebars in db so we make google places API call.');
@@ -186,13 +188,11 @@ angular.module('divestop.services', [])
           }, callback);
 
         function callback(results, status) {
-          console.log(results);
           if (status === google.maps.places.PlacesServiceStatus.OK) {
-              addMarkers(results, SharedProperties.map);
               savePlaces(results);
-            }
           }
-        };
+        }
+    };
     var savePlaces = function (places) {
       console.log('places');
       console.log(places);
@@ -204,7 +204,7 @@ angular.module('divestop.services', [])
           throw err;
         });
       // logic for posting places to db goes here
-    }
+    };
 
 
     var addMarkers = function(sites, map){
@@ -215,10 +215,13 @@ angular.module('divestop.services', [])
       }
     };
     var addMarker = function(site, map) {
+      console.log(site);
+      var loc = {lat: + site.lat, lng: + site.long};
+      console.log(loc);
       var marker = new google.maps.Marker({
-          position: site.geometry.location,
+          position: loc,
           map: map,
-          title: site.name,
+          title: site.site,
           // store the site object in the marker to make it easier to access when clicking on the marker.
           diveSite: site
         });
