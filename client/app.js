@@ -43,10 +43,6 @@ angular.module('divestop', [
         loginRequired: loginRequired
       }
     })
-    // .when('/bars', {
-    //   templateUrl: '/divesite/divesite.html',
-    //   controller: 'DiveSiteController'
-    // })
     .when('/new-dive', {
       templateUrl: '/add/add.html',
       controller: 'AddSiteController'
