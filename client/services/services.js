@@ -136,7 +136,7 @@ angular.module('divestop.services', [])
   })
   .factory("AppMap", ['SharedProperties', '$rootScope', 'DiveSites',
     function(SharedProperties, $rootScope, DiveSites) {
-    var getMap = function (map) {
+    var getMap = function (map, custom) {
       // make geocoder variable
       var geocoder = new google.maps.Geocoder();
       // set map variable on sharedprops
@@ -144,9 +144,11 @@ angular.module('divestop.services', [])
       address = SharedProperties.location;
       // sends a request to get divesites around a certain location (based on long and lat)
         geocoder.geocode({'address': address}, function(results, status) {
-          console.log("results", results);
+          var center = {};
           if (status === google.maps.GeocoderStatus.OK) {
-            SharedProperties.map.setCenter(results[0].geometry.location);
+            // location is either a dragged location or the address supplies by the user
+            center = custom || results[0].geometry.location;
+            SharedProperties.map.setCenter(center);
             SharedProperties.map.setZoom(14);
             // will search for divebars (In our db OR google places API)
             getDiveBars();
@@ -178,7 +180,7 @@ angular.module('divestop.services', [])
         var service = new google.maps.places.PlacesService(SharedProperties.map);
           service.nearbySearch({
             location: center,
-            radius: 8000,
+            radius: 500,
             types: ['cafe', 'bar'],
             keyword:['dive']
           }, callback);
