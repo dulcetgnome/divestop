@@ -173,15 +173,18 @@ angular.module('divestop.services', [])
 
     var addMarkers = function(sites, map){
       // iterate over all markers, and add a Marker object to the map.
-      console.log('in add markerSSSS');
+      console.dir(map);
       for (var i = 0; i < sites.length; i++) {
         var site = sites[i];
         addMarker(site, map);
       }
     };
     var addMarker = function(site, map) {
+      console.log('this is the site');
+      console.log(site);
+      console.log(map.center);
       var marker = new google.maps.Marker({
-          position: site.coordinates,
+          position: site.geometry.location,
           map: map,
           title: site.name,
           // store the site object in the marker to make it easier to access when clicking on the marker.
