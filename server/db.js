@@ -106,7 +106,7 @@ var addOneSite = function (sites, index, client, done, cb) {
           // Add pictures from array
           var pictures_url = currentSite.photos;
 
-          if(pictures_url.length>0) {
+          if(pictures_url) {
             var queryString = '';
             for (var i=0; i<pictures_url.length; i++) {
               var picUrl = pictures_url[i].html_attributions[0].split('"')[1];
