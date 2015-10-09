@@ -30,22 +30,18 @@ angular.module('divestop', [
       controller: 'OurMapController'
     })
     .when('/login', {
-      templateUrl: '/users/login.html',
+      templateUrl: '/auth/login.html',
       controller: 'LoginCtrl',
       resolve: {
         skipIfLoggedIn: skipIfLoggedIn
       }
     })
     .when('/profile', {
-      templateUrl: '/users/profile.html',
+      templateUrl: '/profile/profile.html',
       controller: 'ProfileCtrl',
       resolve: {
         loginRequired: loginRequired
       }
-    })
-    .when('/settings', {
-      templateUrl: '/users/settings.html',
-      controller: 'userController'
     })
     // .when('/bars', {
     //   templateUrl: '/divesite/divesite.html',
