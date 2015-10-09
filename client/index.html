@@ -62,12 +62,11 @@
         <i class="fa fa-beer"></i>
         <a href="#/" class="brand-logo">DiveStop</a>
       </div>
-      <div ng-controller="AuthbarCtrl" class="userHeader">
-          <span ng-if="isAuthenticated()" ng-controller="ProfileCtrl">
+      <div ng-controller="AuthbarCtrl" class="userHeader" ng-if="isAuthenticated()">
+          <span ng-controller="ProfileCtrl">
             <img class="profile-picture" ng-src="{{user.picture || 'http://placehold.it/100x100'}}">
             <p>Hey {{ user.displayName}}</p>
           </span>
-          
       </div>
       <ul>
         <li><a href="#/bars/new">Add Dive</a></li>
