@@ -19,6 +19,21 @@ angular.module('divestop.map', ['ngMap'])
       AppMap.getMap(map);  
     });
 
+    $scope.toggle = false;
+    $scope.toggleMe = function() {
+      $scope.toggle = !$scope.toggle;
+
+      if($scope.toggle) {
+        console.log("showing marker")
+         AppMap.showNewMarker();
+       } else {
+         AppMap.hideNewMarker();
+       }
+
+
+      return $scope.toggle;
+    }
+
     // $scope.toggleForm = function() {
     //   var toggle = true;
     //   console.log(toggle);

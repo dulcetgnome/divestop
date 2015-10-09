@@ -2,9 +2,11 @@
 /* To install pg, run the following command: npm install pg */
 
 var pg = require('pg');
-
+// 'postgresql://localhost';
 /* URL for hosted heroku postgresql database */
 var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
+// var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost';
+
 
 exports.createTables = function (cb) {
   pg.connect(connectionString, function (err, client, done) {
@@ -27,8 +29,8 @@ exports.createTables = function (cb) {
       client.query('CREATE TABLE IF NOT EXISTS sites (' +
         '_id SERIAL PRIMARY KEY, ' +
         'site VARCHAR(250), ' +
-        'lat NUMERIC(5), ' +
-        'long NUMERIC(5), ' +
+        'lat NUMERIC, ' +
+        'long NUMERIC, ' +
         'upvote INT, ' +
         'downvote INT, ' +
         'address VARCHAR(250)' +
@@ -88,7 +90,6 @@ exports.createTables = function (cb) {
 
 var addOneSite = function (sites, index, client, done, cb) {
   var currentSite = sites[index];
-  console.log('index ', index, currentSite.name)
   var input = [
     currentSite.name,
     currentSite.geometry.location.J,
@@ -97,9 +98,9 @@ var addOneSite = function (sites, index, client, done, cb) {
     0,
     currentSite.vicinity
   ];
-  client.query('SELECT * FROM sites WHERE lat = $2 AND long = $3 );', input, function (err, results) {
-    console.log(results);
-    if(!results) {
+
+  client.query('SELECT * FROM sites WHERE site = $1 AND address = $2;', [input[0],input[5]], function (err, results) {
+    if(results.rows.length === 0) {
       client.query('INSERT INTO sites (site, lat, long, upvote, downvote, address) VALUES ($1, $2, $3, $4, $5, $6);', input, 
         function (err, result) {
           // Add pictures from array
@@ -108,10 +109,10 @@ var addOneSite = function (sites, index, client, done, cb) {
           if(pictures_url.length>0) {
             var queryString = '';
             for (var i=0; i<pictures_url.length; i++) {
+              var picUrl = pictures_url[i].html_attributions[0].split('"')[1];
               queryString+='INSERT INTO pictures (site_id, picture) VALUES ((SELECT _id FROM sites ' + 
-                      'WHERE site = \'' + input[0] + '\'), \'' + pictures_url[i] + '\'); ';
+                      'WHERE site = \'' + input[0] + '\'), \'' + picUrl + '\'); ';
             }
-            console.log(queryString);
             client.query(queryString,
               function (err, result) {
               if (err) {
@@ -175,12 +176,15 @@ exports.search = function (cb, passedLocation) {
   var locationQuery = '';
   var upperLat, upperLong, lowerLat, lowerLong, params;
   if (passedLocation) {
-    upperLat = passedLocation[0] + 1;
-    lowerLat = passedLocation[0] - 1;
-    upperLong = passedLocation[1] + 1;
-    lowerLong = passedLocation[1] - 1;
+    upperLat = + passedLocation[0] + 1;
+    lowerLat = + passedLocation[0] - 1;
+    upperLong = + passedLocation[1] + 1;
+    lowerLong = + passedLocation[1] - 1;
   }
-
+  console.log('upperlat');
+  console.log(upperLat);
+  console.log('search was called');
+  console.log(passedLocation);
   params = [lowerLat, upperLat, lowerLong, upperLong];
   // need to get lat and long from search 
   locationQuery = ' WHERE s.lat BETWEEN $1 AND $2 AND s.long BETWEEN $3 AND $4';
@@ -198,8 +202,12 @@ exports.search = function (cb, passedLocation) {
         throw err;
       }
       results = results.rows;
+      console.log('results');
+      console.log(results);
       var filtered_sites = results.filter(function (result) {
-        return result.site.upvote-downvote>-5;
+        console.log('result');
+        console.log(result);
+        return (+ result.upvote - result.downvote) > -5;
       })
       cb(filtered_sites);
       done();
