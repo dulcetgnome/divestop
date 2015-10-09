@@ -62,23 +62,32 @@
         <i class="fa fa-beer"></i>
         <a href="#/" class="brand-logo">DiveStop</a>
       </div>
-      <div ng-controller="AuthbarCtrl" class="userHeader" ng-if="isAuthenticated()">
-          <span ng-controller="ProfileCtrl">
+      <div ng-controller="AuthbarCtrl">
+        <div class="userHeader" ng-if="isAuthenticated()">
+          <div ng-controller="ProfileCtrl">
             <img class="profile-picture" ng-src="{{user.picture || 'http://placehold.it/100x100'}}">
-            <p>Hey {{ user.displayName}}</p>
-          </span>
+              <!-- Dropdown Trigger -->
+            
+            <div class="sideDivs">
+              <a class='dropdown-button' href='#' data-activates='dropdown1'>Hey {{ user.displayName}}<i class="material-icons">arrow_drop_down</i></a>
+              
+                <!-- Dropdown Structure -->
+              <ul id='dropdown1' class='dropdown-content'>
+                <li><a href="#/profile">Profile</a></li>
+                <li><a href="#/logout">Logout</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
       <ul>
-        <li><a href="#/bars/new">Add Dive</a></li>
-        <li><a href="#/bars">Bars Nearby</a></li>
+        <li><a href="#/new-dive">Add Dive</a></li>
+        <li><a href="#/map">Bars Nearby</a></li>
       </ul>
       <div ng-controller="AuthbarCtrl">
-        <ul ng-if="isAuthenticated()"><li><a href="#/profile">Profile</a></li></ul>
-        <ul ng-if="isAuthenticated()"><li><a href="#/logout">Logout</a></li></ul>
         <ul ng-if="!isAuthenticated()"><li><a href="#/login">Login</a></li></ul>
       </div>
       <div ng-include src="'/layout/barsvisited.html'"></div>
-
       <footer>
         <div class="footer-copyright">
           <div class="container">

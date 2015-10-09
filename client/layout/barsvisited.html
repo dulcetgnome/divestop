@@ -1,5 +1,5 @@
-<div class="container">
-  <div class="row">
+<div ng-controller="AuthbarCtrl">
+  <div class="row" ng-if="isAuthenticated()">
     <div id="barsvisited" class="col s3" ng-controller="BarsVisitedCtrl">
       <h5> Bars Visited </h5>
       <ul class="collection">
@@ -13,4 +13,5 @@
     </div>
   </div>
 </div>
+
 
