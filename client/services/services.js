@@ -134,8 +134,8 @@ angular.module('divestop.services', [])
     };
 
   })
-  .factory("AppMap", ['SharedProperties', '$rootScope', 'DiveSites',
-    function(SharedProperties, $rootScope, DiveSites) {
+  .factory("AppMap", ['SharedProperties', '$rootScope', 'DiveSites', '$http',
+    function(SharedProperties, $rootScope, DiveSites, $http) {
     var getMap = function (map, custom) {
       // make geocoder variable
       var geocoder = new google.maps.Geocoder();
@@ -196,7 +196,7 @@ angular.module('divestop.services', [])
     var savePlaces = function (places) {
       console.log('places');
       console.log(places);
-      return $http.post('/api/sites', places)
+      return $http.post('/api/sites', JSON.stringify(places))
         .then(function(resp) {
           return resp.data;
           // put marker on map? 
