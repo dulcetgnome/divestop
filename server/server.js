@@ -41,7 +41,7 @@ app.get('/', function(req, res) {
 
 app.get('/api/sites/:location', function(req, res) {
   // location in url is formatted as api/sites/3.456-50.267
-  var location = req.params.location.split('-');
+  var location = req.params.location.split('_');
   var coordinates = [location[0], location[1]]; 
   // regex /\%20/g, ' '
   // pass down coordinates to db for query
@@ -70,7 +70,6 @@ app.get('/api/keys', function(req, res) {
       'X-Parse-REST-API-Key': 'pE7A3TXUbzC3C3NQPPT22FR4VSQZAnI0U21t5zcC'
     });
 });
-// db.wipeDatabase();
 /* Routes for logged in user */
 // Force HTTPS on Heroku
 if (app.get('env') === 'production') {
@@ -169,7 +168,9 @@ app.post('/auth/facebook', function(req, res) {
 
 
 // Creates table
-db.createTables();
+db.dropTables(function () {
+  db.createTables();
+});
 
 
 // db.wipeDatabase();
