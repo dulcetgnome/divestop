@@ -51,11 +51,11 @@ angular.module('divestop', [
       templateUrl: '/users/settings.html',
       controller: 'userController'
     })
-    .when('/bars', {
-      templateUrl: '/divesite/divesite.html',
-      controller: 'DiveSiteController'
-    })
-    .when('/new', {
+    // .when('/bars', {
+    //   templateUrl: '/divesite/divesite.html',
+    //   controller: 'DiveSiteController'
+    // })
+    .when('/new-dive', {
       templateUrl: '/add/add.html',
       controller: 'AddSiteController'
     })

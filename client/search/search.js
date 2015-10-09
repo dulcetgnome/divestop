@@ -8,20 +8,21 @@ angular.module('divestop.search', [])
     var geocoder = new google.maps.Geocoder();
     // $scope.data.address = '';
     $scope.geocodeAddress = function(address) {
-      console.log(SharedProperties.map);
+      
+      SharedProperties.location = address;
       // console.log(address);
       // Takes in an address (String) and sets map postion
-      geocoder.geocode({'address': address}, function(results, status) {
-        console.log("results", results);
-        if (status === google.maps.GeocoderStatus.OK) {
-          SharedProperties.map.setCenter(results[0].geometry.location);
-          SharedProperties.map.setZoom(11);
-          $scope.$apply();
-        } else {
-          console.log('Geocode was not successful for the following reason: ' + status);
-        }
-      });
+      // geocoder.geocode({'address': address}, function(results, status) {
+      //   console.log("results", results);
+      //   if (status === google.maps.GeocoderStatus.OK) {
+      //     SharedProperties.map.setCenter(results[0].geometry.location);
+      //     SharedProperties.map.setZoom(11);
+      //     $scope.$apply();
+      //   } else {
+      //     console.log('Geocode was not successful for the following reason: ' + status);
+      //   }
+      // });
       $scope.data.address = '';
-      $location.path('/');
+      $location.path('/map');
     };
   });

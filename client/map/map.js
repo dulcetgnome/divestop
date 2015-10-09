@@ -10,6 +10,17 @@ angular.module('divestop.map', ['ngMap'])
 
     $scope.$on("mapInitialized", function(e, map) {
       SharedProperties.map = map;
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({'address': SharedProperties.location}, function(results, status) {
+        console.log("results", results);
+        if (status === google.maps.GeocoderStatus.OK) {
+          SharedProperties.map.setCenter(results[0].geometry.location);
+          SharedProperties.map.setZoom(11);
+          $scope.$apply();
+        } else {
+          console.log('Geocode was not successful for the following reason: ' + status);
+        }
+      });
       // sends a request to get divesites around a certain location (based on long and lat)
       var coordinates = SharedProperties.map.center.J + "-" + SharedProperties.map.center.M;
       DiveSites.getDiveSites(coordinates)

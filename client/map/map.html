@@ -1,6 +1,38 @@
 <div class="mapContainer" ng-controller="OurMapController">
   <map center='33.688895, 130.295930' zoom="11" on-click="moveNewMarker()" scrollwheel="false"></map>
   <div class="addDiveSite">
-    <a ng-click="toggleForm()" class="right btn waves-effect waves-light red">Add Dive Site</a>
+    <a ng-click="toggleForm()" class="right btn waves-effect waves-light">Add Dive Site</a>
   </div>
+  <h3>Nearby Bars</h3>
+ <!--  <ul class="barList">
+    <li class="row">
+      <div class="col s1"><i class="fa fa-map-signs"></i></div>
+      <div class="col s7"><p>Sad Bar</p></div>
+      <div class="col s2"><button>Check In</button></div>
+      <div class="col s2"><button>Rate</button></div>
+    </li>
+  </ul> -->
+    <table class="highlight">
+
+      <tbody>
+        <tr>
+          <td><i class="fa fa-map-signs"></i></td>
+          <td>Sad Bar</td>
+          <td><span class="btn">Check In</span></td>
+          <td><span class="btn">Rate</span></td>
+        </tr>
+        <tr>
+          <td><i class="fa fa-map-signs"></i></td>
+          <td>Jellybean</td>
+          <td><span class="btn">Check In</span></td>
+          <td><span class="btn">Rate</span></td>
+        </tr>
+        <tr>
+          <td><i class="fa fa-map-signs"></i></td>
+          <td>Lollipop</td>
+          <td><span class="btn">Check In</span></td>
+          <td><span class="btn">Rate</span></td>
+        </tr>
+      </tbody>
+    </table>
 </div>
