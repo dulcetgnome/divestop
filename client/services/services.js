@@ -187,9 +187,14 @@ angular.module('divestop.services', [])
           console.log(results);
           if (status === google.maps.places.PlacesServiceStatus.OK) {
               addMarkers(results, SharedProperties.map);
+              saveGooglePlaces(results);
             }
           }
-      };
+        };
+    var saveGooglePlaces = function (places) {
+      // logic for posting places to db goes here
+    }
+
 
     var addMarkers = function(sites, map){
       // iterate over all markers, and add a Marker object to the map.
