@@ -16,11 +16,12 @@ angular.module('divestop.map', ['ngMap'])
         AppMap.getMap(map, custom);
       });
       // if map is initialized getMap without custom drag location
-      AppMap.getMap(map);
+      AppMap.getMap(map);  
     });
 
-
     $scope.toggleForm = function() {
+      var toggle = true;
+      console.log(toggle);
       $scope.showForm.state = !$scope.showForm.state;
       if($scope.showForm.state) {
         AppMap.showNewMarker();

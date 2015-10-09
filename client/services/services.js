@@ -9,7 +9,6 @@ angular.module('divestop.services', [])
     sharedProperties.map = {};
     sharedProperties.location = '';
     sharedProperties.markers = [];
-    sharedProperties.map = {};
     sharedProperties.currentSite = {site: {}};
     // sharedProperties.splash = {state: true};
 
