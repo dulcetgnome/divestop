@@ -159,8 +159,9 @@ angular.module('divestop.services', [])
         var service = new google.maps.places.PlacesService(SharedProperties.map);
           service.nearbySearch({
             location: center,
-            radius: 500,
-            types: ['bar']
+            radius: 8000,
+            types: ['cafe', 'bar'],
+            keyword:['dive']
           }, callback);
 
         function callback(results, status) {
