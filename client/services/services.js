@@ -156,7 +156,7 @@ angular.module('divestop.services', [])
             console.log('Geocode was not successful for the following reason: ' + status);
           }
         });
-    }
+    };
 
     var getDiveBars = function () {
       var coords = [SharedProperties.map.center.J, SharedProperties.map.center.M];

@@ -2,7 +2,7 @@
 /* To install pg, run the following command: npm install pg */
 
 var pg = require('pg');
-
+// 'postgresql://localhost';
 /* URL for hosted heroku postgresql database */
 var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
 
