@@ -2,10 +2,11 @@
 /* To install pg, run the following command: npm install pg */
 
 var pg = require('pg');
-
+// 'postgresql://localhost';
 /* URL for hosted heroku postgresql database */
 // var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
 var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost';
+
 
 exports.createTables = function (cb) {
   pg.connect(connectionString, function (err, client, done) {
@@ -175,10 +176,10 @@ exports.search = function (cb, passedLocation) {
   var locationQuery = '';
   var upperLat, upperLong, lowerLat, lowerLong, params;
   if (passedLocation) {
-    upperLat = passedLocation[0] + 1;
-    lowerLat = passedLocation[0] - 1;
-    upperLong = passedLocation[1] + 1;
-    lowerLong = passedLocation[1] - 1;
+    upperLat = + passedLocation[0] + 1;
+    lowerLat = + passedLocation[0] - 1;
+    upperLong = + passedLocation[1] + 1;
+    lowerLong = + passedLocation[1] - 1;
   }
   params = [lowerLat, upperLat, lowerLong, upperLong];
   console.log(params)
@@ -198,8 +199,12 @@ exports.search = function (cb, passedLocation) {
         throw err;
       }
       results = results.rows;
+      console.log('results');
+      console.log(results);
       var filtered_sites = results.filter(function (result) {
-        return result.site.upvote-downvote>-5;
+        console.log('result');
+        console.log(result);
+        return (+ result.upvote - result.downvote) > -5;
       })
       cb(filtered_sites);
       done();

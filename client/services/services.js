@@ -155,16 +155,17 @@ angular.module('divestop.services', [])
             console.log('Geocode was not successful for the following reason: ' + status);
           }
         });
-    }
+    };
 
-    var getDiveBars = function () {
+    var getDiveBars = function (callback) {
       var coords = [SharedProperties.map.center.J, SharedProperties.map.center.M];
-      var coordinates = coords[0] + "-" + coords[1];
+      var coordinates = coords[0] + '_' + coords[1];
       DiveSites.getDiveSites(coordinates)
         .then(function(sites) {
           if(sites.length > 0) {
             console.log('found some divebars in db');
-            Addmarkers(sites, map);
+            addMarkers(sites, map);
+            callback(sites);
           }
           else {
             console.log('no divebars in db so we make google places API call.');
