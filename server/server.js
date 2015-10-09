@@ -70,7 +70,6 @@ app.get('/api/keys', function(req, res) {
       'X-Parse-REST-API-Key': 'pE7A3TXUbzC3C3NQPPT22FR4VSQZAnI0U21t5zcC'
     });
 });
-// db.wipeDatabase();
 /* Routes for logged in user */
 // Force HTTPS on Heroku
 if (app.get('env') === 'production') {
@@ -169,7 +168,9 @@ app.post('/auth/facebook', function(req, res) {
 
 
 // Creates table
-db.createTables();
+db.dropTables(function () {
+  db.createTables();
+});
 
 
 // db.wipeDatabase();
