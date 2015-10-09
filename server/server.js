@@ -168,7 +168,9 @@ app.post('/auth/facebook', function(req, res) {
 
 
 // Creates table
-db.createTables();
+db.droptable(function () {
+  db.createTables();
+});
 
 
 // db.wipeDatabase();

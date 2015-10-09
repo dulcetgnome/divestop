@@ -4,8 +4,8 @@
 var pg = require('pg');
 // 'postgresql://localhost';
 /* URL for hosted heroku postgresql database */
-// var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
-var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost';
+var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
+// var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost';
 
 
 exports.createTables = function (cb) {
@@ -222,6 +222,22 @@ exports.wipeDatabase = function (cb) {
     });
   });
 };
+
+exports.dropTables = function (cb) {
+  var queryString = 'DROP TABLE bars_visited, users, pictures, sites;';
+
+  pg.connect(connectionString, function (error, client, done) {
+    client.query(queryString, function (err, result) {
+      if (err) {
+        throw err;
+      }
+      done();
+      if(cb)
+        cb();
+    });
+  });
+}
+
 
 // Add a user to the database 
 exports.addUser = function (fbdata, cb) {
