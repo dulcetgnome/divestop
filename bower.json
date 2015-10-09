@@ -26,6 +26,7 @@
     "angular-toastr": "~1.5.0",
     "ngmap": "~1.13.4",
     "satellizer": "~0.12.5",
-    "angular-ui-router": "~0.2.15"
+    "angular-ui-router": "~0.2.15",
+    "underscore": "~1.8.3"
   }
 }

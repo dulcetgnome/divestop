@@ -51,26 +51,26 @@ app.get('/api/sites/:location', function(req, res) {
 });
 
 app.get('/api/sites', function(req, res) {
-  db.createTables(function(){
-    db.search(function(sites) {
-      res.json(sites);
-    });
-  });
+  db.search(function(sites) {
+    res.json(sites);
+  }, [0,0]);
 });
 
 app.post('/api/sites', function(req, res) {
-  db.addSite(function() {
+  db.addSites(function() {
     res.sendStatus(201);
   }, req.body);
 });
 
 app.get('/api/keys', function(req, res) {
     res.json({
-      'X-Parse-Application-Id': process.env['X-Parse-Application-Id'],
-      'X-Parse-REST-API-Key': process.env['X-Parse-REST-API-Key']
+      // 'X-Parse-Application-Id': process.env['X-Parse-Application-Id'],
+      // 'X-Parse-REST-API-Key': process.env['X-Parse-REST-API-Key']
+      'X-Parse-Application-Id': 'jAY20TrvBGo3rwdhc3UTvJnr9wbnmgbGAE5lryDv',
+      'X-Parse-REST-API-Key': 'pE7A3TXUbzC3C3NQPPT22FR4VSQZAnI0U21t5zcC'
     });
 });
-
+// db.wipeDatabase();
 /* Routes for logged in user */
 // Force HTTPS on Heroku
 if (app.get('env') === 'production') {
@@ -111,7 +111,6 @@ function createJWT(user) {
   return jwt.encode(payload, config.TOKEN_SECRET);
 }
 
-
 app.get('/api/me', ensureAuthenticated, function(req, res) {
   db.findUser(req.user, function (user) {
     user = user[0];
@@ -125,9 +124,6 @@ app.get('/api/me', ensureAuthenticated, function(req, res) {
 app.put('/api/me', ensureAuthenticated, function(req, res) {
   res.send()
 });
-
-
-
 
 // Log in Facebook
 app.post('/auth/facebook', function(req, res) {
@@ -170,6 +166,11 @@ app.post('/auth/facebook', function(req, res) {
     });
   });
 });
+
+
+// Creates table
+db.createTables();
+
 
 // db.wipeDatabase();
 /* Auth stuff */
