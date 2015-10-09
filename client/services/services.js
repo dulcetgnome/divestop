@@ -6,6 +6,8 @@ angular.module('divestop.services', [])
 
     sharedProperties.newSite = {coordinates: {}};
     sharedProperties.showForm = {state: false};
+    sharedProperties.map = {};
+    sharedProperties.location = '';
     sharedProperties.markers = [];
     
     sharedProperties.currentSite = {site: {}};
@@ -132,10 +134,44 @@ angular.module('divestop.services', [])
     };
 
   })
-  .factory("AppMap", ['SharedProperties', '$rootScope',
-    function(SharedProperties, $rootScope) {
+  .factory("AppMap", ['SharedProperties', '$rootScope', 'DiveSites',
+    function(SharedProperties, $rootScope, DiveSites) {
 
+    var getDiveBars = function () {
+      var coords = [SharedProperties.map.center.J, SharedProperties.map.center.M];
+      var coordinates = coords[0] + "-" + coords[1];
+      DiveSites.getDiveSites(coordinates)
+        .then(function(sites) {
+          if(sites.length > 0) {
+            console.log('found some divebars in db');
+            Addmarkers(sites, map);
+          }
+          else {
+            console.log('no divebars in db so we make google places API call.');
+            // make API request to google places
+            getGooglePlaces(coords);
+          }
+        }); 
+    };
     // this will add markers to the google map object, then store them in a markers array.
+    var getGooglePlaces = function(coords) {
+        var center = {lat: coords[0], lng: coords[1]};
+        var service = new google.maps.places.PlacesService(SharedProperties.map);
+          service.nearbySearch({
+            location: center,
+            radius: 8000,
+            types: ['cafe', 'bar'],
+            keyword:['dive']
+          }, callback);
+
+        function callback(results, status) {
+          console.log(results);
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+              addMarkers(results, SharedProperties.map);
+            }
+          }
+      };
+
     var addMarkers = function(sites, map){
       // iterate over all markers, and add a Marker object to the map.
       for (var i = 0; i < sites.length; i++) {
@@ -143,11 +179,9 @@ angular.module('divestop.services', [])
         addMarker(site, map);
       }
     };
-
-
     var addMarker = function(site, map) {
       var marker = new google.maps.Marker({
-          position: site.coordinates,
+          position: site.geometry.location,
           map: map,
           title: site.name,
           // store the site object in the marker to make it easier to access when clicking on the marker.
@@ -180,6 +214,8 @@ angular.module('divestop.services', [])
     };
 
     return {
+      getDiveBars: getDiveBars,
+      getGooglePlaces: getGooglePlaces,
       addMarkers: addMarkers,
       addMarker: addMarker,
       hideNewMarker: hideNewMarker,
