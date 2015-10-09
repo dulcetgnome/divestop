@@ -1,4 +1,4 @@
-<div class="container">
+<!-- <div class="container">
   <div class="row" id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable() && !showForm.state" ng-include src="templateUrl">
     <div class="col m8 s12">
       <h3> Dive Site </h3>
@@ -19,4 +19,30 @@
       <img class="responsive-img" ng-src="{{picture}}" alt="">
     </div>
   </div>
+</div> -->
+
+<div class="container">
+  <h4>Nearby Dives</h4>
+    <table class="highlight">
+      <tbody>
+        <tr>
+          <td><i class="fa fa-map-signs"></i></td>
+          <td>Sad Bar</td>
+          <td><span class="btn">Check In</span></td>
+          <td><span class="btn">Rate</span></td>
+        </tr>
+        <tr>
+          <td><i class="fa fa-map-signs"></i></td>
+          <td>Jellybean</td>
+          <td><span class="btn">Check In</span></td>
+          <td><span class="btn">Rate</span></td>
+        </tr>
+        <tr>
+          <td><i class="fa fa-map-signs"></i></td>
+          <td>Lollipop</td>
+          <td><span class="btn">Check In</span></td>
+          <td><span class="btn">Rate</span></td>
+        </tr>
+      </tbody>
+    </table>
 </div>
