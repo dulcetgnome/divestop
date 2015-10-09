@@ -92,8 +92,8 @@ var addOneSite = function (sites, index, client, done, cb) {
   var currentSite = sites[index];
   var input = [
     currentSite.name,
-    currentSite.geometry.location.J,
-    currentSite.geometry.location.M,
+    +currentSite.geometry.location.J,
+    +currentSite.geometry.location.M,
     0,
     0,
     currentSite.vicinity
@@ -106,7 +106,7 @@ var addOneSite = function (sites, index, client, done, cb) {
           // Add pictures from array
           var pictures_url = currentSite.photos;
 
-          if(pictures_url.length>0) {
+          if(pictures_url) {
             var queryString = '';
             for (var i=0; i<pictures_url.length; i++) {
               var picUrl = pictures_url[i].html_attributions[0].split('"')[1];
@@ -181,10 +181,6 @@ exports.search = function (cb, passedLocation) {
     upperLong = + passedLocation[1] + 1;
     lowerLong = + passedLocation[1] - 1;
   }
-  console.log('upperlat');
-  console.log(upperLat);
-  console.log('search was called');
-  console.log(passedLocation);
   params = [lowerLat, upperLat, lowerLong, upperLong];
   // need to get lat and long from search 
   locationQuery = ' WHERE s.lat BETWEEN $1 AND $2 AND s.long BETWEEN $3 AND $4';
@@ -202,11 +198,7 @@ exports.search = function (cb, passedLocation) {
         throw err;
       }
       results = results.rows;
-      console.log('results');
-      console.log(results);
       var filtered_sites = results.filter(function (result) {
-        console.log('result');
-        console.log(result);
         return (+ result.upvote - result.downvote) > -5;
       })
       cb(filtered_sites);
@@ -230,6 +222,22 @@ exports.wipeDatabase = function (cb) {
     });
   });
 };
+
+exports.dropTables = function (cb) {
+  var queryString = 'DROP TABLE bars_visited, users, pictures, sites;';
+
+  pg.connect(connectionString, function (error, client, done) {
+    client.query(queryString, function (err, result) {
+      if (err) {
+        throw err;
+      }
+      done();
+      if(cb)
+        cb();
+    });
+  });
+}
+
 
 // Add a user to the database 
 exports.addUser = function (fbdata, cb) {
