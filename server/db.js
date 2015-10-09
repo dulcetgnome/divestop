@@ -5,6 +5,8 @@ var pg = require('pg');
 // 'postgresql://localhost';
 /* URL for hosted heroku postgresql database */
 var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
+// var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost';
+
 
 exports.createTables = function (cb) {
   pg.connect(connectionString, function (err, client, done) {
@@ -88,6 +90,7 @@ exports.createTables = function (cb) {
 
 var addOneSite = function (sites, index, client, done, cb) {
   var currentSite = sites[index];
+
   var input = [
     currentSite.name,
     +currentSite.geometry.location.J,
@@ -103,28 +106,32 @@ var addOneSite = function (sites, index, client, done, cb) {
         function (err, result) {
           // Add pictures from array
           var pictures_url = currentSite.photos;
+          input[0] = currentSite.name.replace(/'/g, '\'\'')
+          input[5] = currentSite.vicinity.replace(/'/g, '\'\'')
 
           if(pictures_url) {
             var queryString = '';
             for (var i=0; i<pictures_url.length; i++) {
               var picUrl = pictures_url[i].html_attributions[0].split('"')[1];
               queryString+='INSERT INTO pictures (site_id, picture) VALUES ((SELECT _id FROM sites ' + 
-                      'WHERE site = \'' + input[0] + '\'), \'' + picUrl + '\'); ';
+                      'WHERE site = \'' + input[0] + '\' AND address = \'' + input[5] + '\'), \'' + picUrl + '\'); ';
             }
+
             client.query(queryString,
               function (err, result) {
-              if (err) {
-                throw err;
-              // Next iteration
-              } else if (index < sites.length-1) {
-                addOneSite(sites, ++index, client, done, cb);
-              } else {
-                done();
-                if(cb) {
-                  cb();
+                if (err) {
+                  throw err;
+                // Next iteration
+                } else if (index < sites.length-1) {
+                  addOneSite(sites, ++index, client, done, cb);
+                } else {
+                  done();
+                  if(cb) {
+                    cb();
+                  }
                 }
               }
-            });
+            );
             // If there are no pictures
           } else {
             if(index < sites.length-1) {
@@ -171,17 +178,21 @@ exports.addSites = function (cb, passedSites) {
 exports.search = function (cb, passedLocation) {
   // passedlocation is array of long and latitude
   // should be integers
+
+  // Each degree of latitude is approximately 69 miles (111 kilometers) apart. 
+  // A degree of longitude is widest at the equator at 69.172 miles (111.321) and gradually shrinks to zero at the poles. At 40° north or south the distance between a degree of longitude is 53 miles (85 km).
+
   var locationQuery = '';
   var upperLat, upperLong, lowerLat, lowerLong, params;
   if (passedLocation) {
-    upperLat = + passedLocation[0] + 1;
-    lowerLat = + passedLocation[0] - 1;
-    upperLong = + passedLocation[1] + 1;
-    lowerLong = + passedLocation[1] - 1;
+    Lat = + passedLocation[0];
+    Long = + passedLocation[1];
   }
-  params = [lowerLat, upperLat, lowerLong, upperLong];
-  // need to get lat and long from search 
-  locationQuery = ' WHERE s.lat BETWEEN $1 AND $2 AND s.long BETWEEN $3 AND $4';
+
+  params = [Lat, Long];
+  // need to get lat and long from search
+ 
+  locationQuery = ' WHERE acos(sin(radians(s.lat))*sin(radians($1)) + cos(radians(s.lat))*cos(radians($1))*cos(radians($2)-radians(s.long))) * 6371 < 10';
 
   var queryString = 'SELECT s.site, s.address, s.lat, s.long, ' + 
      's.upvote, s.downvote, p.picture FROM sites s ' + 
@@ -189,7 +200,7 @@ exports.search = function (cb, passedLocation) {
      'ON (p.site_id = s._id)' + 
      locationQuery + ';';
 
-
+     console.log(queryString)
   pg.connect(connectionString, function (error, client, done) {
     client.query(queryString, params, function (err, results) {
       if (err) {

@@ -150,7 +150,7 @@ angular.module('divestop.services', [])
             console.log('correct syntax');
             console.log(results[0].geometry.location);
             SharedProperties.map.setCenter(center);
-            SharedProperties.map.setZoom(14);
+            // SharedProperties.map.setZoom(14);
             // will search for divebars (In our db OR google places API)
             getDiveBars();
           } else {
@@ -159,7 +159,7 @@ angular.module('divestop.services', [])
         });
     };
 
-    var getDiveBars = function () {
+    var getDiveBars = function (loop) {
       var coords = [SharedProperties.map.center.J, SharedProperties.map.center.M];
       var coordinates = coords[0] + '_' + coords[1];
       DiveSites.getDiveSites(coordinates)
@@ -170,9 +170,11 @@ angular.module('divestop.services', [])
             // callback(sites);
           }
           else {
-            console.log('no divebars in db so we make google places API call.');
-            // make API request to google places
-            getGooglePlaces(coords);
+            if(!loop) {
+              console.log('no divebars in db so we make google places API call.');
+              // make API request to google places
+              getGooglePlaces(coords);
+            }
           }
         }); 
     };
@@ -182,7 +184,7 @@ angular.module('divestop.services', [])
         var service = new google.maps.places.PlacesService(SharedProperties.map);
           service.nearbySearch({
             location: center,
-            radius: 500,
+            radius: 5000,
             types: ['cafe', 'bar'],
             keyword:['dive']
           }, callback);
@@ -194,12 +196,12 @@ angular.module('divestop.services', [])
         }
     };
     var savePlaces = function (places) {
-      console.log('places');
-      console.log(places);
       return $http.post('/api/sites', JSON.stringify(places))
         .then(function(resp) {
+          console.log('run get dive bars agaain')
+          getDiveBars(true);
           return resp.data;
-          // put marker on map? 
+            // put marker on map? 
         }, function(err) {
           throw err;
         });
@@ -215,9 +217,7 @@ angular.module('divestop.services', [])
       }
     };
     var addMarker = function(site, map) {
-      console.log(site);
       var loc = {lat: + site.lat, lng: + site.long};
-      console.log(loc);
       var marker = new google.maps.Marker({
           position: loc,
           map: map,
