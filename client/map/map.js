@@ -6,31 +6,19 @@ angular.module('divestop.map', ['ngMap'])
     $scope.newSite = SharedProperties.newSite; // Object with properties lat, lng
     $scope.showForm = SharedProperties.showForm;
     $scope.moveNewMarker = AppMap.moveNewMarker;
+    
     SharedProperties.newSiteMarker = new google.maps.Marker();
 
     $scope.$on("mapInitialized", function(e, map) {
-      SharedProperties.map = map;
-      var geocoder = new google.maps.Geocoder();
-      geocoder.geocode({'address': SharedProperties.location}, function(results, status) {
-        console.log("results", results);
-        if (status === google.maps.GeocoderStatus.OK) {
-          SharedProperties.map.setCenter(results[0].geometry.location);
-          SharedProperties.map.setZoom(11);
-          $scope.$apply();
-        } else {
-          console.log('Geocode was not successful for the following reason: ' + status);
-        }
+      // make API call to google maps on drag event
+      google.maps.event.addListener(map, 'dragend', function() {
+        var custom = {lat: map.getCenter().lat(), lng: map.getCenter().lng()};
+        AppMap.getMap(map, custom);
       });
-      // sends a request to get divesites around a certain location (based on long and lat)
-      var coordinates = SharedProperties.map.center.J + "-" + SharedProperties.map.center.M;
-      DiveSites.getDiveSites(coordinates)
-        .then(function(sites) {
-          console.log(sites);
-          AppMap.addMarkers(sites, map);
-        });
+      // if map is initialized getMap without custom drag location
+      AppMap.getMap(map);
     });
 
-    // $scope.templateUrl = 'map/map.html';
 
     $scope.toggleForm = function() {
       $scope.showForm.state = !$scope.showForm.state;

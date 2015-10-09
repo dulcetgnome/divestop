@@ -13,6 +13,7 @@ angular.module('divestop', [
   'divestop.logout',
   'divestop.profile',
   'divestop.authbar',
+  'divestop.barsvisited',
   'ngRoute',
   'satellizer'
 ])
@@ -24,11 +25,6 @@ angular.module('divestop', [
       templateUrl: '/welcome/welcome.html',
       controller: 'SearchController'
     })
-    // We don't need signup at the moment - maybe later functionality
-    // .when('/signup', {
-    //   templateUrl: '/users/signup.html',
-    //   controller: 'userController'
-    // })
     .when('/map', {
       templateUrl: '/map/map.html',
       controller: 'OurMapController'

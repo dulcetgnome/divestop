@@ -22,7 +22,10 @@
   <script src="/libs/angular-route/angular-route.min.js"></script>
   <!-- // <script src="/libs/angular-toastr/dist/angular-toastr.tpls.js"></script> -->
   <script src="/libs/satellizer/satellizer.min.js"></script>
-  <script src="//maps.google.com/maps/api/js"></script>
+  <!-- <script src="//maps.google.com/maps/api/js"></script> -->
+  <!--<script src="https://maps.googleapis.com/maps/api/js"></script> -->
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBA6ZwynlnNch3N9v0yj0aUImYWU6K3wBE&libraries=places,geocoder"></script>
+
   <script src="/libs/ngmap/build/scripts/ng-map.js"></script>
   <script src="/add/canvas-to-blob.js"></script>
   <!-- // <script src="/build/ugly.min.js"></script> -->
@@ -38,6 +41,7 @@
   <script src="auth/login.js"></script>
   <script src="auth/logout.js"></script>
   <script src="layout/authbar.js"></script>
+  <script src="layout/barsvisited.js"></script>
 
 
   <script src="app.js"></script>
@@ -74,6 +78,7 @@
         <ul ng-if="isAuthenticated()"><li><a href="#/logout">Logout</a></li></ul>
         <ul ng-if="!isAuthenticated()"><li><a href="#/login">Login</a></li></ul>
       </div>
+      <div ng-include src="'/layout/barsvisited.html'"></div>
       <footer>
         <div class="footer-copyright">
           <div class="container">
