@@ -4,16 +4,24 @@
     <a ng-click="toggleForm()" class="right btn waves-effect waves-light">Add Dive Site</a>
   </div>
   <h3>Nearby Bars</h3>
- <!--  <ul class="barList">
-    <li class="row">
-      <div class="col s1"><i class="fa fa-map-signs"></i></div>
-      <div class="col s7"><p>Sad Bar</p></div>
-      <div class="col s2"><button>Check In</button></div>
-      <div class="col s2"><button>Rate</button></div>
-    </li>
-  </ul> -->
-    <table class="highlight">
 
+Click me: <input type="checkbox" ng-model="checked" aria-label="Toggle ngHide"><br/>
+<div>
+  Show:
+  <div class="check-element animate-show" ng-show="checked">
+    <span class="glyphicon glyphicon-thumbs-up"></span> I show up when your checkbox is checked.
+  </div>
+</div>
+<div>
+  Hide:
+  <div class="check-element animate-show" ng-hide="checked">
+    <span class="glyphicon glyphicon-thumbs-down"></span> I hide when your checkbox is checked.
+  </div>
+</div>
+
+
+  <div class="animate-show" ng-show="toggle">
+    <table class="highlight">
       <tbody>
         <tr>
           <td><i class="fa fa-map-signs"></i></td>
@@ -35,4 +43,6 @@
         </tr>
       </tbody>
     </table>
+  </div>
+
 </div>
