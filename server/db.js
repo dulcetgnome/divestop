@@ -4,8 +4,8 @@
 var pg = require('pg');
 
 /* URL for hosted heroku postgresql database */
-var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
-// var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost';
+// var connectionString = process.env.DATABASE_URL || 'postgresql://localhost';
+var connectionString = process.env.DATABASE_URL || 'postgresql://postgres:aaa@localhost';
 
 exports.createTables = function (cb) {
   pg.connect(connectionString, function (err, client, done) {
@@ -180,8 +180,8 @@ exports.search = function (cb, passedLocation) {
     upperLong = passedLocation[1] + 1;
     lowerLong = passedLocation[1] - 1;
   }
-
   params = [lowerLat, upperLat, lowerLong, upperLong];
+  console.log(params)
   // need to get lat and long from search 
   locationQuery = ' WHERE s.lat BETWEEN $1 AND $2 AND s.long BETWEEN $3 AND $4';
 
