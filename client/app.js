@@ -44,7 +44,7 @@ angular.module('divestop', [
       }
     })
     .when('/new-dive', {
-      templateUrl: '/add/add.html',
+      templateUrl: '/map/map.html',
       controller: 'AddSiteController'
     })
     .when('/logout', {

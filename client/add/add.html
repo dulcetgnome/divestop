@@ -5,17 +5,17 @@
 
     <div class="input-field">
       <input id="site-name" type="text" required ng-model="form.site.name" />
-      <label for="site-name">Site Name</label>
+      <label for="site-name">Dive Site Name</label>
     </div>
 
     <div class="input-field">
       <input id="description" type="text" required ng-model="form.site.description" />
-      <label for="description">Description</label>
+      <label for="description"> Why Should We Dive Here? (Description)</label>
     </div>
 
     <div class="input-field">
       <input id="address" type="text" required ng-model="form.site.address" />
-      <label for="address">Address</label>
+      <label for="address"> Where Are We Going Diving? (Address)</label>
     </div>
 
 
@@ -26,11 +26,11 @@
       </div> -->
 
       <div class="input-field col s12 m6">
-        <input type="text" disabled required ng-model="form.site.coordinates.lat" placeholder="click map!">
+        <input type="text" disabled required ng-model="form.site.coordinates.lat" placeholder="Click Map!">
         <label class="active">Latitude</label>
       </div>
       <div class="input-field col s12 m6">
-        <input type="text" disabled required ng-model="form.site.coordinates.lng" placeholder="click map!">
+        <input type="text" disabled required ng-model="form.site.coordinates.lng" placeholder="Click Map!">
         <label class="active">Longitude</label>
       </div>
     </div>
@@ -41,7 +41,7 @@
         <div class="row">
           <div class="input-field col s10">
             <input id="aquatic-life" type="text" ng-model="form.newAquaticLife" ng-enter="form.addAquaticLife()">
-            <label for="aquatic-life">Aquatic Life</label>
+            <label for="aquatic-life">Aquatic Life (What Did You Drink?) </label>
           </div>
           <div class="col s2">
             <a class="btn-floating" type="button" ng-click="form.addAquaticLife()">
@@ -58,7 +58,7 @@
         <div class="row">
           <div class="input-field col s10">
             <input id="features" type="text" ng-model="form.newFeature" ng-enter="form.addFeature()">
-            <label for="features">Features</label>
+            <label for="features">Unique Dive Features (Ex: Popcorn)</label>
           </div>
           <div class="col s2">
             <a class="btn-floating" type="button" ng-click="form.addFeature()">
