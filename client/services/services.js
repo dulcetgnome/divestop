@@ -203,7 +203,7 @@ angular.module('divestop.services', [])
           throw err;
         });
       // logic for posting places to db goes here
-    }
+    };
 
 
     var addMarkers = function(sites, map){

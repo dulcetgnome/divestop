@@ -1,0 +1,52 @@
+<div class="header" ng-controller="AuthbarCtrl">
+  <div ng-if="isAuthenticated()">
+    <div ng-controller="ProfileCtrl">
+    <i class="fa fa-beer"></i>
+    <a class='dropdown-button' href='#' data-activates='dropdown1'>DiveStop<i class="material-icons">arrow_drop_down</i></a>
+      <ul id='dropdown1' class='dropdown-content'>
+        <li><a href="#/profile">Profile</a></li>
+        <li><a href="#/logout">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div ng-if="!isAuthenticated()">
+    <div ng-controller="ProfileCtrl">
+    <i class="fa fa-beer"></i>
+    <a class='dropdown-button' href='#' data-activates='dropdown2'>DiveStop<i class="material-icons">arrow_drop_down</i></a>
+      <ul id='dropdown2' class='dropdown-content'>
+        <li><a href="#/login">Login</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+<div ng-controller="AuthbarCtrl">
+  <div class="userHeader" ng-if="isAuthenticated()">
+    <div ng-controller="ProfileCtrl">
+      <img class="profile-picture" ng-src="{{user.picture || 'http://placehold.it/100x100'}}">
+        <!-- Dropdown Trigger -->
+      <div class="sideDivs">
+        <p>Hey {{ user.displayName}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ul>
+  <li><a href="#/new-dive">Add Dive</a></li>
+  <li><a href="#/map">Bars Nearby</a></li>
+</ul>
+      
+<div ng-include src="'/layout/barsvisited.html'"></div>
+
+<footer>
+  <div class="footer-copyright">
+    <div class="container">
+    © 2015 DiveStop
+    
+    </div>
+  </div>
+</footer>
