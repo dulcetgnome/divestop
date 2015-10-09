@@ -1,7 +1,8 @@
 <div class="container">
   <div class="row" id="siteInformation" ng-controller="DiveSiteController" ng-show="isSiteAvailable() && !showForm.state" ng-include src="templateUrl">
     <div class="col m8 s12">
-      <h3>{{currentSite.site.name}}</h3>
+      <h3> Dive Site </h3>
+      <h4>{{currentSite.site.name}}</h2>
     <p>{{currentSite.site.description}}</p>
     </div>
     <div class="col m4 s12">
