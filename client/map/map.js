@@ -10,7 +10,6 @@ angular.module('divestop.map', ['ngMap'])
     SharedProperties.newSiteMarker = new google.maps.Marker();
 
     $scope.$on("mapInitialized", function(e, map) {
-      console.log('map initialized')
       // make API call to google maps on drag event
       google.maps.event.addListener(map, 'dragend', function() {
         var custom = {lat: map.getCenter().lat(), lng: map.getCenter().lng()};
@@ -20,8 +19,9 @@ angular.module('divestop.map', ['ngMap'])
       AppMap.getMap(map);  
     });
 
-
     $scope.toggleForm = function() {
+      var toggle = true;
+      console.log(toggle);
       $scope.showForm.state = !$scope.showForm.state;
       if($scope.showForm.state) {
         AppMap.showNewMarker();

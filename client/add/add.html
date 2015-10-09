@@ -1,5 +1,6 @@
 <div class="container">
-  <div class="row addSiteForm" ng-controller="AddSiteController as form" ng-include src="form.templateUrl" ng-show="form.showForm.state">
+  <h4>Dive Site</h4>
+  <div class="row addSiteForm" ng-controller="AddSiteController as form">
     <form name="addSite" class="addSite">
 
     <div class="input-field">
@@ -12,16 +13,23 @@
       <label for="description">Description</label>
     </div>
 
+    <div class="input-field">
+      <input id="address" type="text" required ng-model="form.site.description" />
+      <label for="address">Address</label>
+    </div>
+
+
     <div class="row">
-      <div class="input-field col s12 m4">
-        <input id="depth" type="number" required ng-model="form.site.maxDepth">
-        <label for="depth">Maximum Depth (meters)</label>
-      </div>
-      <div class="input-field col s12 m4">
+      <!-- <div class="input-field col s12 m4">
+        <input id="depth" type="text" required ng-model="form.site.maxDepth">
+        <label for="depth">Address </label>
+      </div> -->
+
+      <div class="input-field col s12 m6">
         <input type="text" disabled required ng-model="form.site.coordinates.lat" placeholder="click map!">
         <label class="active">Latitude</label>
       </div>
-      <div class="input-field col s12 m4">
+      <div class="input-field col s12 m6">
         <input type="text" disabled required ng-model="form.site.coordinates.lng" placeholder="click map!">
         <label class="active">Longitude</label>
       </div>
