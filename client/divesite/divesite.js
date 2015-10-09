@@ -13,6 +13,6 @@ angular.module('divestop.divesite', [])
     };
     $scope.getNearbyDives = function () {
       // get list of all divesites nearby
-      DiveSites.getDiveSites([SharedProperties.map.center.J, SharedProperties.map.center.M];)
+      DiveSites.getDiveSites([SharedProperties.map.center.J, SharedProperties.map.center.M])
     };
   });
