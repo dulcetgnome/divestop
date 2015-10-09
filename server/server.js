@@ -172,7 +172,7 @@ app.post('/auth/facebook', function(req, res) {
 db.createTables();
 
 
-// db.wipeDatabase();
+db.wipeDatabase();
 /* Auth stuff */
 
 app.listen(port, function() {
