@@ -41,6 +41,7 @@
   <script src="auth/login.js"></script>
   <script src="auth/logout.js"></script>
   <script src="layout/authbar.js"></script>
+  <script src="layout/barsvisited.js"></script>
 
 
   <script src="app.js"></script>
@@ -71,6 +72,7 @@
         <ul ng-if="isAuthenticated()"><li><a href="#/logout">Logout</a></li></ul>
         <ul ng-if="!isAuthenticated()"><li><a href="#/login">Login</a></li></ul>
       </div>
+      <div ng-include src="'/layout/barsvisited.html'"></div>
       <footer>
         <div class="footer-copyright">
           <div class="container">
