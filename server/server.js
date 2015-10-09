@@ -51,15 +51,13 @@ app.get('/api/sites/:location', function(req, res) {
 });
 
 app.get('/api/sites', function(req, res) {
-  db.createTables(function(){
-    db.search(function(sites) {
-      res.json(sites);
-    }, [0,0]);
-  });
+  db.search(function(sites) {
+    res.json(sites);
+  }, [0,0]);
 });
 
 app.post('/api/sites', function(req, res) {
-  db.addSite(function() {
+  db.addSites(function() {
     res.sendStatus(201);
   }, req.body);
 });
@@ -72,7 +70,7 @@ app.get('/api/keys', function(req, res) {
       'X-Parse-REST-API-Key': 'pE7A3TXUbzC3C3NQPPT22FR4VSQZAnI0U21t5zcC'
     });
 });
-
+// db.wipeDatabase();
 /* Routes for logged in user */
 // Force HTTPS on Heroku
 if (app.get('env') === 'production') {
@@ -168,6 +166,11 @@ app.post('/auth/facebook', function(req, res) {
     });
   });
 });
+
+
+// Creates table
+db.createTables();
+
 
 // db.wipeDatabase();
 /* Auth stuff */

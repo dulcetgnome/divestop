@@ -66,7 +66,9 @@ exports.createTables = function (cb) {
                           throw err;
                         }
                         done();
-                        cb();
+                        if(cb) {
+                          cb();
+                        }
                       }
                     );
                   }
@@ -84,11 +86,81 @@ exports.createTables = function (cb) {
    insert statement.
 */
 
-exports.addSite = function (cb, passedSite) {
-  pg.connect(connectionString, function (err, client, done) {
-    if (err) {throw err;}
-    // add site via google or manually
+var addOneSite = function (sites, index, client, done, cb) {
+  var currentSite = sites[index];
+  console.log('index ', index, currentSite.name)
+  var input = [
+    currentSite.name,
+    currentSite.geometry.location.J,
+    currentSite.geometry.location.M,
+    0,
+    0,
+    currentSite.vicinity
+  ];
+  client.query('SELECT * FROM sites WHERE lat = $2 AND long = $3 );', input, function (err, results) {
+    console.log(results);
+    if(!results) {
+      client.query('INSERT INTO sites (site, lat, long, upvote, downvote, address) VALUES ($1, $2, $3, $4, $5, $6);', input, 
+        function (err, result) {
+          // Add pictures from array
+          var pictures_url = currentSite.photos;
 
+          if(pictures_url.length>0) {
+            var queryString = '';
+            for (var i=0; i<pictures_url.length; i++) {
+              queryString+='INSERT INTO pictures (site_id, picture) VALUES ((SELECT _id FROM sites ' + 
+                      'WHERE site = \'' + input[0] + '\'), \'' + pictures_url[i] + '\'); ';
+            }
+            console.log(queryString);
+            client.query(queryString,
+              function (err, result) {
+              if (err) {
+                throw err;
+              // Next iteration
+              } else if (index < sites.length-1) {
+                addOneSite(sites, ++index, client, done, cb);
+              } else {
+                done();
+                if(cb) {
+                  cb();
+                }
+              }
+            });
+            // If there are no pictures
+          } else {
+            if(index < sites.length-1) {
+              addOneSite(sites, ++index, client, done, cb);
+            } else {
+              done();
+              if(cb) {
+                cb();
+              }
+            }          
+          }
+        }
+      );
+    } else {
+      if(index < sites.length-1) {
+        addOneSite(sites, ++index, client, done, cb);
+      } else {
+        done();
+        if(cb) {
+          cb();
+        }
+      }
+    } 
+  })
+}
+
+exports.addSites = function (cb, passedSites) {
+  // console.log(passedSites)
+  // var sites = JSON.parse(passedSites);
+  var sites = passedSites;
+  pg.connect(connectionString, function (err, client, done) {
+    if (err) {
+      throw err;
+    }
+    addOneSite(sites, 0, client, done, cb);
   });
 };
 
@@ -114,19 +186,21 @@ exports.search = function (cb, passedLocation) {
   locationQuery = ' WHERE s.lat BETWEEN $1 AND $2 AND s.long BETWEEN $3 AND $4';
 
   var queryString = 'SELECT s.site, s.address, s.lat, s.long, ' + 
-     's.upvote, s.downvote, a.type, p.picture FROM sites s ' + 
+     's.upvote, s.downvote, p.picture FROM sites s ' + 
      'LEFT OUTER JOIN pictures p ' +
      'ON (p.site_id = s._id)' + 
      locationQuery + ';';
 
 
   pg.connect(connectionString, function (error, client, done) {
-    client.query(queryString, params, function (err, result) {
+    client.query(queryString, params, function (err, results) {
       if (err) {
         throw err;
       }
-
-      var filtered_sites = [];
+      results = results.rows;
+      var filtered_sites = results.filter(function (result) {
+        return result.site.upvote-downvote>-5;
+      })
       cb(filtered_sites);
       done();
     });
@@ -135,7 +209,7 @@ exports.search = function (cb, passedLocation) {
 
 // The wipeDatabase() method is used in the db tests.
 exports.wipeDatabase = function (cb) {
-  var queryString = 'DROP TABLE bars_visited, users, pictures, sites;';
+  var queryString = 'TRUNCATE bars_visited, users, pictures, sites;';
 
   pg.connect(connectionString, function (error, client, done) {
     client.query(queryString, function (err, result) {
@@ -160,7 +234,8 @@ exports.addUser = function (fbdata, cb) {
         if (err) { throw err; }
         done();
         cb(result);
-      });
+      }
+    );
   });
 };
 
@@ -178,7 +253,8 @@ exports.findUser = function (id, cb) {
         }
         done();
         cb(result.rows);
-      });
+      }
+    );
   });
 };
 
