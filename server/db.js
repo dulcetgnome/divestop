@@ -92,8 +92,8 @@ var addOneSite = function (sites, index, client, done, cb) {
   var currentSite = sites[index];
   var input = [
     currentSite.name,
-    currentSite.geometry.location.J,
-    currentSite.geometry.location.M,
+    +currentSite.geometry.location.J,
+    +currentSite.geometry.location.M,
     0,
     0,
     currentSite.vicinity
@@ -182,7 +182,6 @@ exports.search = function (cb, passedLocation) {
     lowerLong = + passedLocation[1] - 1;
   }
   params = [lowerLat, upperLat, lowerLong, upperLong];
-  console.log(params)
   // need to get lat and long from search 
   locationQuery = ' WHERE s.lat BETWEEN $1 AND $2 AND s.long BETWEEN $3 AND $4';
 
@@ -199,11 +198,7 @@ exports.search = function (cb, passedLocation) {
         throw err;
       }
       results = results.rows;
-      console.log('results');
-      console.log(results);
       var filtered_sites = results.filter(function (result) {
-        console.log('result');
-        console.log(result);
         return (+ result.upvote - result.downvote) > -5;
       })
       cb(filtered_sites);
