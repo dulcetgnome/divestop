@@ -9,7 +9,7 @@ angular.module('divestop.services', [])
     sharedProperties.map = {};
     sharedProperties.location = '';
     sharedProperties.markers = [];
-    
+    sharedProperties.map = {};
     sharedProperties.currentSite = {site: {}};
     // sharedProperties.splash = {state: true};
 
@@ -189,11 +189,20 @@ angular.module('divestop.services', [])
           console.log(results);
           if (status === google.maps.places.PlacesServiceStatus.OK) {
               addMarkers(results, SharedProperties.map);
-              saveGooglePlaces(results);
+              savePlaces(results);
             }
           }
         };
-    var saveGooglePlaces = function (places) {
+    var savePlaces = function (places) {
+      console.log('places');
+      console.log(places);
+      return $http.post('/api/sites', places)
+        .then(function(resp) {
+          return resp.data;
+          // put marker on map? 
+        }, function(err) {
+          throw err;
+        });
       // logic for posting places to db goes here
     }
 

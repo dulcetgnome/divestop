@@ -9,5 +9,6 @@ angular.module('divestop.search', [])
         $scope.data.address = '';
         // redirect to map (search query will be handled in map.js)
         $location.path('/map');
+
     };
   });
