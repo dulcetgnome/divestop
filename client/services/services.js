@@ -136,6 +136,25 @@ angular.module('divestop.services', [])
   })
   .factory("AppMap", ['SharedProperties', '$rootScope', 'DiveSites',
     function(SharedProperties, $rootScope, DiveSites) {
+    var getMap = function (map) {
+      // make geocoder variable
+      var geocoder = new google.maps.Geocoder();
+      // set map variable on sharedprops
+      SharedProperties.map = map;
+      address = SharedProperties.location;
+      // sends a request to get divesites around a certain location (based on long and lat)
+        geocoder.geocode({'address': address}, function(results, status) {
+          console.log("results", results);
+          if (status === google.maps.GeocoderStatus.OK) {
+            SharedProperties.map.setCenter(results[0].geometry.location);
+            SharedProperties.map.setZoom(11);
+            // will search for divebars (In our db OR google places API)
+            getDiveBars();
+          } else {
+            console.log('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+    }
 
     var getDiveBars = function () {
       var coords = [SharedProperties.map.center.J, SharedProperties.map.center.M];
@@ -214,6 +233,7 @@ angular.module('divestop.services', [])
     };
 
     return {
+      getMap: getMap,
       getDiveBars: getDiveBars,
       getGooglePlaces: getGooglePlaces,
       addMarkers: addMarkers,
