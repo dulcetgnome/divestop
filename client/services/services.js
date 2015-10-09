@@ -147,7 +147,7 @@ angular.module('divestop.services', [])
           console.log("results", results);
           if (status === google.maps.GeocoderStatus.OK) {
             SharedProperties.map.setCenter(results[0].geometry.location);
-            SharedProperties.map.setZoom(11);
+            SharedProperties.map.setZoom(14);
             // will search for divebars (In our db OR google places API)
             getDiveBars();
           } else {
