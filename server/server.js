@@ -41,7 +41,7 @@ app.get('/', function(req, res) {
 
 app.get('/api/sites/:location', function(req, res) {
   // location in url is formatted as api/sites/3.456-50.267
-  var location = req.params.location.split('-');
+  var location = req.params.location.split('_');
   var coordinates = [location[0], location[1]]; 
   // regex /\%20/g, ' '
   // pass down coordinates to db for query
@@ -172,7 +172,7 @@ app.post('/auth/facebook', function(req, res) {
 db.createTables();
 
 
-db.wipeDatabase();
+// db.wipeDatabase();
 /* Auth stuff */
 
 app.listen(port, function() {
