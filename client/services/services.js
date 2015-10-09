@@ -147,6 +147,8 @@ angular.module('divestop.services', [])
           if (status === google.maps.GeocoderStatus.OK) {
             // location is either a dragged location or the address supplies by the user
             center = custom || results[0].geometry.location;
+            console.log('correct syntax');
+            console.log(results[0].geometry.location);
             SharedProperties.map.setCenter(center);
             SharedProperties.map.setZoom(14);
             // will search for divebars (In our db OR google places API)
@@ -187,11 +189,10 @@ angular.module('divestop.services', [])
 
         function callback(results, status) {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
-              addMarkers(results, SharedProperties.map);
               savePlaces(results);
-            }
           }
-        };
+        }
+    };
     var savePlaces = function (places) {
       console.log('places');
       console.log(places);
@@ -215,8 +216,8 @@ angular.module('divestop.services', [])
     };
     var addMarker = function(site, map) {
       console.log(site);
-      console.log(parseInt(site.lat));
-      var loc = {J: parseInt(site.lat), M: parseInt(site.long)}
+      var loc = {lat: + site.lat, lng: + site.long};
+      console.log(loc);
       var marker = new google.maps.Marker({
           position: loc,
           map: map,
